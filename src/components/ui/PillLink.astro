@@ -1,0 +1,40 @@
+---
+/**
+ * The page's primary CTA: a moss pill with white Inter semibold, used by
+ * "View All Products", "Learn More" and "Shop Now".
+ *
+ * It fixes the look (colours, shape, shadow, hover, focus ring). Sizing
+ * (height, padding, gap, type size, margins) comes from `class`, because each
+ * section scales it differently. `arrow` adds a light → that nudges right on
+ * hover. Other attributes (`data-*` hooks) pass through to the link.
+ */
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"a"> {
+  href: string;
+  arrow?: boolean;
+  class?: string;
+}
+const { href, arrow = false, class: className, ...rest } = Astro.props;
+---
+
+<a
+  {...rest}
+  href={href}
+  class:list={[
+    "group inline-flex items-center justify-center rounded-full bg-brand-moss font-inter font-semibold tracking-[0.1px] text-white shadow-pill transition-colors hover:bg-brand-moss-dark focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss motion-reduce:transition-none",
+    className,
+  ]}
+>
+  <slot />
+  {
+    arrow && (
+      <span
+        aria-hidden="true"
+        class="font-light transition-transform duration-150 ease-[ease] group-hover:translate-x-[3px] motion-reduce:transition-none"
+      >
+        &rarr;
+      </span>
+    )
+  }
+</a>

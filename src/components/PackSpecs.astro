@@ -1,0 +1,33 @@
+---
+import CalendarClock from "@lucide/astro/icons/calendar-clock";
+import CupSoda from "@lucide/astro/icons/cup-soda";
+
+import Claim from "./Claim.astro";
+
+/**
+ * Net contents and shelf life, in the claims' badge style.
+ *
+ * `flank` hangs one off each shoulder of the can, positioned in percentages of
+ * its parent — which must be the can's own box. `inline` is the narrow-screen
+ * fallback, centred in flow. Neither is marked to swap: the range shares both.
+ */
+interface Props {
+  volume: string;
+  shelfLife: string;
+  layout?: "flank" | "inline";
+  class?: string;
+}
+const { volume, shelfLife, layout = "inline", class: className } = Astro.props;
+---
+
+<ul
+  class:list={[
+    layout === "flank"
+      ? "pointer-events-none absolute inset-x-0 top-[7%] z-10 flex justify-between text-brand-ink"
+      : "flex justify-center gap-x-8 text-brand-ink",
+    className,
+  ]}
+>
+  <Claim icon={CupSoda} headline={volume} note="Net Content" />
+  <Claim icon={CalendarClock} headline={shelfLife} note="Shelf Life" mirrored={layout === "flank"} />
+</ul>

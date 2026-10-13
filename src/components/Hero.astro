@@ -1,0 +1,228 @@
+---
+import { Image, Picture } from "astro:assets";
+
+import BrandIntro from "./BrandIntro.astro";
+import ArrowDownIcon from "./icons/ArrowDownIcon.astro";
+import ArrowRightIcon from "./icons/ArrowRightIcon.astro";
+import LeafIcon from "./icons/LeafIcon.astro";
+import RecycleIcon from "./icons/RecycleIcon.astro";
+import SealIcon from "./icons/SealIcon.astro";
+
+import heroBg1 from "../assets/images/hero/hero-bg-1.jpg";
+import heroBg2 from "../assets/images/hero/hero-bg-2.jpg";
+import heroBg4 from "../assets/images/hero/hero-bg-4.jpg";
+import heroBg5 from "../assets/images/hero/hero-bg-5.jpg";
+import heroBg6 from "../assets/images/hero/hero-bg-6.jpg";
+import heroBg8 from "../assets/images/hero/hero-bg-8.jpg";
+import brandIntroBg from "../assets/images/hero/brand-intro-bg.png";
+import cansTrio from "../assets/images/cans-trio.png";
+import { url } from "../config/url";
+
+/**
+ * The background slideshow, in order. Add an image here and the loop in
+ * `scripts/anim/heroSlideshow.ts` picks it up at the same cadence.
+ */
+const HERO_BACKGROUNDS = [heroBg1, heroBg2, heroBg4, heroBg5, heroBg6, heroBg8];
+
+/** Responsive widths up to, and always including, the photo's own width. */
+const widthsFor = (width: number) => [
+  ...[640, 960, 1280, 1672, 1920].filter((w) => w < width),
+  width,
+];
+
+const HERO_FEATURES = [
+  { Icon: LeafIcon, title: "Real Ingredients", body: "Only the best from nature" },
+  {
+    Icon: RecycleIcon,
+    title: "Sustainably Crafted",
+    body: "Better for you, better for our planet",
+  },
+  { Icon: SealIcon, title: "Proudly Ceylon", body: "Made in Sri Lanka with care" },
+];
+---
+
+{/*
+  `overflow-x-clip`: the headline's entrance scales each word up from 3x, and
+  on a phone that briefly overflows the screen and zooms the whole page out.
+  `clip` rather than `hidden`, because `hidden` would make this a scroll
+  container and break the sticky 3D layer inside it.
+*/}
+<section class="hero overflow-x-clip px-4 first:pt-10 md:px-6" aria-labelledby="hero-heading">
+  {/*
+    The photo layer sits outside `.hero-fade`, so it paints straight away as
+    the page's largest image instead of waiting for the entrance under an
+    opacity of 0. Fixed, so where it sits in the DOM changes nothing on screen.
+  */}
+  <div class="hero-bg pointer-events-none fixed inset-0 z-0">
+    {/*
+      The slides stack; the GSAP loop cross-fades between them. Only the first
+      is high priority — it's the LCP image. No `scale-*` classes: GSAP owns the
+      transform on these.
+    */}
+    {
+      HERO_BACKGROUNDS.map((src, i) => (
+        <Picture
+          src={src}
+          alt=""
+          formats={["webp"]}
+          widths={widthsFor(src.width)}
+          sizes="100vw"
+          quality={78}
+          loading={i === 0 ? "eager" : "lazy"}
+          fetchpriority={i === 0 ? "high" : "auto"}
+          class="hero-bg-slide absolute inset-0 h-full w-full object-cover"
+        />
+      ))
+    }
+
+    {/*
+      Three stacked shades: a flat knock-down of the photo's brightness, a
+      top/bottom gradient so the headline and the cue clear the sky and the
+      horizon, and a soft pool of black behind the centred copy. `z-10` is
+      load-bearing: the cross-fade lifts the incoming slide to z-index 1.
+    */}
+    <div class="absolute inset-0 z-10 bg-black/20"></div>
+    <div class="absolute inset-0 z-10 bg-linear-to-b from-black/30 via-black/10 to-black/35"></div>
+    <div class="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.45)_0%,transparent_70%)]"></div>
+  </div>
+
+  {/* `Bounded`'s centred column; hidden until the entrance sets it visible (at once without script). */}
+  <div class="hero-fade mx-auto flex w-full max-w-7xl flex-col items-center opacity-0 noscript:opacity-100!">
+    {/* The shared canvas draws the hero cans into this box (desktop only). */}
+    <div
+      data-view="hero"
+      aria-hidden="true"
+      class="hero-scene pointer-events-none sticky top-0 z-50 -mt-[100vh] hidden h-screen w-screen md:block"
+    >
+    </div>
+
+    {/* w-full so the runway below is a real two-column grid. */}
+    <div class="relative z-10 grid w-full">
+      <div class="grid h-screen place-items-center">
+        <div class="grid auto-rows-min place-items-center text-center">
+          <Image
+            src={cansTrio}
+            alt="Three cans of Thynkers Lyquid: Mango Passion, Pineapple and Matcha Original"
+            widths={[320, 640, 960]}
+            sizes="(max-width: 767px) 20rem, 1px"
+            loading="eager"
+            class="mb-6 w-full max-w-xs md:hidden"
+          />
+
+          {/*
+            Every size here must be an arbitrary value: Tailwind's named sizes
+            ship their own line-height, which would override leading-[.82].
+          */}
+          <h1
+            id="hero-heading"
+            class="hero-header relative font-aonic text-[3.25rem] leading-[.82] font-black text-white uppercase drop-shadow-[0_8px_34px_rgba(0,0,0,0.45)] sm:text-[4.5rem] md:text-[6.5rem] lg:text-[8rem] xl:text-[8.75rem]"
+          >
+            <span class="hero-header-word block">Ceylon</span>
+            <span class="hero-header-word block">Future</span>
+            {/*
+              The G sits in its own inline-block (it once anchored a leaf
+              sprite). That breaks the kerning either side of it, and the
+              headline's width depends on it — keep it.
+            */}
+            <span class="hero-header-word block">Bevera<span class="relative inline-block">G</span>es</span>
+          </h1>
+
+          <p
+            class="hero-subheading mt-6 font-ubuntu text-xl font-semibold text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)] md:text-2xl lg:text-[1.75rem] lg:leading-8"
+          >
+            Crafted for tomorrow. Inspired by nature.
+          </p>
+
+          <p
+            class="hero-body mt-4 max-w-xl text-sm leading-relaxed text-balance text-white/80 md:text-base md:leading-6 lg:text-lg lg:leading-7"
+          >
+            Refreshing sparkling beverages made with real ingredients, sustainably crafted in Sri
+            Lanka for a better future.
+          </p>
+
+          <div class="hero-ctas mt-8 flex flex-wrap items-center justify-center gap-4">
+            <a
+              href={url("/products/")}
+              class="hero-cta inline-flex h-[52px] items-center gap-2.5 rounded-full bg-brand-moss px-8 font-inter text-[15px] font-semibold tracking-[0.1px] text-white shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition-colors hover:bg-brand-moss-dark focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white lg:h-[54px]"
+            >
+              Shop Products
+              <ArrowRightIcon class="h-4 w-4" />
+            </a>
+            <a
+              href="#company"
+              class="hero-cta inline-flex h-[52px] items-center rounded-full border border-white/60 bg-white/10 px-8 font-inter text-[15px] font-semibold tracking-[0.1px] text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-ink-heading focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white lg:h-[54px]"
+            >
+              Our Story
+            </a>
+          </div>
+
+          <ul
+            class="hero-features mt-12 grid w-full max-w-3xl grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-white/25"
+          >
+            {
+              HERO_FEATURES.map(({ Icon, title, body }) => (
+                <li class="hero-feature flex items-start justify-center gap-3 px-5 text-left">
+                  <Icon class="mt-0.5 h-7 w-7 shrink-0 text-white" />
+                  <div>
+                    <p class="text-sm font-semibold text-white">{title}</p>
+                    <p class="text-xs leading-snug text-white/70">{body}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
+
+          <a
+            href="#scroll"
+            class="hero-scroll-cue mt-12 inline-flex items-center gap-4 text-sm text-white/80 transition-colors hover:text-white"
+          >
+            Scroll to explore
+            <span class="grid h-10 w-10 place-items-center rounded-full border border-white/40">
+              <ArrowDownIcon class="h-4 w-4" />
+            </span>
+          </a>
+        </div>
+      </div>
+
+      {/*
+        Second screen: the scroll runway for the can choreography. The cans
+        assemble in the right half of the frame, so the copy takes the left.
+      */}
+      <div
+        id="scroll"
+        class="text-side relative z-[80] grid min-h-screen w-full items-center gap-4 py-24 md:grid-cols-2 md:py-28"
+      >
+        {/*
+          The runway owns its ground. It breaks out of the centred column to
+          the full viewport width (`left-1/2 w-screen -translate-x-1/2`); the
+          flat cream underneath is the photo's own, so whatever `object-cover`
+          crops reads as more cream.
+        */}
+        <div
+          class="pointer-events-none absolute top-0 left-1/2 h-full w-screen -translate-x-1/2 overflow-hidden bg-hero-runway"
+        >
+          <Image
+            src={brandIntroBg}
+            alt=""
+            widths={widthsFor(brandIntroBg.width)}
+            sizes="100vw"
+            quality={78}
+            class="h-full w-full object-cover"
+          />
+        </div>
+
+        <div class="relative">
+          <BrandIntro class="brand-intro" id="about" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { runHeroIntro } from "../scripts/anim/heroIntro";
+  import { runHeroSlideshow } from "../scripts/anim/heroSlideshow";
+
+  runHeroSlideshow();
+  runHeroIntro();
+</script>

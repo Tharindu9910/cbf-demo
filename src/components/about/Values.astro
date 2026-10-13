@@ -1,0 +1,51 @@
+---
+import { ICONS, type IconName } from "./icons";
+import { ABOUT } from "../../config/about";
+import { heading } from "../../styles/section";
+
+/**
+ * "Our Values": six cards, three across from `lg`, two on tablets, one on
+ * phones. Each has its icon in a pale green disc on the left, with the name
+ * and a one-line belief beside it.
+ */
+const { eyebrow, title, items } = ABOUT.values;
+---
+
+<section aria-labelledby="values-heading" class="bg-gotukola-band py-20 lg:py-24">
+  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+    <div data-reveal class="text-center font-inter">
+      <p class="text-[12px] leading-4 font-bold tracking-[2.6px] uppercase text-brand-fern">{eyebrow}</p>
+      <h2
+        id="values-heading"
+        class:list={[heading, "mt-3 text-balance text-ink-heading lg:text-[44px]"]}
+      >
+        {title}
+      </h2>
+    </div>
+
+    <ul class="mt-10 grid gap-5 font-inter sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
+      {
+        items.map((item) => {
+          const Icon = ICONS[item.icon as IconName];
+          return (
+            <li
+              data-reveal
+              class="flex items-center gap-6 rounded-[20px] bg-white/85 px-7 py-8 shadow-[0_10px_30px_-20px_rgb(30_50_20/0.35)] lg:px-8"
+            >
+              <span
+                class="grid size-[76px] shrink-0 place-items-center rounded-full bg-gk-card-muted text-brand-pine"
+                aria-hidden="true"
+              >
+                <Icon class="size-9" stroke-width={1.75} />
+              </span>
+              <div>
+                <h3 class="text-[17px] leading-6 font-semibold text-ink-heading">{item.title}</h3>
+                <p class="mt-2 max-w-[21ch] text-[14px] leading-[1.6] text-ink-body">{item.body}</p>
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,116 @@
+---
+import { Image } from "astro:assets";
+
+import CanScene from "./CanScene.astro";
+import type { Product } from "./range";
+
+/**
+ * The product's pictures: one large frame you can swipe through, with a row
+ * of thumbnails under it. The frame is a scroll-snap track, so it works with
+ * touch, trackpad and keyboard before any script runs;
+ * `scripts/products/productPage.ts` lets the thumbnails drive it and marks
+ * the one in view.
+ *
+ * The first picture is the product's still life (`CanScene`: the can in
+ * front of its fruit), standing in for the gallery's lead shot; the rest of
+ * the gallery follows. Cut-outs sit on the halo; photos fill the frame.
+ */
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const { data } = product;
+const rest = data.gallery.slice(1);
+const count = rest.length + 1;
+const multiple = count > 1;
+const leadAlt = data.can
+  ? `A can of ${data.brand} ${data.name}, ${data.size}`
+  : data.gallery[0].alt;
+
+const FOCUS = { center: "object-center", right: "object-[72%_50%]" } as const;
+const frame = "relative overflow-hidden bg-white";
+---
+
+<div data-gallery class="min-w-0">
+  <div class="relative aspect-square overflow-hidden rounded-[28px] bg-white shadow-card ring-1 ring-brand-leaf/6 sm:aspect-[5/4]">
+    <ul
+      data-gallery-track
+      tabindex={multiple ? 0 : undefined}
+      aria-label={multiple ? `${data.name} pictures` : undefined}
+      class="absolute inset-0 flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain scrollbar-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-brand-moss"
+    >
+      <li
+        class:list={[frame, "h-full w-full shrink-0 snap-center snap-always"]}
+        aria-label={multiple ? `1 of ${count}` : undefined}
+        role={multiple ? "group" : undefined}
+      >
+        <CanScene product={product} size="hero" eager alt={leadAlt} />
+      </li>
+      {rest.map((img, i) => (
+        <li
+          class:list={[frame, "h-full w-full shrink-0 snap-center snap-always"]}
+          aria-label={`${i + 2} of ${count}`}
+          role="group"
+        >
+          <Image
+            src={img.src}
+            alt={img.alt}
+            widths={[480, 720, 960, 1200]}
+            sizes="(min-width: 1024px) 560px, (min-width: 768px) 90vw, 100vw"
+            quality={82}
+            loading="lazy"
+            class:list={[
+              "absolute inset-0 size-full select-none",
+              img.fit === "contain"
+                ? "object-contain p-8"
+                : ["object-cover", FOCUS[img.focus]],
+            ]}
+          />
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  {multiple && (
+    <div
+      class="mt-4 grid grid-cols-3 gap-3 sm:gap-4"
+      role="group"
+      aria-label="Choose a picture"
+    >
+      <button
+        type="button"
+        data-gallery-thumb="0"
+        aria-current="true"
+        aria-label={`Show picture 1: ${leadAlt}`}
+        class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-white opacity-70 ring-1 ring-brand-leaf/8 transition-[opacity,box-shadow] duration-300 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss aria-[current=true]:opacity-100 aria-[current=true]:ring-2 aria-[current=true]:ring-brand-moss"
+      >
+        <CanScene product={product} size="thumb" />
+      </button>
+      {rest.map((img, i) => (
+        <button
+          type="button"
+          data-gallery-thumb={i + 1}
+          aria-current="false"
+          aria-label={`Show picture ${i + 2}: ${img.alt}`}
+          class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-white opacity-70 ring-1 ring-brand-leaf/8 transition-[opacity,box-shadow] duration-300 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss aria-[current=true]:opacity-100 aria-[current=true]:ring-2 aria-[current=true]:ring-brand-moss"
+        >
+          <Image
+            src={img.src}
+            alt=""
+            widths={[240, 360]}
+            sizes="(min-width: 1024px) 180px, 30vw"
+            quality={70}
+            loading="lazy"
+            class:list={[
+              "absolute inset-0 size-full",
+              img.fit === "contain"
+                ? "object-contain p-2"
+                : ["object-cover", FOCUS[img.focus]],
+            ]}
+          />
+        </button>
+      ))}
+    </div>
+  )}
+</div>

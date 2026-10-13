@@ -1,0 +1,169 @@
+---
+import ChevronLeft from "@lucide/astro/icons/chevron-left";
+import ChevronRight from "@lucide/astro/icons/chevron-right";
+
+import { inquiryHref } from "../../config/site";
+import { getReviews, STAR_PATH } from "./reviews";
+
+/**
+ * What customers say about this product: the average and how the stars
+ * split on the left, the quotes as a swipeable row of cards on the right,
+ * and a way to send one in. Built by `getReviews`, so in a build the section
+ * is absent until real reviews exist. Reviews never go into the JSON-LD.
+ *
+ * The row is a scroll-snap track; the arrows (`scripts/products/productPage.ts`)
+ * page it and hide while everything fits.
+ */
+interface Props {
+  productId: string;
+}
+
+const { productId } = Astro.props;
+const { reviews, average, breakdown } = await getReviews(productId);
+
+const arrow =
+  "grid size-9 place-items-center rounded-full text-ink-heading ring-1 ring-brand-leaf/14 transition-colors hover:bg-brand-leaf hover:text-white disabled:pointer-events-none disabled:opacity-35 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss";
+---
+
+{reviews.length > 0 && (
+  <section
+    aria-labelledby="reviews-heading"
+    class="scroll-mt-24 bg-brand-ivory pb-16 font-inter lg:pb-20"
+  >
+    <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+      <div data-reveal class="flex items-end justify-between gap-6">
+        <h2
+          id="reviews-heading"
+          class="font-display text-[clamp(28px,3.6vw,36px)] leading-[1.1] font-bold tracking-[-0.4px] text-ink-heading"
+        >
+          Customer Reviews
+        </h2>
+        <div data-review-arrows hidden class="flex gap-2">
+          <button
+            type="button"
+            data-review-step="-1"
+            aria-label="Previous reviews"
+            class={arrow}
+          >
+            <ChevronLeft class="size-4" stroke-width={2} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            data-review-step="1"
+            aria-label="Next reviews"
+            class={arrow}
+          >
+            <ChevronRight class="size-4" stroke-width={2} aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-8 grid gap-10 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,2fr)] lg:gap-12">
+        <div data-reveal>
+          <div class="flex items-center gap-3">
+            <span class="font-display text-[44px] leading-none font-bold text-ink-heading lining-nums">
+              {average.toFixed(1)}
+            </span>
+            <div>
+              <div
+                class="flex gap-0.5"
+                role="img"
+                aria-label={`${average.toFixed(1)} out of 5 stars`}
+              >
+                {Array.from({ length: 5 }, (_, i) => (
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    class:list={[
+                      "size-4",
+                      i < Math.round(average)
+                        ? "fill-brand-gold"
+                        : "fill-brand-leaf/12",
+                    ]}
+                  >
+                    <path d={STAR_PATH} />
+                  </svg>
+                ))}
+              </div>
+              <p class="mt-1 text-[13px] text-ink-body/70">
+                {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+              </p>
+            </div>
+          </div>
+          <ul class="mt-6 flex flex-col gap-2" aria-label="Ratings breakdown">
+            {breakdown.map((row) => (
+              <li class="flex items-center gap-3 text-[13px] text-ink-body tabular-nums">
+                <span class="w-8 shrink-0">
+                  {row.stars}
+                  <span aria-hidden="true" class="text-brand-moss">
+                    {" "}
+                    &#9733;
+                  </span>
+                  <span class="sr-only"> stars</span>
+                </span>
+                <progress
+                  max="1"
+                  value={row.share}
+                  class="h-1.5 flex-1 appearance-none overflow-hidden rounded-full bg-brand-leaf/8 [&::-moz-progress-bar]:bg-brand-moss [&::-webkit-progress-bar]:bg-brand-leaf/8 [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-brand-moss"
+                >
+                  {Math.round(row.share * 100)}%
+                </progress>
+                <span class="w-5 shrink-0 text-right">{row.count}</span>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={inquiryHref({ intent: "feedback", product: productId, topic: "review" })}
+            class="mt-7 inline-flex h-11 items-center rounded-full bg-white px-6 text-[14px] font-semibold text-brand-leaf ring-1 ring-brand-leaf/40 transition-colors hover:bg-brand-leaf hover:text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
+          >
+            Write a review
+          </a>
+        </div>
+
+        <ul
+          data-review-track
+          class="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto overscroll-x-contain px-5 pb-2 scrollbar-none md:mx-0 md:scroll-px-0 md:px-0 lg:gap-5"
+        >
+          {reviews.map((review) => (
+            <li
+              data-reveal
+              class="flex-[0_0_min(82%,340px)] snap-start md:flex-[0_0_calc(50%-10px)]"
+            >
+              <figure class="flex h-full flex-col rounded-[22px] bg-white p-6 shadow-card ring-1 ring-brand-leaf/6 lg:p-7">
+                <div
+                  class="flex gap-0.5"
+                  role="img"
+                  aria-label={`${review.rating} out of 5 stars`}
+                >
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <svg
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      class:list={[
+                        "size-4",
+                        i < review.rating
+                          ? "fill-brand-gold"
+                          : "fill-brand-leaf/12",
+                      ]}
+                    >
+                      <path d={STAR_PATH} />
+                    </svg>
+                  ))}
+                </div>
+                <blockquote class="mt-4 flex-1 font-display text-[18px] leading-[1.5] text-pretty text-ink-heading">
+                  <p>&ldquo;{review.quote}&rdquo;</p>
+                </blockquote>
+                <figcaption class="mt-5 text-[13px] text-ink-body/75">
+                  <span class="font-semibold text-ink-heading">
+                    {review.name}
+                  </span>{" "}
+                  &middot; {review.city}
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+)}

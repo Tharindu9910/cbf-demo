@@ -1,0 +1,63 @@
+---
+import { Image } from "astro:assets";
+
+import SectionHeading from "./SectionHeading.astro";
+import { ABOUT } from "../../config/about";
+
+/**
+ * "Our People": the founder's note, with an optional portrait and team photo.
+ * Renders nothing until the founder's name, title and quote are all filled
+ * in, so a placeholder quote can never ship.
+ */
+const { eyebrow, title, founder, teamPhoto } = ABOUT.people;
+const ready = Boolean(founder.name && founder.title && founder.quote);
+---
+
+{
+  ready && (
+    <section aria-labelledby="people-heading" class="bg-brand-ivory py-20 lg:py-28">
+      <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+        <SectionHeading id="people-heading" eyebrow={eyebrow} title={title} data-reveal />
+
+        <figure
+          class:list={[
+            "mt-12 grid items-center gap-10 font-inter",
+            founder.photo && "md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-14",
+          ]}
+        >
+          {founder.photo && (
+            <Image
+              src={founder.photo.src}
+              alt={founder.photo.alt}
+              widths={[400, 640, 800]}
+              sizes="(min-width: 768px) 400px, 100vw"
+              quality={80}
+              loading="lazy"
+              class="aspect-[4/5] w-full max-w-[420px] rounded-[28px] object-cover"
+            />
+          )}
+          <div>
+            <blockquote class="font-display text-[clamp(22px,3vw,30px)] leading-[1.35] font-semibold text-ink-heading italic">
+              &ldquo;{founder.quote}&rdquo;
+            </blockquote>
+            <figcaption class="mt-6 text-[15px] text-ink-body">
+              <strong class="text-ink-heading">{founder.name}</strong>, {founder.title}
+            </figcaption>
+          </div>
+        </figure>
+
+        {teamPhoto && (
+          <Image
+            src={teamPhoto.src}
+            alt={teamPhoto.alt}
+            widths={[768, 1200, 1800]}
+            sizes="(min-width: 1280px) 1120px, 100vw"
+            quality={78}
+            loading="lazy"
+            data-reveal class="mt-14 aspect-[21/9] w-full rounded-[28px] object-cover"
+          />
+        )}
+      </div>
+    </section>
+  )
+}

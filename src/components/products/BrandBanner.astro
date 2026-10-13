@@ -1,0 +1,28 @@
+---
+import type { BRANDS } from "../../config/products";
+
+/**
+ * A collection's label on the Products listing: the brand's name and one
+ * sentence, from `BRANDS` in `config/products.ts`. Deliberately quieter than
+ * the page heading above it (no eyebrow, no badges: the promises panel in the
+ * grid already lists them). The heading's id is `<brand id>-heading`, for the
+ * section's aria-labelledby.
+ */
+interface Props {
+  brand: (typeof BRANDS)[number];
+}
+
+const { brand } = Astro.props;
+---
+
+<div class="max-w-md font-inter">
+  <h2
+    id={`${brand.id}-heading`}
+    class="font-display text-[26px] leading-[1.15] font-bold tracking-[-0.2px] text-ink-heading"
+  >
+    {brand.name}
+  </h2>
+  <p class="mt-1.5 text-[16px] leading-[25px] text-ink-body">
+    {brand.body}
+  </p>
+</div>

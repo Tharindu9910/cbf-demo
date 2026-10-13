@@ -1,0 +1,103 @@
+---
+import { Image } from "astro:assets";
+
+import type { Product } from "./range";
+import { tintOf } from "./tint";
+
+/**
+ * A product's still life: the can standing in front of its fruit (the
+ * `background` corner art the home carousel uses), on the flavour's halo,
+ * with a soft shadow at its foot. A pack has no single can, so its lead
+ * cut-out (`cans-trio.png`, which carries its own shadow) stands there alone.
+ *
+ * It fills the nearest positioned parent, which sets the shape. Inside a
+ * `group` (a card) the fruit spreads and the can rises on hover.
+ *
+ * `size` only picks the image widths: `thumb` for gallery thumbnails, `card`
+ * for grid cards, `hero` for the product page's main frame.
+ */
+interface Props {
+  product: Product;
+  size?: "thumb" | "card" | "hero";
+  eager?: boolean;
+  /** The can's alt text. Leave empty where the can is decorative (a thumbnail, a card that names it). */
+  alt?: string;
+}
+
+const { product, size = "card", eager = false, alt = "" } = Astro.props;
+const { id, data } = product;
+const tint = tintOf(id);
+const art = data.can ?? data.gallery[0].src;
+const solo = !data.can;
+const loading = eager ? "eager" : "lazy";
+
+const SIZES = {
+  thumb: { fruit: [160], fruitSizes: "80px", can: [96], canSizes: "40px" },
+  card: {
+    fruit: [240, 360, 480],
+    fruitSizes: "(min-width: 1024px) 240px, (min-width: 768px) 24vw, 60vw",
+    can: [140, 220, 320],
+    canSizes: "(min-width: 1024px) 120px, (min-width: 768px) 12vw, 30vw",
+  },
+  hero: {
+    fruit: [360, 560, 800],
+    fruitSizes: "(min-width: 1024px) 360px, 60vw",
+    can: [240, 360, 520],
+    canSizes: "(min-width: 1024px) 220px, 40vw",
+  },
+} as const;
+const s = SIZES[size];
+---
+
+<div
+  aria-hidden="true"
+  class:list={[
+    "absolute inset-0 scale-90 opacity-80 transition-[opacity,scale] duration-700 ease-rise group-hover:scale-105 group-hover:opacity-100 motion-reduce:transition-none",
+    tint.halo,
+  ]}
+></div>
+
+{!solo && data.background && (
+  <>
+    <Image
+      src={data.background.left}
+      alt=""
+      widths={[...s.fruit]}
+      sizes={s.fruitSizes}
+      quality={80}
+      loading={loading}
+      class="absolute bottom-0 left-0 h-[88%] w-auto origin-bottom-left transition-[translate,scale] duration-700 ease-rise select-none group-hover:-translate-x-1 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:scale-100"
+    />
+    <Image
+      src={data.background.right}
+      alt=""
+      widths={[...s.fruit]}
+      sizes={s.fruitSizes}
+      quality={80}
+      loading={loading}
+      class="absolute right-0 bottom-0 h-[88%] w-auto origin-bottom-right transition-[translate,scale] duration-700 ease-rise select-none group-hover:translate-x-1 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:scale-100"
+    />
+  </>
+)}
+
+{!solo && (
+  <div
+    aria-hidden="true"
+    class="absolute inset-x-0 bottom-[7%] z-10 mx-auto h-[5%] w-[22%] rounded-[50%] bg-brand-leaf/25 blur-md transition-[scale,opacity] duration-700 ease-rise group-hover:scale-90 group-hover:opacity-70 motion-reduce:transition-none"
+  ></div>
+)}
+<Image
+  src={art}
+  alt={alt}
+  widths={solo ? [...s.fruit] : [...s.can]}
+  sizes={solo ? s.fruitSizes : s.canSizes}
+  quality={85}
+  loading={loading}
+  fetchpriority={eager && size === "hero" ? "high" : undefined}
+  class:list={[
+    "absolute inset-x-0 z-10 mx-auto w-auto drop-shadow-[0_12px_14px_rgb(13_43_18/0.22)] transition-[translate,scale] duration-700 ease-rise select-none group-hover:-translate-y-2 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:scale-100",
+    solo
+      ? "bottom-[8%] h-[76%] max-w-[86%] object-contain"
+      : "bottom-[9%] h-[68%]",
+  ]}
+/>

@@ -1,0 +1,11 @@
+{
+  "order": 1,
+  "name": "Nadeesha F.",
+  "city": "Colombo",
+  "rating": 5,
+  "quote": "Finally a soda I don't feel guilty about. Light, clean and it actually keeps me sharp through the afternoon.",
+  "flavour": "matcha-original",
+  "featured": true,
+  "image": "../../assets/images/order/beach-six-pack.jpg",
+  "placeholder": true
+}

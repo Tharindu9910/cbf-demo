@@ -1,0 +1,45 @@
+---
+import Base from "../../layouts/Base.astro";
+import AboutHero from "../../components/about/AboutHero.astro";
+import AboutStory from "../../components/about/AboutStory.astro";
+import BrandsCta from "../../components/about/BrandsCta.astro";
+import HowWeWork from "../../components/about/HowWeWork.astro";
+import OurPeople from "../../components/about/OurPeople.astro";
+import Quality from "../../components/about/Quality.astro";
+import Values from "../../components/about/Values.astro";
+import VideoFeature from "../../components/about/VideoFeature.astro";
+import VisionMission from "../../components/about/VisionMission.astro";
+import { ABOUT } from "../../config/about";
+
+/**
+ * About Us: who the company is, what it believes and how it works. Product
+ * detail stays on the home page. Copy and data live in `config/about.ts`.
+ * No 3D here, so the WebGL stage and three.js are skipped.
+ */
+const { seo } = ABOUT;
+---
+
+<Base
+  title={seo.title}
+  description={seo.description}
+  image={seo.image}
+  imageAlt={seo.imageAlt}
+  pageType="AboutPage"
+  products={false}
+  stage={false}
+>
+  <AboutHero />
+  <AboutStory />
+  <VisionMission />
+  <VideoFeature />
+  <Values />
+  <HowWeWork />
+  <Quality />
+  <OurPeople />
+  <BrandsCta />
+</Base>
+
+<script>
+  import { revealOnScroll } from "../../scripts/anim/aboutReveal";
+  revealOnScroll();
+</script>

@@ -1,0 +1,49 @@
+---
+import { Image } from "astro:assets";
+import Candy from "@lucide/astro/icons/candy";
+import FlaskConical from "@lucide/astro/icons/flask-conical";
+import MapPin from "@lucide/astro/icons/map-pin";
+import Palette from "@lucide/astro/icons/palette";
+import Sprout from "@lucide/astro/icons/sprout";
+
+import leavesRight from "../../assets/images/footer/leaves-right.png";
+import { BENEFITS } from "../../config/products";
+
+/**
+ * The range's promises beside the Mixed Pack on the Products listing. Only
+ * claims marked `confirmed` in `config/products.ts` are shown, the same four
+ * the product pages list.
+ */
+const ICONS = {
+  sprout: Sprout,
+  flask: FlaskConical,
+  palette: Palette,
+  candy: Candy,
+  "map-pin": MapPin,
+} as const;
+const promises = BENEFITS.filter((b) => b.confirmed).slice(0, 4);
+---
+
+<div class="relative isolate flex h-full overflow-hidden rounded-[24px] bg-brand-sage p-7 font-inter ring-1 ring-brand-leaf/6 lg:p-9">
+  <Image
+    src={leavesRight}
+    alt=""
+    widths={[240, 360]}
+    sizes="200px"
+    loading="lazy"
+    class="pointer-events-none absolute -right-8 -bottom-10 -z-10 h-[55%] w-auto opacity-60 select-none"
+  />
+  <ul class="flex flex-col justify-center gap-6" aria-label="In every can">
+    {promises.map(({ icon, title }) => {
+      const Icon = ICONS[icon];
+      return (
+        <li class="flex items-center gap-4 text-[15px] leading-5 font-medium text-ink-heading">
+          <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white/70 text-brand-moss ring-1 ring-brand-leaf/8">
+            <Icon class="size-5" stroke-width={1.75} aria-hidden="true" />
+          </span>
+          {title}
+        </li>
+      );
+    })}
+  </ul>
+</div>

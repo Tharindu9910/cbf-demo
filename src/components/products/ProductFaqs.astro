@@ -1,0 +1,61 @@
+---
+import ChevronDown from "@lucide/astro/icons/chevron-down";
+
+import ArrowRightIcon from "../icons/ArrowRightIcon.astro";
+import { FAQS } from "../../config/products";
+import { FAQ_HREF } from "../../config/site";
+
+/**
+ * Quick answers on every product page, one card per question. A question
+ * without an answer yet is left out, and the section with it if none have
+ * one. "More FAQs" appears once the FAQs page exists (`FAQ_HREF`).
+ */
+const faqs = FAQS.filter((f) => f.a.trim());
+---
+
+{faqs.length > 0 && (
+  <section
+    aria-labelledby="faqs-heading"
+    class="bg-brand-ivory pb-16 font-inter lg:pb-20"
+  >
+    <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+      <div data-reveal class="flex items-end justify-between gap-6">
+        <h2
+          id="faqs-heading"
+          class="font-display text-[clamp(28px,3.6vw,36px)] leading-[1.1] font-bold tracking-[-0.4px] text-ink-heading"
+        >
+          Frequently Asked Questions
+        </h2>
+        {FAQ_HREF && (
+          <a
+            href={FAQ_HREF}
+            class="group inline-flex shrink-0 items-center gap-2 rounded-sm text-[14px] font-semibold text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss"
+          >
+            More FAQs
+            <ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+          </a>
+        )}
+      </div>
+      <div data-reveal class="mt-7 flex flex-col gap-3">
+        {faqs.map((faq) => (
+          <details
+            name="product-faqs"
+            class="group rounded-[18px] bg-white ring-1 ring-brand-leaf/8 transition-shadow open:shadow-[0_18px_40px_-30px_rgb(30_50_20/0.45)]"
+          >
+            <summary class="flex min-h-[60px] cursor-pointer list-none items-center justify-between gap-6 rounded-[18px] px-5 py-4 text-[15px] leading-6 font-semibold text-ink-heading marker:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss md:px-6 [&::-webkit-details-marker]:hidden">
+              {faq.q}
+              <ChevronDown
+                class="size-5 shrink-0 text-brand-moss transition-transform duration-300 ease-rise group-open:rotate-180 motion-reduce:transition-none"
+                stroke-width={1.8}
+                aria-hidden="true"
+              />
+            </summary>
+            <p class="max-w-3xl px-5 pb-5 text-[14px] leading-[1.7] text-ink-body md:px-6">
+              {faq.a}
+            </p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

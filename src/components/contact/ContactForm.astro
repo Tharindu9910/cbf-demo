@@ -1,0 +1,204 @@
+---
+import { getCollection } from "astro:content";
+import ChevronDown from "@lucide/astro/icons/chevron-down";
+import Minus from "@lucide/astro/icons/minus";
+import Plus from "@lucide/astro/icons/plus";
+import CircleCheck from "@lucide/astro/icons/circle-check";
+
+import SectionHeading from "../about/SectionHeading.astro";
+import ContactDetails from "./ContactDetails.astro";
+import { tintOf } from "../products/tint";
+import { CONTACT, FORM_TEMPLATES, INQUIRY_TYPES } from "../../config/contact";
+import { url } from "../../config/url";
+
+/**
+ * The enquiry form, with the contact details beside it from `lg` up.
+ *
+ * It posts to `/contact.php` (public/), which mails the team, so it works
+ * without script: the handler redirects to `/contact/thanks/`. With script,
+ * `scripts/contact/form.ts` pre-fills it from the query string
+ * (`?intent=bulk&product=…`, see `inquiryHref`) and starts the subject
+ * and message from `FORM_TEMPLATES`, shows only the
+ * fieldset for the selected inquiry type, and sends it with `fetch` so the
+ * thank-you appears in place.
+ *
+ * Without script both optional fieldsets stay visible, labelled for whom
+ * they are. Their fields are optional, so nothing blocks a general message.
+ */
+const { title, replyTime, submit, success, error, privacy } = CONTACT.form;
+
+const range = (await getCollection("flavours")).sort((a, b) => a.data.order - b.data.order);
+
+/** The flavours a bulk order counts cans of; the Mixed Pack is ordered from its own page. */
+const flavours = range.filter((entry) => entry.data.kind === "flavour");
+/** Every product's name by id, for the templates' `{product}` and a Mixed Pack's mix. */
+const names = Object.fromEntries(range.map((entry) => [entry.id, entry.data.name]));
+const stepper =
+  "grid size-8 shrink-0 place-items-center rounded-full text-ink-heading ring-1 ring-brand-leaf/14 transition-colors hover:bg-brand-moss hover:text-white hover:ring-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss disabled:pointer-events-none disabled:opacity-35";
+
+const label = "block text-[14px] leading-5 font-semibold text-ink-heading";
+const field =
+  "block h-12 w-full rounded-[14px] border border-brand-leaf/15 bg-white px-4 text-[16px] text-ink-heading transition-colors placeholder:text-ink-body/45 hover:border-brand-leaf/30 focus:border-brand-moss focus:outline-2 focus:outline-offset-0 focus:outline-brand-moss/30 user-invalid:border-form-error";
+const select = `${field} appearance-none pr-11`;
+const chevron = "pointer-events-none absolute top-1/2 right-4 size-[18px] -translate-y-1/2 text-brand-moss";
+const optional = "font-normal text-ink-body/60";
+const group = "grid gap-5 rounded-[20px] bg-brand-cream p-5 sm:grid-cols-2 md:p-6";
+const legend = "float-left mb-1 w-full text-[12px] leading-4 font-bold tracking-[2.2px] text-brand-fern uppercase sm:col-span-2";
+---
+
+<section id="form" aria-labelledby="form-heading" class="scroll-mt-24 bg-brand-ivory py-20 lg:py-28">
+  <div class="mx-auto grid max-w-[1200px] gap-12 px-5 md:px-10 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-16">
+    <div data-reveal class="rounded-[32px] bg-white p-6 font-inter ring-1 ring-brand-leaf/6 sm:p-10">
+      <SectionHeading id="form-heading" title={title} />
+      {replyTime && <p class="mt-3 text-[16px] leading-[1.6] text-ink-body">We usually reply within {replyTime}.</p>}
+
+      <form
+        action={url("/contact.php")}
+        method="post"
+        class="mt-8 grid gap-5 sm:grid-cols-2"
+        data-contact-form
+        data-templates={JSON.stringify(FORM_TEMPLATES)}
+        data-names={JSON.stringify(names)}
+      >
+        <div>
+          <label for="cf-name" class={label}>Full name</label>
+          <input id="cf-name" name="name" type="text" required maxlength="100" autocomplete="name" class:list={[field, "mt-2"]} />
+        </div>
+        <div>
+          <label for="cf-email" class={label}>Email</label>
+          <input id="cf-email" name="email" type="email" required maxlength="200" autocomplete="email" class:list={[field, "mt-2"]} />
+        </div>
+        <div>
+          <label for="cf-phone" class={label}>Phone <span class={optional}>(optional)</span></label>
+          <input id="cf-phone" name="phone" type="tel" maxlength="40" autocomplete="tel" class:list={[field, "mt-2"]} />
+        </div>
+        <div>
+          <label for="cf-intent" class={label}>Inquiry type</label>
+          <div class="relative mt-2">
+<select id="cf-intent" name="intent" required class={select} data-intent-select>
+            {INQUIRY_TYPES.map((type) =>
+              "linkOnly" in type ? (
+                <option value={type.value} hidden disabled data-link-only>{type.label}</option>
+              ) : (
+                <option value={type.value}>{type.label}</option>
+              ),
+            )}
+          </select>
+<ChevronDown class={chevron} stroke-width={2} aria-hidden="true" />
+</div>
+        </div>
+
+        <fieldset class:list={[group, "sm:col-span-2"]} data-group="bulk">
+          <legend class={legend}>For bulk orders</legend>
+          <div class="sm:col-span-2">
+            <p class={label}>Cans per flavour <span class={optional}>(optional)</span></p>
+            <ul class="mt-2 divide-y divide-brand-leaf/8 rounded-[14px] bg-white px-4 ring-1 ring-brand-leaf/15">
+              {flavours.map((f) => (
+                <li data-can-row class="flex items-center gap-3 py-2.5">
+                  <span aria-hidden="true" class:list={["size-2 shrink-0 rounded-full", tintOf(f.id).dot]} />
+                  <label for={`cf-cans-${f.id}`} class="text-[15px] text-ink-heading">{f.data.name}</label>
+                  <div class="ml-auto flex items-center gap-2">
+                    <button type="button" data-can-step="-1" aria-label={`One fewer can of ${f.data.name}`} class={stepper}>
+                      <Minus class="size-3.5" stroke-width={2} aria-hidden="true" />
+                    </button>
+                    <input
+                      id={`cf-cans-${f.id}`}
+                      name={`cans[${f.id}]`}
+                      type="number"
+                      inputmode="numeric"
+                      min="0"
+                      max="99999"
+                      step="1"
+                      value="0"
+                      class="h-9 w-16 rounded-full bg-white text-center text-[15px] font-semibold text-ink-heading tabular-nums ring-1 ring-brand-leaf/14 [appearance:textfield] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                    />
+                    <button type="button" data-can-step="1" aria-label={`One more can of ${f.data.name}`} class={stepper}>
+                      <Plus class="size-3.5" stroke-width={2} aria-hidden="true" />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <p data-can-total role="status" class="mt-2 text-[13px] leading-5 font-semibold text-ink-heading tabular-nums"></p>
+            <p data-can-small hidden class="mt-1 text-[13px] leading-5 text-ink-body/75">
+              6 cans or fewer? <a href={url("/products/mixed-pack/")} class="font-semibold text-brand-moss underline decoration-brand-moss/40 underline-offset-4 hover:decoration-brand-moss">Order a Mixed Pack</a> instead.
+            </p>
+          </div>
+        </fieldset>
+
+        <fieldset class:list={[group, "sm:col-span-2"]} data-group="mixed">
+          <legend class={legend}>Your Mixed Pack</legend>
+          <div class="sm:col-span-2">
+            <label for="cf-order" class="sr-only">Your order</label>
+            <textarea
+              id="cf-order"
+              name="order"
+              readonly
+              rows="5"
+              class:list={[field, "h-auto cursor-default resize-none bg-white/60 py-3 leading-[1.6] focus:border-brand-leaf/15 focus:outline-hidden"]}></textarea>
+            <input type="hidden" name="quantity" data-order-quantity />
+            <p class="mt-2 text-[13px] leading-5 text-ink-body/75">
+              To change your mix, go back to the <a href={url("/products/mixed-pack/")} class="font-semibold text-brand-moss underline decoration-brand-moss/40 underline-offset-4 hover:decoration-brand-moss">Mixed Pack</a>.
+            </p>
+          </div>
+        </fieldset>
+
+        <fieldset class:list={[group, "sm:col-span-2"]} data-group="distribution">
+          <legend class={legend}>For distributors &amp; export</legend>
+          <div>
+            <label for="cf-company" class={label}>Company name <span class={optional}>(optional)</span></label>
+            <input id="cf-company" name="company" type="text" maxlength="150" autocomplete="organization" class:list={[field, "mt-2"]} />
+          </div>
+          <div>
+            <label for="cf-country" class={label}>Country / region <span class={optional}>(optional)</span></label>
+            <input id="cf-country" name="country" type="text" maxlength="100" autocomplete="country-name" class:list={[field, "mt-2"]} />
+          </div>
+        </fieldset>
+
+        <div class="sm:col-span-2">
+          <label for="cf-subject" class={label}>Subject</label>
+          <input id="cf-subject" name="subject" type="text" required maxlength="150" class:list={[field, "mt-2 read-only:cursor-default read-only:bg-brand-cream read-only:text-ink-body"]} />
+        </div>
+
+        <div class="sm:col-span-2">
+          <label for="cf-message" class={label}>Message</label>
+          <textarea
+            id="cf-message"
+            name="message"
+            required
+            rows="6"
+            maxlength="5000"
+            class:list={[field, "mt-2 h-auto resize-y py-3 leading-[1.6]"]}></textarea>
+        </div>
+
+        {/* Spam trap: hidden from people and assistive tech, so only bots fill it. */}
+        <div aria-hidden="true" class="absolute -left-[9999px] size-px overflow-hidden">
+          <label for="cf-website">Leave this empty</label>
+          <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <input type="hidden" name="t" value="" data-form-time />
+
+        <div class="flex flex-col gap-4 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-[13px] leading-5 text-ink-body/75">{privacy}</p>
+          <button
+            type="submit"
+            class="inline-flex h-[52px] shrink-0 items-center justify-center rounded-full bg-brand-moss px-8 text-[15px] font-semibold text-white shadow-pill transition-colors hover:bg-brand-moss-dark focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss disabled:cursor-wait disabled:opacity-70 motion-reduce:transition-none"
+            data-submit
+          >
+            {submit}
+          </button>
+        </div>
+        <p role="alert" class="text-[14px] leading-5 font-semibold text-form-error sm:col-span-2" data-form-error hidden>
+          {error}
+        </p>
+      </form>
+
+      <div role="status" tabindex="-1" class="mt-8 rounded-[20px] bg-brand-cream p-8 text-center outline-hidden" data-form-success hidden>
+        <CircleCheck class="mx-auto size-10 text-brand-moss" stroke-width={1.6} aria-hidden="true" />
+        <p class="mt-4 text-[18px] leading-7 font-semibold text-ink-heading">{success}</p>
+      </div>
+    </div>
+
+    <ContactDetails />
+  </div>
+</section>

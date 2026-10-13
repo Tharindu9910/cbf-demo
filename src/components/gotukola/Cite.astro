@@ -1,0 +1,31 @@
+---
+import { GOTUKOLA, sourceNumber } from "../../config/gotukola";
+
+/**
+ * Bracketed source numbers after a claim, each linking to its entry in the
+ * page's Sources list (`#source-<n>`).
+ */
+interface Props {
+  ids: string[];
+  class?: string;
+}
+
+const { ids, class: className } = Astro.props;
+---
+
+<sup class:list={["ml-0.5 font-inter whitespace-nowrap text-[0.7em] font-semibold", className]}>
+  [{
+    ids.map((id, i) => (
+      <>
+        {i > 0 && ", "}
+        <a
+          href={`#source-${sourceNumber(id)}`}
+          title={GOTUKOLA.sources[id]?.label}
+          class="underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+        >
+          {sourceNumber(id)}
+        </a>
+      </>
+    ))
+  }]
+</sup>

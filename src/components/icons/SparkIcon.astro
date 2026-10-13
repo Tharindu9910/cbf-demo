@@ -1,0 +1,15 @@
+---
+// Three hand-drawn accent strokes fanning up and right from the bottom-left
+// corner (mirror with `-scale-x-100`), in `currentColor`.
+// Decorative: always aria-hidden.
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true" class={className}>
+  <path d="M7.5 12.5 5.8 6.5" />
+  <path d="M11.5 15.5l5.3-3.2" />
+  <path d="M12.5 20.2h5.6" />
+</svg>

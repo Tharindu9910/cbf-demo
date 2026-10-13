@@ -1,0 +1,56 @@
+{
+  "order": 3,
+  "category": "tea",
+  "can": "../../assets/images/cans/matcha-original.png",
+  "name": "Matcha Original",
+  "key": "lemonLime",
+  "color": "#5C7A29",
+  "background": {
+    "left": "../../assets/images/flavours/matcha-left.png",
+    "right": "../../assets/images/flavours/matcha-right.png"
+  },
+  "description": "Thynkers Lyquid Matcha Original is a Gotukola-infused drink with smooth matcha green tea flavour, crafted in Sri Lanka to support clear thinking and mindful energy.",
+  "facts": {
+    "extract": "Gotukola Extract",
+    "volume": "250ml",
+    "shelfLife": "12 Months"
+  },
+  "tagline": "Calm in Taste. Crafted with Purpose.",
+  "tags": [
+    "Calm",
+    "Clean",
+    "Focused"
+  ],
+  "summary": "Our signature gotu kola infusion with smooth matcha, made for the moments that ask for focus.",
+  "story": [
+    "Our signature gotu kola infusion, crafted for moments that demand focus, with a clean and refreshing finish."
+  ],
+  "finish": "Powered by gotu kola. Flavored with matcha.",
+  "ingredients": "Carbonated water, Sugar, Gotu Kola Extract, Citric Acid (INS 330), Matcha Natural Flavour, L-Theanine, Vitamin B12.",
+  "gallery": [
+    {
+      "src": "../../assets/images/products/matcha-original.jpg",
+      "alt": "A can of Thynkers Lyquid Matcha Original, 250 ml"
+    },
+    {
+      "src": "../../assets/images/gotu-kola/gotu-kola-can.jpg",
+      "alt": "A Thynkers Lyquid can among fresh gotu kola leaves and a bowl of gotu kola powder",
+      "fit": "cover"
+    },
+    {
+      "src": "../../assets/images/order/beach-six-pack.jpg",
+      "alt": "The six-can Thynkers Lyquid box beside all three flavours on a Sri Lankan beach",
+      "fit": "cover",
+      "focus": "right"
+    }
+  ],
+  "size": "250 ml",
+  "packs": [
+    {
+      "id": "single",
+      "label": "Single Can",
+      "detail": "250 ml",
+      "orderable": false
+    }
+  ]
+}

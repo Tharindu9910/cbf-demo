@@ -1,0 +1,64 @@
+---
+import Factory from "@lucide/astro/icons/factory";
+import Leaf from "@lucide/astro/icons/leaf";
+import ShieldCheck from "@lucide/astro/icons/shield-check";
+
+import ArrowRightIcon from "../icons/ArrowRightIcon.astro";
+import SectionHeading from "../about/SectionHeading.astro";
+import { ABOUT, OWN_FACILITY } from "../../config/about";
+import { CONTACT } from "../../config/contact";
+import { inquiryHref } from "../../config/site";
+
+/**
+ * "Partner With Us", for distributors, retailers and export buyers. The
+ * points follow the About page's facts: certifications only once
+ * `ABOUT.quality.certifications` marks them held, and the supply point only
+ * while `OWN_FACILITY` is true. "Become a Partner" opens the form set to
+ * Distribution / Export.
+ */
+const { eyebrow, title, body, natural, supply, cta } = CONTACT.partner;
+const held = ABOUT.quality.certifications.filter((c) => c.held).map((c) => c.code);
+
+/** "SLS, ISO, HACCP and GMP". */
+const list = (items: string[]) =>
+  items.length > 1 ? `${items.slice(0, -1).join(", ")} and ${items.at(-1)}` : items.join("");
+
+const points = [
+  held.length > 0 && { icon: ShieldCheck, title: "Certified quality", body: `${list(held)}.` },
+  { icon: Leaf, ...natural },
+  OWN_FACILITY && { icon: Factory, ...supply },
+].filter((p) => !!p);
+---
+
+<section id="partner" aria-labelledby="partner-heading" class="scroll-mt-24 bg-brand-moss py-20 text-white lg:py-28">
+  <div class="mx-auto grid max-w-[1200px] gap-12 px-5 font-inter md:px-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center lg:gap-20">
+    <div data-reveal>
+      <SectionHeading id="partner-heading" eyebrow={eyebrow} title={title} tone="light" />
+      <p class="mt-6 max-w-xl text-[17px] leading-[1.6] text-white/85">{body}</p>
+      <a
+        href={inquiryHref({ intent: "distribution" })}
+        data-intent="distribution"
+        class="group mt-10 inline-flex h-[52px] items-center gap-3 rounded-full bg-white px-8 text-[15px] font-semibold text-brand-leaf transition-colors hover:bg-brand-cream focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
+      >
+        {cta}
+        <ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+      </a>
+    </div>
+
+    <ul data-reveal class="grid gap-4">
+      {
+        points.map(({ icon: Icon, title, body }) => (
+          <li class="flex items-start gap-4 rounded-[20px] border border-white/15 bg-white/[0.06] p-6">
+            <span class="grid size-11 shrink-0 place-items-center rounded-full bg-white/10 text-brand-green">
+              <Icon class="size-5" stroke-width={1.8} aria-hidden="true" />
+            </span>
+            <p class="pt-0.5 text-[15px] leading-[1.55] text-white/80">
+              <strong class="block text-[17px] leading-6 font-semibold text-white">{title}</strong>
+              {body}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

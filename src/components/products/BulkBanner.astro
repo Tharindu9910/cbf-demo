@@ -1,0 +1,103 @@
+---
+import { Image } from "astro:assets";
+
+import PillLink from "../ui/PillLink.astro";
+import StoreLogo from "../stores/StoreLogo.astro";
+import { LISTING, RETAILERS } from "../../config/products";
+import { inquiryHref } from "../../config/site";
+import { listingPhoto } from "./listingPhoto";
+import { eyebrow as eyebrowClass, heading } from "../../styles/section";
+
+/**
+ * The Products listing's close: the stockists' logos (once `RETAILERS` has
+ * them), then the deep-green banner for cafés, offices and shops.
+ *
+ * `products-page/bulk.jpg` (stacked cartons on deep green, subject on the
+ * right) is the banner's background, under a light fade from the left so the
+ * copy stays readable. Without it the banner draws a plain green glow.
+ */
+const { eyebrow, title, body, enquire, retailer } = LISTING.bulk;
+const photo = listingPhoto("bulk");
+---
+
+<section aria-labelledby="bulk-heading" class="bg-brand-ivory pb-20 lg:pb-28">
+  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+    {RETAILERS.length > 0 && (
+      <div
+        data-reveal
+        class="mb-6 rounded-[24px] bg-white p-8 ring-1 ring-brand-leaf/6 md:p-10"
+      >
+        <p class:list={[eyebrowClass, "text-brand-fern uppercase"]}>
+          Where to buy
+        </p>
+        <ul class="mt-6 flex flex-wrap items-center gap-x-10 gap-y-6">
+          {RETAILERS.map((r) => (
+            <li class="opacity-80 grayscale transition hover:opacity-100 hover:grayscale-0">
+              <StoreLogo retailer={r} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <div
+      data-reveal
+      class="relative isolate overflow-hidden rounded-[28px] bg-brand-leaf font-inter text-white md:min-h-[320px]"
+    >
+      {photo ? (
+        <>
+          <Image
+            src={photo}
+            alt=""
+            widths={[640, 960, 1300, 1792]}
+            sizes="(min-width: 1200px) 1120px, 100vw"
+            quality={80}
+            loading="lazy"
+            class="absolute inset-0 -z-20 h-full w-full object-cover object-[78%_center]"
+          />
+          <div
+            aria-hidden="true"
+            class="absolute inset-0 -z-10 bg-linear-to-t from-brand-leaf/90 via-brand-leaf/75 to-brand-leaf/40 md:bg-linear-to-r md:from-brand-leaf/70 md:via-brand-leaf/30 md:via-45% md:to-transparent"
+          ></div>
+        </>
+      ) : (
+        <div
+          aria-hidden="true"
+          class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_45%_80%_at_82%_70%,color-mix(in_oklab,var(--color-brand-green)_32%,transparent),transparent_70%),radial-gradient(ellipse_60%_80%_at_0%_0%,rgb(79_122_58/0.45),transparent_70%)]"
+        ></div>
+      )}
+
+      <div class="px-8 py-12 md:px-12 md:py-14 lg:px-14">
+        <p class:list={[eyebrowClass, "text-white/75 uppercase"]}>
+          {eyebrow}
+        </p>
+        <h2
+          id="bulk-heading"
+          class:list={[heading, "mt-3 max-w-[14ch] text-balance lg:text-[44px]"]}
+        >
+          {title}
+        </h2>
+        <p class="mt-4 max-w-sm text-[16px] leading-[25px] text-white/85">
+          {body}
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <PillLink
+            href={inquiryHref({ intent: "bulk" })}
+            data-inquiry="bulk"
+            arrow
+            class="h-[52px] gap-2.5 px-7 text-[15px]"
+          >
+            {enquire}
+          </PillLink>
+          <a
+            href={inquiryHref({ intent: "store" })}
+            class="inline-flex h-[52px] items-center rounded-full border border-white/60 px-7 text-[15px] font-semibold text-white transition-colors hover:bg-white hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
+          >
+            {retailer}
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

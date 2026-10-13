@@ -1,0 +1,102 @@
+---
+import { Image } from "astro:assets";
+
+import PillLink from "./ui/PillLink.astro";
+import StoreLogo from "./stores/StoreLogo.astro";
+import { RETAILERS } from "../config/products";
+import { inquiryHref } from "../config/site";
+import { body } from "../styles/section";
+
+import beachSixPack from "../assets/images/order/beach-six-pack.jpg";
+import { url } from "../config/url";
+
+/**
+ * "Order Now": the closing call to action. The six-pack and the three cans on
+ * a sunset beach, full bleed, with the eyebrow, headline, line of copy and a
+ * "Shop Now" pill on the left.
+ *
+ * The left of the photo is the sun and the surf — bright and busy — so a cream
+ * wash (the page's own ground) rises from the left edge and clears before the
+ * box. Dark ink on it reads at full contrast, and the product half of the
+ * photo is untouched.
+ *
+ * From `lg` up the copy sits on the photo and every length scales with the
+ * section (`lg:frame-1432`: `--u` is 1px at a 1432px-wide section; text has
+ * floors). Below `lg` the copy stacks above a crop of the photo framed on the
+ * products.
+ *
+ * Under the pill, once `RETAILERS` lists any, an "Available at" row of the
+ * stockists' logos links to the Contact page's "Where to Buy".
+ */
+---
+
+<section
+  id="order"
+  aria-labelledby="order-heading"
+  class="@container relative overflow-hidden bg-brand-ivory font-inter text-ink-body-deep max-lg:flex max-lg:flex-col lg:aspect-[1432/580] lg:max-h-[760px] lg:min-h-[440px] lg:frame-1432"
+>
+  {/* Below lg the sky fades up into the copy's cream, so the two read as one. */}
+  <Image
+    src={beachSixPack}
+    alt="A Ceylon Future Beverages six-can box beside Thynkers Lyquid Original, Mango & Passion and Pineapple cans on a sunset beach"
+    widths={[640, 960, 1280, 1600, 1919]}
+    sizes="100vw"
+    quality={80}
+    loading="lazy"
+    class="block w-full object-cover select-none max-lg:aspect-[16/10] max-lg:h-auto max-lg:object-[68%_center] max-lg:[mask-image:linear-gradient(180deg,transparent,#000_22%)] lg:absolute lg:inset-0 lg:h-full lg:object-[60%_55%]"
+  />
+  {
+    /*
+      The legibility wash: the page's cream, near-opaque behind the copy and
+      gone by 52% — the box's left edge sits at ~39%, and its white face takes
+      the last of the fade without looking veiled.
+    */
+  }
+  <div
+    class="max-lg:hidden lg:absolute lg:inset-0 lg:bg-[linear-gradient(90deg,rgb(248_246_236/0.94)_0%,rgb(248_246_236/0.86)_20%,rgb(248_246_236/0.55)_34%,rgb(248_246_236/0.18)_44%,rgb(248_246_236/0)_52%),linear-gradient(180deg,rgb(248_246_236/0.35),rgb(248_246_236/0)_18%)]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div
+    class="mx-auto w-full max-lg:-order-1 max-lg:max-w-[600px] max-lg:px-5 max-lg:pt-12 max-lg:pb-9 lg:relative lg:flex lg:h-full lg:max-w-[1432px] lg:items-center lg:p-[calc(40*var(--u))] lg:pl-[calc(81*var(--u))]"
+  >
+    <div class="lg:max-w-[max(340px,calc(400*var(--u)))]">
+      <p
+        class="text-[12px] leading-[16px] font-bold tracking-[2.6px] text-brand-fern lg:text-[length:max(11px,calc(12.5*var(--u)))] lg:leading-[max(15px,calc(16*var(--u)))] lg:tracking-[calc(3.4*var(--u))]"
+      >
+        Taste Nature, Reimagined.
+      </p>
+      <h2
+        id="order-heading"
+        class="mt-2.5 font-display text-[length:clamp(44px,12vw,60px)] leading-none font-bold tracking-[-0.5px] text-ink-heading lg:mt-[calc(10*var(--u))] lg:ml-[calc(-3*var(--u))] lg:text-[length:max(52px,calc(72*var(--u)))] lg:tracking-[calc(-0.8*var(--u))]"
+      >
+        Order Now
+      </h2>
+      <p class:list={[body, "mt-3.5 lg:mt-[calc(18*var(--u))]"]}>
+        Experience the natural goodness of Thynkers Lyquid, packed with Ceylon&rsquo;s finest
+        botanicals.
+      </p>
+      <PillLink
+        href={url("/products/")}
+        arrow
+        class="mt-[22px] h-[52px] gap-2.5 px-8 text-[15px] lg:mt-[calc(34*var(--u))] lg:h-[max(46px,calc(54*var(--u)))] lg:gap-[calc(10*var(--u))] lg:px-[calc(35*var(--u))] lg:text-[length:max(14px,calc(15*var(--u)))]"
+      >
+        Shop Now
+      </PillLink>
+      {
+        RETAILERS.length > 0 && (
+          <a
+            href={inquiryHref({ intent: "store" })}
+            class="mt-6 flex w-fit flex-wrap items-center gap-x-4 gap-y-2 rounded-md text-[13px] leading-5 font-medium text-ink-body-deep/75 transition-colors hover:text-ink-heading focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss lg:mt-[calc(26*var(--u))] lg:gap-x-[calc(16*var(--u))] lg:text-[length:max(12px,calc(13*var(--u)))]"
+          >
+            Available at
+            {RETAILERS.map((r) => (
+              <span class="opacity-85"><StoreLogo retailer={r} size="sm" /></span>
+            ))}
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>

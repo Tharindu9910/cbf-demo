@@ -1,0 +1,191 @@
+---
+import Base from "../../layouts/Base.astro";
+import BrandBanner from "../../components/products/BrandBanner.astro";
+import BulkBanner from "../../components/products/BulkBanner.astro";
+import ComingSoonCollection from "../../components/products/ComingSoonCollection.astro";
+import FlavourCard from "../../components/products/FlavourCard.astro";
+// import PackCard from "../../components/products/PackCard.astro";
+// import ProductsHero from "../../components/products/ProductsHero.astro";
+// import PromisesPanel from "../../components/products/PromisesPanel.astro";
+import { getRange } from "../../components/products/range";
+import { BRANDS, LISTING } from "../../config/products";
+
+/**
+ * Our Products: the collections, shop-style but without prices or a basket.
+ * One heading over them all, with pills beside it that show one kind of
+ * drink's collections at a time (`data-group`), then each collection in turn:
+ *
+ * - Thynkers Lyquid: its brand banner and filter pills, the flavours three
+ *   across, each can in front of its fruit, then the packs two wide beside
+ *   the range's promises. Pills filter by category within it.
+ * - Coming soon: a teaser for the next, completely different drink.
+ *
+ * The Thynkers section keeps the brand's id, which the hero, the product
+ * pages' breadcrumb and the JSON-LD link to. No 3D here, so the WebGL stage
+ * is skipped.
+ */
+const range = await getRange();
+const flavours = range.filter((p) => p.data.kind === "flavour");
+// const packs = range.filter((p) => p.data.kind === "pack");
+const { collection } = LISTING;
+const brand = BRANDS[0];
+
+// Hidden for now with the product filter pills below.
+// /** What the grid lists; while the packs are hidden, only the flavours. */
+// const listed = flavours;
+// /** Only pills that would show something: none for Bundles while the packs are hidden. */
+// const filters = LISTING.filters.filter((f) =>
+//   listed.some((p) => p.data.category === f.id),
+// );
+
+const pill =
+  "inline-flex h-10 items-center rounded-full px-5 text-[13px] font-semibold ring-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss bg-white text-ink-heading ring-brand-leaf/12 hover:ring-brand-leaf/40 aria-pressed:bg-brand-moss aria-pressed:text-white aria-pressed:ring-brand-moss";
+---
+
+<Base
+  title={LISTING.seo.title}
+  description={LISTING.seo.description}
+  image="/og/home.jpg"
+  pageType="CollectionPage"
+  products
+  stage={false}
+>
+  {/*<ProductsHero />*/}
+
+  <section
+    aria-labelledby="collection-heading"
+    data-collections
+    class="relative isolate overflow-hidden bg-brand-ivory pt-32 pb-16 font-inter md:pt-40 lg:pb-24"
+  >
+    {/* As on the product pages: a green wash along the top so the white header reads. */}
+    <div
+      aria-hidden="true"
+      class="absolute inset-x-0 top-0 -z-10 h-40 bg-linear-to-b from-brand-leaf/45 to-transparent"
+    ></div>
+    <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+      <header
+        data-reveal
+        class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+      >
+        <h1
+          id="collection-heading"
+          class="font-display text-[clamp(32px,4.6vw,46px)] leading-[1.05] font-bold tracking-[-0.5px] text-balance text-ink-heading"
+        >
+          {collection.title}
+        </h1>
+        <div
+          role="group"
+          aria-label="Filter collections"
+          class="flex flex-wrap gap-2 noscript:hidden"
+        >
+          <button
+            type="button"
+            data-filter="all"
+            aria-pressed="true"
+            class={pill}
+          >
+            All
+          </button>
+          {collection.filters.map((f) => (
+            <button
+              type="button"
+              data-filter={f.id}
+              aria-pressed="false"
+              class={pill}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      <section
+        id={brand.id}
+        aria-labelledby={`${brand.id}-heading`}
+        data-group={brand.group}
+        class="mt-12 scroll-mt-8 border-t border-brand-leaf/10 pt-8 lg:mt-14 lg:pt-10"
+      >
+        <div
+          data-reveal
+          class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+        >
+          <BrandBanner brand={brand} />
+
+          {/* Hidden for now: the filter pills and the product count.
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-3 noscript:hidden">
+            <div
+              role="group"
+              aria-label={`Filter ${brand.name} products`}
+              class="flex flex-wrap gap-2"
+            >
+              <button
+                type="button"
+                data-filter="all"
+                aria-pressed="true"
+                class={pill}
+              >
+                All
+              </button>
+              {filters.map((f) => (
+                <button
+                  type="button"
+                  data-filter={f.id}
+                  aria-pressed="false"
+                  class={pill}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+            <p
+              data-filter-count
+              aria-live="polite"
+              class="text-[12px] text-ink-body/60"
+            >
+              Showing {listed.length} products
+            </p>
+          </div>
+          */}
+        </div>
+
+        <ul
+          class="mt-8 grid gap-5 md:grid-cols-3 lg:mt-10 lg:gap-6"
+          aria-label={`${brand.name} products`}
+        >
+          {flavours.map((product) => (
+            <li data-reveal data-category={product.data.category}>
+              <FlavourCard product={product} />
+            </li>
+          ))}
+          {/* Hidden for now: the Mixed Pack card and the promises panel beside it.
+          {packs.map((product) => (
+            <li
+              data-reveal
+              data-category={product.data.category}
+              class="md:col-span-2"
+            >
+              <PackCard product={product} />
+            </li>
+          ))}
+          <li data-reveal>
+            <PromisesPanel />
+          </li>
+          */}
+        </ul>
+      </section>
+
+      <ComingSoonCollection />
+    </div>
+  </section>
+
+  <BulkBanner />
+</Base>
+
+<script>
+  import { revealOnScroll } from "../../scripts/anim/aboutReveal";
+  import { initFilter } from "../../scripts/products/filter";
+
+  revealOnScroll();
+  const collections = document.querySelector<HTMLElement>("[data-collections]");
+  if (collections) initFilter(collections, "group");
+</script>

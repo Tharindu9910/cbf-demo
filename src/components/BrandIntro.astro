@@ -1,0 +1,132 @@
+---
+import ProductsLink from "./ProductsLink.astro";
+import MangoIcon from "./icons/MangoIcon.astro";
+import MatchaLeafIcon from "./icons/MatchaLeafIcon.astro";
+import PineappleIcon from "./icons/PineappleIcon.astro";
+import SparkIcon from "./icons/SparkIcon.astro";
+
+/**
+ * "Meet Thynkers Lyquid": eyebrow pill, heading, intro line, the three
+ * flavours, the brand statement and the "View All Products" pill — the hero
+ * runway's copy.
+ *
+ * Reproduced from a 740px-wide mockup: everything is sized in `--u` (see
+ * `frame-*` in global.css), with floors on the text so it stays legible on a
+ * phone. Playfair for the heading, Outfit for the rest.
+ */
+interface Props {
+  /**
+   * The hero passes `brand-intro`, which its GSAP reveal targets (it staggers
+   * the children). It lands on the frame, inside the `@container` wrapper.
+   */
+  class?: string;
+  id?: string;
+}
+const { class: className, id } = Astro.props;
+
+const FLAVOURS = [
+  {
+    Icon: MangoIcon,
+    lines: ["Mango &", "Passion"],
+    label: "text-intro-mango",
+    chip: "border-intro-mango bg-intro-mango-fill text-intro-mango",
+  },
+  {
+    Icon: PineappleIcon,
+    lines: ["Pineapple"],
+    label: "text-intro-pineapple",
+    chip: "border-intro-pineapple-ring bg-intro-pineapple-fill text-intro-pineapple-ring",
+  },
+  {
+    Icon: MatchaLeafIcon,
+    lines: ["Matcha"],
+    label: "text-intro-matcha",
+    chip: "border-intro-matcha-ring bg-intro-matcha-fill text-intro-matcha-ring",
+  },
+];
+---
+
+<div id={id} class="@container w-full max-w-[740px] scroll-mt-24">
+  <div class:list={["frame-740 font-outfit text-ink-body", className]}>
+    {/*<p
+      class="relative ml-[calc(9*var(--u))] inline-flex h-[max(28px,calc(35*var(--u)))] items-center rounded-full border-[1.5px] border-intro-pill px-[calc(26*var(--u))] text-[length:max(10px,calc(14*var(--u)))] font-semibold tracking-[0.3em] text-intro-eyebrow uppercase"
+    >
+      <SparkIcon
+        class="absolute top-1/2 right-full mr-[calc(4*var(--u))] size-[calc(20*var(--u))] -translate-y-1/3 -scale-x-100"
+      />
+      Refreshingly different
+      <SparkIcon
+        class="absolute bottom-1/2 left-full ml-[calc(4*var(--u))] size-[calc(20*var(--u))]"
+      />
+    </p>*/}
+
+    <h2
+      class="mt-[calc(24*var(--u))] font-display text-[length:calc(70*var(--u))] leading-none font-black tracking-[-0.01em] text-ink-heading"
+    >
+      Meet
+      {/* `leading-[1.15]` leaves the gradient room for the "y" descenders. */}
+      <span
+        class="-mt-[calc(13*var(--u))] block bg-linear-to-b from-intro-title-top to-intro-title-bottom bg-clip-text text-[length:calc(90*var(--u))] leading-[1.15] tracking-[-0.015em] whitespace-nowrap text-transparent drop-shadow-intro-title"
+      >
+        Thynkers Lyquid
+      </span>
+    </h2>
+
+    <p
+      class="mt-[calc(13*var(--u))] text-[length:max(16px,calc(23*var(--u)))] leading-[1.3] font-medium text-intro-lede"
+    >
+      Sparkling, gotu kola&ndash;infused drinks in three refreshing flavours.
+    </p>
+
+    <ul class="mt-[calc(28*var(--u))] flex gap-[calc(88*var(--u))]">
+      {
+        FLAVOURS.map(({ Icon, lines, label, chip }) => (
+          <li class="flex flex-col items-center">
+            <span
+              class:list={[
+                "grid size-[max(48px,calc(70*var(--u)))] place-items-center rounded-full border-[max(1.5px,calc(2*var(--u)))]",
+                chip,
+              ]}
+            >
+              <Icon class="size-[58%]" />
+            </span>
+            <span
+              class:list={[
+                "mt-[calc(9*var(--u))] text-center text-[length:max(11px,calc(15*var(--u)))] leading-[1.45] font-semibold tracking-[0.15em] whitespace-nowrap uppercase",
+                label,
+              ]}
+            >
+              {lines.map((line, i) => (i ? [<br />, line] : line))}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+
+    {/*<span
+      aria-hidden="true"
+      class="mt-[calc(26*var(--u))] block h-[1.5px] w-[calc(50*var(--u))] bg-intro-rule"></span>*/}
+
+    <div
+      class="mt-[calc(25*var(--u))] max-w-[28.2em] space-y-[calc(9*var(--u))] text-[length:max(15px,calc(17*var(--u)))] leading-[1.47]"
+    >
+      <p>
+        Thynkers Lyquid is a Gotukola based beverage crafted to support clear thinking and mindful
+        energy.
+      </p>
+
+      <p>
+        Inspired by Ceylon&rsquo;s botanical heritage and refined through modern innovation,
+        it&rsquo;s designed for moments that demand focus without the noise of conventional energy
+        drinks.
+      </p>
+    </div>
+
+    <div class="mt-[calc(38*var(--u))] flex items-center gap-[calc(12*var(--u))]">
+      <ProductsLink />
+      {/*<SparkIcon
+        class="size-[calc(26*var(--u))] -translate-y-[calc(6*var(--u))] text-intro-eyebrow"
+      />*/}
+    </div>
+  </div>
+</div>

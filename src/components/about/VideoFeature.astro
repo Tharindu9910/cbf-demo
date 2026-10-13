@@ -1,0 +1,115 @@
+---
+import { getImage } from "astro:assets";
+import Play from "@lucide/astro/icons/play";
+
+import SectionHeading from "./SectionHeading.astro";
+import { ABOUT } from "../../config/about";
+
+/**
+ * "The next big beverage trend": a self-hosted video between Vision & Mission
+ * and Values. Copy on the left, a 16:9 frame on the right from `lg`; stacked
+ * below.
+ *
+ * The frame is always shown so the slot is reserved. Until `video.src` is set
+ * it carries the play icon with a "Coming soon" badge. With a video, the
+ * markup ships native controls (playable without JavaScript); the script
+ * swaps them for the big play button and hands the controls back on play.
+ */
+const { eyebrow, title, body, src, poster, duration, captions } = ABOUT.video;
+const posterUrl = poster ? (await getImage({ src: poster.src, width: 1600, format: "webp" })).src : undefined;
+const label = duration ? `Play video, ${duration}` : "Play video";
+---
+
+<section aria-labelledby="video-heading" class="bg-brand-ivory py-20 lg:py-28">
+  <div
+    class="mx-auto grid max-w-[1200px] items-center gap-10 px-5 md:px-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-14"
+  >
+    <div data-reveal class="font-inter">
+      <SectionHeading id="video-heading" eyebrow={eyebrow} title={title} />
+      <p class="mt-5 text-[16px] leading-[25px] text-ink-body">{body}</p>
+      {
+        duration && (
+          <p class="mt-4 text-[13px] leading-5 font-semibold tracking-[1px] text-brand-fern uppercase">
+            Video &middot; {duration}
+          </p>
+        )
+      }
+    </div>
+
+    <div
+      data-reveal
+      class="relative isolate aspect-video overflow-hidden rounded-[28px] bg-brand-leaf shadow-[0_24px_60px_-28px_rgb(13_43_18/0.6)]"
+      data-video-frame
+    >
+      {
+        !posterUrl && (
+          <div
+            aria-hidden="true"
+            class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_70%_at_70%_20%,rgb(79_122_58/0.7),transparent_70%),radial-gradient(ellipse_60%_60%_at_10%_100%,rgb(141_198_63/0.25),transparent_70%)]"
+          />
+        )
+      }
+
+      {
+        src ? (
+          <>
+            <video
+              data-video
+              class="absolute inset-0 size-full bg-black object-cover"
+              src={src}
+              poster={posterUrl}
+              preload="none"
+              playsinline
+              controls
+              aria-label={title}
+            >
+              {captions && <track kind="captions" src={captions} srclang="en" label="English" default />}
+            </video>
+            <button
+              type="button"
+              data-video-play
+              hidden
+              aria-label={`${label}: ${title}`}
+              class="group absolute inset-0 grid cursor-pointer place-items-center bg-[linear-gradient(to_top,rgb(8_26_12/0.45),transparent_60%)] focus-visible:outline-3 focus-visible:-outline-offset-8 focus-visible:outline-white"
+            >
+              <span class="grid size-20 place-items-center rounded-full bg-white/95 text-brand-moss shadow-[0_10px_30px_-8px_rgb(0_0_0/0.5)] transition-transform group-hover:scale-110 md:size-24">
+                <Play class="ml-1 size-8 fill-current md:size-10" stroke-width={1.5} />
+              </span>
+            </button>
+          </>
+        ) : (
+          <div class="absolute inset-0 grid place-items-center" role="img" aria-label={`${title} Video coming soon.`}>
+            {posterUrl && <img src={posterUrl} alt="" class="absolute inset-0 -z-10 size-full object-cover" />}
+            <div class="flex flex-col items-center gap-4">
+              <span class="grid size-20 place-items-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm md:size-24">
+                <Play class="ml-1 size-8 fill-current md:size-10" stroke-width={1.5} />
+              </span>
+              <span class="rounded-full bg-white/15 px-4 py-1.5 font-inter text-[12px] leading-4 font-bold tracking-[2px] text-white uppercase">
+                Coming soon
+              </span>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // Native controls until this runs; then the big play button takes over and
+  // hands the controls back once the video starts.
+  for (const frame of document.querySelectorAll<HTMLElement>("[data-video-frame]")) {
+    const video = frame.querySelector<HTMLVideoElement>("[data-video]");
+    const button = frame.querySelector<HTMLButtonElement>("[data-video-play]");
+    if (!video || !button) continue;
+
+    video.controls = false;
+    button.hidden = false;
+    button.addEventListener("click", () => {
+      button.hidden = true;
+      video.controls = true;
+      video.play().catch(() => {});
+      video.focus();
+    });
+  }
+</script>

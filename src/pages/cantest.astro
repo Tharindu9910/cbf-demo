@@ -1,0 +1,28 @@
+---
+// Scratch page comparing the soda-can builds. Not linked from the site.
+import "../styles/global.css";
+---
+
+<html><body class="m-0 bg-[#2a3a2a]"><canvas id="c"></canvas>
+<script>
+import { Scene, PerspectiveCamera, WebGLRenderer, NeutralToneMapping, SRGBColorSpace } from "three";
+import { createSodaCan } from "../scripts/three/sodaCan";
+import { createSodaCan as createOld } from "../../backup/plain-aluminum-can/sodaCan";
+import { applyEnvironment } from "../scripts/three/environment";
+import { addCanLights } from "../scripts/three/lights";
+import { url } from "../config/url";
+const canvas = document.getElementById("c") as HTMLCanvasElement;
+const r = new WebGLRenderer({ canvas, antialias: true });
+r.setSize(1600, 900); r.outputColorSpace = SRGBColorSpace; r.toneMapping = NeutralToneMapping;
+const scene = new Scene(); addCanLights(scene);
+await applyEnvironment(scene, url("/hdr/lobby.hdr"), { intensity: 0.4 });
+const cam = new PerspectiveCamera(30, 1600 / 900, 0.1, 100); cam.position.set(0, 0.6, 7); cam.lookAt(0, 0, 0);
+const flavors = ["blackCherry", "grape", "lemonLime"] as const;
+const spins = [0, 0, 0, Math.PI / 2, Math.PI, -Math.PI / 2 + 0.3];
+for (let i = 0; i < 6; i++) {
+  const f = flavors[i % 3];
+  const o = await createOld(f); o.position.set(-4.1 + i * 0.75, 1.0, 0); o.rotation.y += spins[i]; scene.add(o);
+  const n = await createSodaCan(f); n.position.set(-4.1 + i * 0.75, -1.0, 0); n.rotation.y += spins[i]; scene.add(n);
+}
+r.render(scene, cam);
+</script></body></html>

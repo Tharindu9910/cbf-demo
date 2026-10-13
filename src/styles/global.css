@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/*
+ * The site's one stylesheet. Components carry Tailwind classes only (no
+ * `<style>` blocks); everything they share lives here:
+ *
+ *   1. @theme      — fonts, colours, shadows, easings, animations (the tokens)
+ *   2. variants    — `noscript:`
+ *   3. utilities   — `frame-*` (the design-frame unit), `scrollbar-none`,
+ *                    `animate-scroll-drift`
+ *   4. base        — the few element defaults Tailwind v4 dropped
+ *
+ * A new colour or face goes in @theme with a comment saying where it is used,
+ * never as a raw hex in markup.
+ */
+
+/*
+ * ---- 1. Theme ----
+ *
+ * The font faces themselves are registered by Astro's Fonts API
+ * (astro.config.mjs) under the `--ff-*` variables; `inline` makes each
+ * utility point straight at them.
+ */
+@theme inline {
+  --font-sans: var(--ff-alpino), sans-serif;
+  --font-aonic: var(--ff-aonic), sans-serif;
+  --font-ubuntu: var(--ff-saira), sans-serif;
+  --font-display: var(--ff-playfair), Georgia, serif; /* section headings */
+  --font-inter: var(--ff-inter), system-ui, sans-serif; /* section body copy */
+  --font-outfit: var(--ff-outfit), system-ui, sans-serif; /* "Meet Thynkers Lyquid" copy */
+  --font-poppins: var(--ff-poppins), system-ui, sans-serif; /* the footer */
+}
+
+@theme {
+  /* drei's loader readout. */
+  --font-system:
+    -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial,
+    Roboto, Ubuntu, sans-serif;
+
+  /* Brand palette, ported from the Next build's tailwind.config.js. */
+  --color-brand-green: #8dc63f; /* brand green — ink on dark grounds, the Matcha chip */
+  --color-brand-leaf: #0d2b12; /* deep foliage — CTA hover text, overlays, reviews ground */
+  --color-brand-moss: #4f7a3a; /* the page's green — CTAs, claim rules */
+  --color-brand-moss-dark: #42692f; /* moss CTA hover */
+  --color-brand-fern: #4a7334; /* eyebrows and accent copy on ivory */
+  --color-brand-olive: #709631; /* "Thynkers Lyquid", the nutrition card */
+  --color-brand-pine: #10331d; /* Gotu Kola heading, top of the reviews ground */
+  --color-brand-cream: #f4f7ec;
+  --color-brand-ivory: #f8f6ec; /* warm paper ground shared by every section below the hero */
+  --color-brand-gold: #e9b949; /* accent arc / highlights, review stars */
+  --color-brand-ink: #1c1a17; /* display headings */
+  --color-brand-sage: #eaf0dc; /* products listing: the promises panel, the hero's ground without its photo */
+
+  --color-hero-runway: #f8f6ec; /* the runway ground under its photo: brand-ivory, as the photo is graded to */
+
+  /* "Meet Thynkers Lyquid" (BrandIntro). */
+  --color-intro-eyebrow: #3f6b2e; /* eyebrow pill text, its sparkles */
+  --color-intro-pill: #6a9450; /* eyebrow pill outline */
+  --color-intro-title-top: #6f9b45; /* "Thynkers Lyquid" gradient */
+  --color-intro-title-bottom: #3b6427;
+  --color-intro-lede: #1d2a1f; /* the one-line intro */
+  --color-intro-rule: #6b9a4a;
+  --color-intro-mango: #e07b2c; /* flavour chips: label + ring */
+  --color-intro-mango-fill: #fdecd8;
+  --color-intro-pineapple: #b89a2e;
+  --color-intro-pineapple-ring: #c9a63e;
+  --color-intro-pineapple-fill: #fbf3d6;
+  --color-intro-matcha: #4f7a3a;
+  --color-intro-matcha-ring: #5f8a42;
+  --color-intro-matcha-fill: #eef3e1;
+  --color-intro-cta-top: #3b6a2f; /* "View All Products" gradient */
+  --color-intro-cta-bottom: #2c5523;
+
+  /* Copy on the ivory sections. */
+  --color-ink-heading: #15241a; /* Playfair headings */
+  --color-ink-body: #3b3d3a; /* body copy */
+  --color-ink-body-deep: #2f3a30; /* body copy over the Order Now photo */
+
+  /* The review chips' flavour dots (Matcha uses brand-green: its can's #5C7A29 is too dark here). */
+  --color-flavour-mango: #e2762b;
+  --color-flavour-pineapple: #f2a93b;
+  --color-flavour-pineapple-deep: #9a5f17; /* pineapple as text on ivory (the can colour is too light to read) */
+  --color-flavour-mango-deep: #b0521a; /* mango as text on ivory: the products tagline */
+  --color-flavour-matcha: #5c7a29; /* the Matcha can; products pages' halo (brand-green stands in on dark grounds) */
+
+  /* Gotu Kola section. */
+  --color-gk-ink: #163822;
+  --color-gk-subtitle: #1c3526;
+  --color-gk-lede: #55605a;
+  --color-gk-benefit: #4e5a52;
+  --color-gk-ring: #e6e4d0; /* benefit icon ring */
+  --color-gk-ring-fill: #f3f1e1;
+  --color-gk-callout: #243a2a;
+  --color-gk-card-muted: #e3edcf; /* nutrition card: labels and sub-rows */
+  --color-gk-card-soft: #f1f6e6; /* nutrition card: secondary copy */
+  --color-gk-kcal: #fdfdf6;
+  --color-gk-kcal-ink: #4d7a22;
+
+  /* Gotu Kola claims strip. */
+  --color-claims-ring: #3f6b34;
+  --color-claims-icon: #24502a;
+  --color-claims-title: #18251b;
+  --color-claims-note: #8b8f88;
+
+  /* The Gotukola page (/gotukola/): evidence badges, weakest to strongest, and its pale bands. */
+  --color-evidence-lab: #6b6f68;
+  --color-evidence-lab-fill: #ecece6;
+  --color-evidence-early: #8a6414;
+  --color-evidence-early-fill: #fbf0d4;
+  --color-evidence-mixed: #9a5f17;
+  --color-evidence-mixed-fill: #fbe8d6;
+  --color-evidence-moderate: #2f5d22;
+  --color-evidence-moderate-fill: #e3edcf;
+  --color-evidence-none: #a3261f;
+  --color-evidence-none-fill: #f8e1de;
+  --color-gotukola-band: #eef2e2; /* the pale green bands between ivory ones (as About's Values) */
+
+  /* Reviews. */
+  --color-reviews-glow: #1a4a26;
+
+
+  /* Footer. */
+  --color-footer-ground: #0b3320;
+  --color-footer-accent: #9ccb55; /* link hover and focus */
+  --color-footer-tagline: #b0c874;
+  --color-footer-rule: #a9c08a;
+  --color-footer-col-rule: #92aa7c;
+  --color-footer-values-rule: #98b376;
+  --color-footer-values: #e6eee2;
+
+  /* Contact form */
+  --color-form-error: #a3261f; /* invalid field border, send-failure message */
+
+  /* The WebGL loader (drei's colours). */
+  --color-loader-ground: #171717;
+  --color-loader-track: #272727;
+  --color-loader-text: #f0f0f0;
+
+  --shadow-pill: 0 6px 14px -4px rgb(30 50 20 / 0.35); /* moss CTA pills */
+  --shadow-card: 0 1px 2px rgb(30 50 20 / 0.04), 0 22px 44px -30px rgb(30 50 20 / 0.45); /* products: cards, gallery frame */
+  --shadow-card-hover: 0 1px 2px rgb(30 50 20 / 0.04), 0 34px 60px -30px rgb(30 50 20 / 0.5); /* products: a card lifted on hover */
+  --shadow-intro-cta: 0 12px 22px -8px rgb(30 50 20 / 0.5); /* BrandIntro's "View All Products" */
+  --drop-shadow-intro-title: 0 2px 2px rgb(30 50 20 / 0.18); /* "Thynkers Lyquid" */
+  --text-shadow-footer: 0 2px 4px rgb(0 18 6 / 0.55);
+  --drop-shadow-footer: 0 2px 4px rgb(0 18 6 / 0.55);
+  --drop-shadow-footer-icon: 0 2px 2px rgb(0 16 6 / 0.45);
+
+  --ease-rise: cubic-bezier(0.22, 1, 0.36, 1); /* reviews cards' entrance */
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1); /* review stars filling, a slight overshoot */
+
+  --animate-slide-left: slide-left 3s linear infinite;
+  --animate-spin-slow: spin 6s linear infinite;
+
+  @keyframes slide-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+}
+
+/*
+ * Porting note — Tailwind v3 → v4 line-heights. In v3 a responsive size such
+ * as `lg:text-lg` reset the line-height, overriding a base `leading-*`; in v4
+ * a `leading-*` always wins. Where the v3 design relied on the reset, the
+ * markup now spells the line-height out (`lg:leading-7` etc.).
+ */
+
+/* ---- 2. Variants ---- */
+
+/* Without JavaScript, for initial states that only script would undo. */
+@custom-variant noscript (@media (scripting: none));
+
+/* ---- 3. Utilities ---- */
+
+/*
+ * The design-frame unit. Sections reproduced from a fixed-width mockup set
+ * `frame-<width>` (from a breakpoint up) on an element inside their
+ * `@container`, and size everything in the mockup's px times `--u`:
+ *
+ *   <section class="@container">
+ *     <div class="lg:frame-1316 lg:mt-[calc(12*var(--u))]">
+ *
+ * `--u` is 1px when the container is the mockup's width or wider, and shrinks
+ * with it below that. Text pairs it with a floor, `max(11px,calc(12*var(--u)))`,
+ * so it stays legible. A frame that must also fit the viewport's height sets
+ * `--u` itself (see GotuKola).
+ */
+@utility frame-* {
+  --u: min(1px, calc(100cqw / --value(integer)));
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/*
+ * A photo that drifts a little slower than the page, on a scroll-driven
+ * timeline. Pair with `supports-[animation-timeline:view()]:` and
+ * `motion-safe:`. The shorthand resets `animation-timeline`, so both have to
+ * live in one rule.
+ */
+@utility animate-scroll-drift {
+  animation: scroll-drift linear both;
+  animation-timeline: view();
+}
+
+@keyframes scroll-drift {
+  from {
+    transform: scale(1.08) translateY(-4%);
+  }
+  to {
+    transform: scale(1.08) translateY(4%);
+  }
+}
+
+/* ---- 4. Base ---- */
+
+@layer base {
+  /* Tailwind v4 dropped v3's pointer cursor on buttons; the design had it. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}

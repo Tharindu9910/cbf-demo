@@ -1,0 +1,181 @@
+---
+import { getImage } from "astro:assets";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+import { SITE } from "../../config/site";
+import { url } from "../../config/url";
+
+/**
+ * Structured data as one @graph: the company, the site, this page, the
+ * Thynkers Lyquid brand and either the range as an ItemList of Products (home
+ * and /products/) or, on a product page, that one Product and its breadcrumb.
+ *
+ * Built from the same content the page renders, so the two can't disagree.
+ * Placeholder fields left empty in `config/site.ts` are dropped rather than
+ * emitted blank.
+ *
+ * The Products carry no `offers` yet. Google needs a price (or reviews) before
+ * it will show a product rich result; add `offers` here once pricing is set.
+ */
+interface Props {
+  title: string;
+  description: string;
+  /** Path (from /public) of the page's share image. */
+  image?: string;
+  /** schema.org type of this page: `WebPage`, `AboutPage`, … */
+  pageType?: string;
+  /** Include the range as an ItemList of Products (the home page, /products/). */
+  products?: boolean;
+  /** On a product page: that product's id in `content/flavours`. */
+  product?: string;
+}
+
+const {
+  title,
+  description,
+  image = "/og/home.jpg",
+  pageType = "WebPage",
+  products = true,
+  product,
+} = Astro.props;
+
+const site = Astro.site!;
+const abs = (path: string) => new URL(url(path), site).href;
+const pageUrl = abs(Astro.url.pathname);
+
+const orgId = abs("/#organization");
+const websiteId = abs("/#website");
+const brandId = abs("/#brand");
+
+/** Drop empty strings, empty arrays and empty objects, recursively. */
+function compact<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map(compact).filter((v) => !isEmpty(v)) as T;
+  }
+  if (value && typeof value === "object") {
+    const entries = Object.entries(value)
+      .map(([k, v]) => [k, compact(v)] as const)
+      .filter(([, v]) => !isEmpty(v));
+    return Object.fromEntries(entries) as T;
+  }
+  return value;
+}
+
+function isEmpty(v: unknown) {
+  if (v === "" || v === undefined || v === null) return true;
+  if (Array.isArray(v)) return v.length === 0;
+  // An object left holding only its @type carries no information.
+  if (typeof v === "object") return Object.keys(v).every((k) => k === "@type");
+  return false;
+}
+
+const range = (await getCollection("flavours")).sort((a, b) => a.data.order - b.data.order);
+
+/** One product, keyed to its page. Placeholder reviews never appear here. */
+async function productNode({ id, data }: CollectionEntry<"flavours">) {
+  const lead = await getImage({ src: data.gallery[0].src, width: 1200, format: "jpg" });
+  return {
+    "@type": "Product",
+    "@id": abs(`/products/${id}/#product`),
+    url: abs(`/products/${id}/`),
+    name: `${data.brand} ${data.name}`,
+    description: data.description,
+    image: abs(lead.src),
+    brand: { "@id": brandId },
+    manufacturer: { "@id": orgId },
+    category: "Food, Beverages & Tobacco > Beverages",
+    countryOfOrigin: { "@type": "Country", name: "Sri Lanka" },
+    size: data.facts.volume,
+    additionalProperty: [
+      { "@type": "PropertyValue", name: "Net content", value: data.facts.volume },
+      { "@type": "PropertyValue", name: "Shelf life", value: data.facts.shelfLife },
+      { "@type": "PropertyValue", name: "Key ingredient", value: data.facts.extract },
+      { "@type": "PropertyValue", name: "Artificial colours", value: "None" },
+      { "@type": "PropertyValue", name: "Preservatives", value: "None" },
+    ],
+  };
+}
+
+const current = product ? range.find((entry) => entry.id === product) : undefined;
+
+const hasContact = SITE.contact.email || SITE.contact.telephone;
+
+const graph = compact({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": orgId,
+      name: SITE.name,
+      url: abs("/"),
+      logo: { "@type": "ImageObject", url: abs("/icon-512.png"), width: 512, height: 512 },
+      sameAs: [...SITE.sameAs],
+      brand: { "@id": brandId },
+      address: { "@type": "PostalAddress", ...SITE.address },
+      contactPoint: hasContact
+        ? {
+            "@type": "ContactPoint",
+            contactType: "customer service",
+            email: SITE.contact.email,
+            telephone: SITE.contact.telephone,
+            areaServed: "LK",
+          }
+        : undefined,
+    },
+    {
+      "@type": "WebSite",
+      "@id": websiteId,
+      url: abs("/"),
+      name: SITE.name,
+      inLanguage: SITE.lang,
+      publisher: { "@id": orgId },
+    },
+    {
+      "@type": pageType,
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      inLanguage: SITE.lang,
+      isPartOf: { "@id": websiteId },
+      about: { "@id": orgId },
+      primaryImageOfPage: abs(image),
+    },
+    {
+      "@type": "Brand",
+      "@id": brandId,
+      name: SITE.brand,
+      slogan: "Fuel the Thought",
+    },
+    products && !current
+      ? {
+          "@type": "ItemList",
+          "@id": abs("/products/#list"),
+          name: `${SITE.brand} range`,
+          numberOfItems: range.length,
+          itemListElement: await Promise.all(
+            range.map(async (entry, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              item: await productNode(entry),
+            })),
+          ),
+        }
+      : undefined,
+    current ? await productNode(current) : undefined,
+    current
+      ? {
+          "@type": "BreadcrumbList",
+          "@id": `${pageUrl}#breadcrumb`,
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Products", item: abs("/products/") },
+            { "@type": "ListItem", position: 2, name: current.data.brand, item: abs("/products/#thynkers-lyquid") },
+            { "@type": "ListItem", position: 3, name: current.data.name, item: pageUrl },
+          ],
+        }
+      : undefined,
+  ],
+});
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(graph)} />

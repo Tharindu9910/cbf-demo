@@ -1,0 +1,46 @@
+---
+import { Image } from "astro:assets";
+
+import leavesRight from "../../assets/images/footer/leaves-right.png";
+import { LISTING } from "../../config/products";
+
+/**
+ * The next collection's teaser under Thynkers Lyquid on the Products listing:
+ * a badge, a heading and one line from `LISTING.comingSoon`. No name, picture
+ * or sign-up until the drink is announced.
+ */
+const { group, eyebrow, title, body } = LISTING.comingSoon;
+---
+
+<section
+  id="coming-soon"
+  aria-labelledby="coming-soon-heading"
+  data-group={group}
+  data-reveal
+  class="mt-16 scroll-mt-8 font-inter lg:mt-24"
+>
+  <div class="relative isolate overflow-hidden rounded-[24px] bg-brand-sage px-7 py-12 ring-1 ring-brand-leaf/6 md:px-12 md:py-16 lg:py-20">
+    <Image
+      src={leavesRight}
+      alt=""
+      widths={[320, 480, 640]}
+      sizes="(min-width: 768px) 320px, 200px"
+      loading="lazy"
+      class="pointer-events-none absolute -right-10 -bottom-12 -z-10 h-[75%] w-auto opacity-60 select-none"
+    />
+    <div class="max-w-xl">
+      <p class="inline-flex h-7 items-center rounded-full bg-white/70 px-3 text-[12px] font-semibold text-brand-moss ring-1 ring-brand-leaf/8">
+        {eyebrow}
+      </p>
+      <h2
+        id="coming-soon-heading"
+        class="mt-4 font-display text-[26px] leading-[1.15] font-bold tracking-[-0.2px] text-balance text-ink-heading"
+      >
+        {title}
+      </h2>
+      <p class="mt-1.5 max-w-md text-[16px] leading-[25px] text-ink-body">
+        {body}
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,120 @@
+---
+import { Image } from "astro:assets";
+import ArrowDown from "@lucide/astro/icons/arrow-down";
+
+import leavesLeft from "../../assets/images/footer/leaves-left.png";
+import leavesRight from "../../assets/images/footer/leaves-right.png";
+import { ABOUT } from "../../config/about";
+
+/**
+ * The About page's opening, after the mockup: a full-height photo with the
+ * eyebrow, the page's only <h1> (one sentence per line), the intro and a
+ * "Our Story" link down the left, and the "Rooted in Ceylon" sign-off
+ * bottom right. Without `hero.image` the ground is deep foliage with the
+ * footer's leaves in the corners.
+ */
+const { eyebrow, title, intro, image, cta, tagline } = ABOUT.hero;
+const titleLines = title.split(/(?<=\.)\s+/);
+---
+
+<section
+  aria-labelledby="about-hero-heading"
+  class="relative isolate flex min-h-[max(600px,100svh)] overflow-hidden bg-brand-leaf text-white"
+>
+  {
+    image ? (
+      <Image
+        src={image.src}
+        alt={image.alt}
+        widths={[768, 1280, 1920, 2560]}
+        sizes="100vw"
+        quality={80}
+        loading="eager"
+        fetchpriority="high"
+        class="absolute inset-0 -z-20 h-full w-full object-cover"
+      />
+    ) : (
+      <>
+        <div
+          aria-hidden="true"
+          class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_70%_60%_at_75%_30%,rgb(79_122_58/0.55),transparent_70%),radial-gradient(ellipse_60%_50%_at_10%_90%,rgb(141_198_63/0.18),transparent_70%)]"
+        />
+        <Image
+          src={leavesLeft}
+          alt=""
+          loading="eager"
+          class="pointer-events-none absolute -bottom-[6%] -left-[4%] -z-10 h-[45%] w-auto opacity-55 select-none md:h-[70%]"
+        />
+        <Image
+          src={leavesRight}
+          alt=""
+          loading="eager"
+          class="pointer-events-none absolute top-[8%] -right-[3%] -z-10 h-[32%] w-auto opacity-55 select-none md:h-[55%]"
+        />
+      </>
+    )
+  }
+  {/* Darkens the top for the header, the left for the copy and the bottom for the sign-off. */}
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgb(6_22_14/0.7)_0%,rgb(6_22_14/0.4)_45%,rgb(6_22_14/0.05)_80%),linear-gradient(to_bottom,rgb(6_22_14/0.55)_0%,rgb(6_22_14/0.05)_28%,rgb(6_22_14/0.05)_65%,rgb(6_22_14/0.6)_100%)]"
+  >
+  </div>
+
+  <div
+    class="relative flex w-full flex-col justify-end px-5 pt-32 pb-32 md:px-10 md:pb-[max(56px,9svh)] lg:pr-10 lg:pl-[11vw]"
+  >
+    <p class="font-poppins text-[11px] leading-4 font-medium tracking-[4px] text-white/90 uppercase md:text-[12px]">
+      {eyebrow}
+    </p>
+    <h1
+      id="about-hero-heading"
+      class="mt-4 font-display text-[clamp(44px,5.6vw,96px)] leading-[1.02] font-bold tracking-[-0.5px] drop-shadow-[0_2px_24px_rgb(0_0_0/0.3)]"
+    >
+      {titleLines.map((line) => <span class="block">{line}</span>)}
+    </h1>
+    <p
+      class="mt-5 max-w-[27em] font-poppins text-[15px] leading-[1.55] font-medium text-white/95 drop-shadow-[0_1px_10px_rgb(0_0_0/0.3)] md:text-[clamp(16px,1.3vw,20px)]"
+    >
+      {intro}
+    </p>
+    {
+      cta && (
+        <a
+          href={cta.href}
+          data-scroll-nudge
+          class="group mt-8 inline-flex items-center gap-2 self-start font-poppins text-[14px] font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:text-[15px]"
+        >
+          {cta.label}
+          <ArrowDown
+            aria-hidden="true"
+            class="size-4 transition-transform duration-300 group-hover:translate-y-1 md:size-[18px]"
+          />
+        </a>
+      )
+    }
+  </div>
+
+  {
+    tagline && (
+      <p class="absolute right-5 bottom-8 border-l-2 border-white/90 py-1 pl-5 font-poppins text-white md:right-10 md:bottom-[max(40px,6svh)] lg:right-[clamp(40px,3vw,72px)]">
+        <span class="block text-[16px] leading-tight font-medium md:text-[18px]">{tagline.title}</span>
+        <span class="mt-1 block text-[9px] leading-4 font-medium tracking-[2.5px] text-white/85 uppercase md:text-[10px]">
+          {tagline.kicker}
+        </span>
+      </p>
+    )
+  }
+</section>
+
+<script>
+  // "Our Story" eases the page down part of a screen rather than jumping to the
+  // section; the href stays as the no-JavaScript fallback.
+  for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-scroll-nudge]")) {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollBy({ top: window.innerHeight * 0.6, behavior: reduce ? "auto" : "smooth" });
+    });
+  }
+</script>

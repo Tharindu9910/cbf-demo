@@ -1,0 +1,73 @@
+---
+import { Image } from "astro:assets";
+
+import PillLink from "./ui/PillLink.astro";
+import { body, eyebrow, heading } from "../styles/section";
+
+import bottlingLine from "../assets/images/about/bottling-line.png";
+import { url } from "../config/url";
+
+/**
+ * "Ceylon Future Beverages": the company statement ahead of the Gotu Kola
+ * story. The bottling-line photo, already cut to its blob shape (transparent
+ * PNG), on the left; eyebrow, heading, two paragraphs and a "Learn More" pill
+ * on the right.
+ *
+ * Reproduced from a 1316px-wide design. From `lg` up every length is the
+ * design's px times `--u` (`lg:frame-1316`), which is 1px at 1316 wide and
+ * shrinks with the section's width (text has floors so it stays legible).
+ * Below `lg` it stacks: photo, then copy.
+ */
+---
+
+<section
+  id="company"
+  aria-labelledby="company-heading"
+  class="@container relative overflow-hidden bg-brand-ivory font-inter text-ink-body"
+>
+  <div
+    class="mx-auto max-lg:flex max-lg:max-w-[600px] max-lg:flex-col max-lg:gap-8 max-lg:px-5 max-lg:pt-12 max-lg:pb-14 lg:grid lg:max-w-[1316px] lg:frame-1316 lg:grid-cols-[minmax(0,727fr)_minmax(0,559fr)] lg:items-center lg:pt-[calc(18*var(--u))] lg:pb-[calc(22*var(--u))] lg:pl-[calc(30*var(--u))]"
+  >
+    <Image
+      src={bottlingLine}
+      alt="Aluminium cans moving along a conveyor beneath a rotary filling machine"
+      widths={[458, 727, 916]}
+      sizes="(min-width: 1024px) min(55vw, 727px), min(100vw - 40px, 560px)"
+      quality={82}
+      loading="lazy"
+      class="block h-auto w-full select-none max-lg:mx-auto max-lg:max-w-[560px]"
+    />
+
+    {/* Centred on the photo, 31px below its midline as in the design. */}
+    <div
+      class="lg:box-content lg:max-w-[max(320px,calc(390*var(--u)))] lg:pt-[calc(62*var(--u))] lg:pl-[calc(68*var(--u))]"
+    >
+      <p class:list={[eyebrow, "text-brand-fern"]}>Rooted in Ceylon. Built for the World.</p>
+      <h2
+        id="company-heading"
+        class:list={[
+          heading,
+          "mt-3 text-ink-heading lg:mt-[calc(12*var(--u))] lg:text-[length:max(34px,calc(44*var(--u)))] lg:tracking-[calc(-0.5*var(--u))]",
+        ]}
+      >
+        Ceylon Future Beverages
+      </h2>
+      <p class:list={[body, "mt-4 lg:mt-[calc(16*var(--u))]"]}>
+        Ceylon Future Beverages transforms Sri Lanka&rsquo;s rich natural heritage into world-class
+        beverages for global markets. Blending botanical roots with modern food science, we craft
+        natural drinks, juices, herbal infusions, and functional beverages designed for
+        today&rsquo;s consumer, built on sustainable sourcing and international quality standards.
+      </p>
+      <p class:list={[body, "mt-[25px] lg:mt-[1.515em]"]}>
+        Our mission: globally competitive brands, rooted at origin.
+      </p>
+      <PillLink
+        href={url("/about/")}
+        arrow
+        class="mt-5 h-[52px] gap-2.5 px-8 text-[15px] lg:mt-[calc(18*var(--u))] lg:ml-[calc(5*var(--u))] lg:h-[max(46px,calc(54*var(--u)))] lg:gap-[calc(10*var(--u))] lg:px-[calc(33*var(--u))] lg:text-[length:max(14px,calc(15*var(--u)))]"
+      >
+        Learn More
+      </PillLink>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,44 @@
+---
+import ArrowRightIcon from "../icons/ArrowRightIcon.astro";
+import { CONTACT } from "../../config/contact";
+import { FAQ_HREF, SOCIAL_LINKS } from "../../config/site";
+
+/**
+ * The page's last word: a pointer to the FAQs and the social profiles. The
+ * FAQ line waits on `FAQ_HREF`, and only profiles with a URL are listed, so
+ * nothing here links nowhere; with neither, the strip isn't rendered.
+ */
+const { faq, faqLink, follow } = CONTACT.more;
+const socials = SOCIAL_LINKS.filter((s) => s.href);
+
+const link =
+  "rounded-sm font-semibold text-brand-moss transition-colors hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss";
+---
+
+{
+  (FAQ_HREF || socials.length > 0) && (
+    <section aria-label="More ways to reach us" class="border-t border-brand-leaf/8 bg-brand-ivory py-12 font-inter">
+      <div class="mx-auto flex max-w-[1200px] flex-col gap-6 px-5 text-[16px] leading-6 text-ink-body md:flex-row md:items-center md:justify-between md:px-10">
+        {FAQ_HREF && (
+          <p>
+            {faq}{" "}
+            <a href={FAQ_HREF} class:list={[link, "group inline-flex items-center gap-1.5"]}>
+              {faqLink}
+              <ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+            </a>
+          </p>
+        )}
+        {socials.length > 0 && (
+          <p class="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <span class="text-[12px] leading-4 font-bold tracking-[2.2px] text-brand-fern uppercase">{follow}</span>
+            {socials.map((s) => (
+              <a href={s.href} target="_blank" rel="noopener noreferrer" class={link}>
+                {s.label}
+              </a>
+            ))}
+          </p>
+        )}
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,160 @@
+---
+import { Font } from "astro:assets";
+
+import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import JsonLd from "../components/seo/JsonLd.astro";
+import Seo from "../components/seo/Seo.astro";
+import { SITE } from "../config/site";
+import { url } from "../config/url";
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  /** Share image (path from /public) and its alt text; defaults in `Seo`. */
+  image?: string;
+  imageAlt?: string;
+  /** The schema.org type of this page in the JSON-LD (`AboutPage` etc.). */
+  pageType?: string;
+  /** Only the home page lists the range as Products in the JSON-LD. */
+  products?: boolean;
+  /** A product page's id in `content/flavours`: its Product and breadcrumb go in the JSON-LD. */
+  product?: string;
+  /** Pages without 3D (the 404) skip the WebGL stage entirely. */
+  stage?: boolean;
+  structuredData?: boolean;
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  noindex = false,
+  image,
+  imageAlt,
+  pageType,
+  products,
+  product,
+  stage = true,
+  structuredData = true,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* The headline face and the body face are on screen at first paint. */}
+    <Font cssVariable="--ff-aonic" preload />
+    <Font cssVariable="--ff-alpino" preload />
+    <Font cssVariable="--ff-saira" />
+    <Font cssVariable="--ff-playfair" />
+    <Font cssVariable="--ff-fraunces" />
+    <Font cssVariable="--ff-outfit" />
+    <Font cssVariable="--ff-inter" />
+    <Font cssVariable="--ff-poppins" />
+
+    {
+      /*
+        Desktop only: the hero copy waits on the cans, so start their assets
+        alongside the three.js chunk instead of after it. The `crossorigin`
+        modes match how three's loaders request them, or the preload is wasted.
+      */
+      stage && (
+        <>
+          <link rel="preload" href={url("/models/real_can_250ml.glb")} as="fetch" crossorigin="anonymous" media="(min-width: 768px)" />
+          <link rel="preload" href={url("/hdr/lobby.hdr")} as="fetch" crossorigin="anonymous" media="(min-width: 768px)" />
+          <link rel="preload" href={url("/labels/pineapple.webp")} as="image" crossorigin="anonymous" media="(min-width: 768px)" />
+          <link rel="preload" href={url("/labels/mango-passion.webp")} as="image" crossorigin="anonymous" media="(min-width: 768px)" />
+          <link rel="preload" href={url("/labels/matcha-original.webp")} as="image" crossorigin="anonymous" media="(min-width: 768px)" />
+        </>
+      )
+    }
+
+    <Seo title={title} description={description} image={image} imageAlt={imageAlt} noindex={noindex} />
+    {
+      structuredData && (
+        <JsonLd
+          title={title}
+          description={description}
+          image={image}
+          pageType={pageType}
+          products={products}
+          product={product}
+        />
+      )
+    }
+  </head>
+
+  <body class="overflow-x-hidden bg-[#FDF7E7]">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1100] focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:text-sm focus:text-brand-leaf"
+    >
+      Skip to content
+    </a>
+
+    <Header />
+
+    <main id="main">
+      <slot />
+      {
+        /*
+          The one WebGL canvas for the site; see scripts/three/stage.ts. The
+          same box the R3F <Canvas> wrapper drew: fixed to the viewport,
+          centred, clear of the pointer, under the header (z-100) and above
+          the page copy.
+        */
+        stage && (
+          <div
+            class="pointer-events-none fixed top-0 left-1/2 z-30 size-full -translate-x-1/2 overflow-hidden *:block *:size-full"
+            data-stage
+            aria-hidden="true"
+          ></div>
+        )
+      }
+    </main>
+
+    <Footer />
+
+    {
+      stage && (
+        <script>
+          // three.js and the scenes stay out of the critical path: one chunk,
+          // never blocking first paint. Desktop fetches it at once — the hero
+          // copy waits on its cans. Phones have no hero cans, so it waits for
+          // the reader's first scroll (the carousel is at least a screen
+          // away), or for the carousel itself on a deep link, leaving the main
+          // thread free for the hero's entrance.
+          let started = false;
+          const load = () => {
+            if (started) return;
+            started = true;
+            import("../scripts/three/boot").then(({ boot }) => boot());
+          };
+          const desktop = matchMedia("(min-width: 768px)");
+          const carousel = document.querySelector("#products");
+
+          if (desktop.matches || !carousel) {
+            load();
+          } else {
+            const io = new IntersectionObserver(
+              (entries) => {
+                if (!entries.some((e) => e.isIntersecting)) return;
+                io.disconnect();
+                load();
+              },
+              { rootMargin: "50% 0px" },
+            );
+            io.observe(carousel);
+            addEventListener("scroll", load, { once: true, passive: true });
+            desktop.addEventListener("change", (e) => e.matches && load(), { once: true });
+          }
+        </script>
+      )
+    }
+  </body>
+</html>

@@ -1,0 +1,83 @@
+---
+import { getEntry } from "astro:content";
+
+import CanScene from "./CanScene.astro";
+import ArrowRightIcon from "../icons/ArrowRightIcon.astro";
+import { productHref, type Product } from "./range";
+import { tintOf } from "./tint";
+import { eyebrow, heading } from "../../styles/section";
+
+/**
+ * A pack the buyer fills: one tile per flavour they can choose from, with its
+ * can in front of its fruit and a link to its own page. The buyer gives their
+ * mix with the order. Renders nothing for a product without `mix`.
+ */
+interface Props {
+  product: Product;
+}
+
+const { data } = Astro.props.product;
+const items = (
+  await Promise.all((data.mix?.flavours ?? []).map((flavour) => getEntry(flavour)))
+).filter((entry) => entry !== undefined);
+const cans = data.mix?.cans ?? 0;
+---
+
+{items.length > 0 && (
+  <section
+    aria-labelledby="inside-heading"
+    class="bg-brand-ivory pb-16 font-inter lg:pb-20"
+  >
+    <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+      <div
+        data-reveal
+        class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"
+      >
+        <div>
+          <p class:list={[eyebrow, "text-brand-fern uppercase"]}>
+            Build your box
+          </p>
+          <h2
+            id="inside-heading"
+            class:list={[heading, "mt-3 text-ink-heading lg:text-[44px]"]}
+          >
+            Mix it your way
+          </h2>
+        </div>
+        <p class="max-w-sm text-[15px] leading-[1.6] text-ink-body/75 md:text-right">
+          Any {cans} cans, in any mix of these {items.length} flavours. Build
+          your mix under &ldquo;Pack options&rdquo; above.
+        </p>
+      </div>
+
+      <ul class="mt-10 grid gap-5 sm:grid-cols-3 lg:mt-12 lg:gap-6">
+        {items.map((entry) => {
+          const tint = tintOf(entry.id);
+          return (
+            <li data-reveal>
+              <a
+                href={productHref(entry.id)}
+                class="group relative flex h-full flex-col overflow-hidden rounded-[24px] bg-white shadow-card ring-1 ring-brand-leaf/6 transition-[translate] duration-500 ease-rise hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss motion-reduce:transition-none"
+              >
+                <div class="relative aspect-[4/3] overflow-hidden bg-brand-ivory">
+                  <CanScene product={entry} />
+                </div>
+                <p class="mt-5 flex items-center px-6 gap-2 text-[16px] font-semibold text-ink-heading">
+                  <span
+                    aria-hidden="true"
+                    class:list={["size-2 rounded-full", tint.dot]}
+                  />
+                  {entry.data.name}
+                  <ArrowRightIcon class="ml-auto size-4 text-brand-moss transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+                </p>
+                <p class="mt-1 px-6 pb-6 text-[14px] text-ink-body/70">
+                  {entry.data.tags.join(" · ")}
+                </p>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+)}

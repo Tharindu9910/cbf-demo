@@ -1,0 +1,75 @@
+---
+import Box from "@lucide/astro/icons/box";
+import Calendar from "@lucide/astro/icons/calendar";
+import Droplet from "@lucide/astro/icons/droplet";
+import FlaskConicalOff from "@lucide/astro/icons/flask-conical-off";
+
+/**
+ * The claims strip that closes the Gotu Kola section: a green hairline, then
+ * five ringed icons with a bold claim and a grey note, split by short green
+ * rules. Five across from `lg`; below that the row wraps (three, then two)
+ * and the rules drop out.
+ */
+
+const icon = "size-[22px] lg:size-[27px]";
+
+const CLAIMS = [
+  { icon: FlaskConicalOff, title: ["No Preservatives"], note: ["Pure and clean."] },
+  { icon: Droplet, title: ["No Artificial Colors"], note: ["Only nature’s green."] },
+  { icon: Box, title: ["Low Sugar"], note: ["Less sugar,", "more goodness."] },
+  { icon: "leaf", title: ["100% Natural", "Gotu Kola Extract"], note: ["Pure plant power."] },
+  { icon: Calendar, title: ["12 Months", "Shelf Life"], note: ["Freshness you", "can trust."] },
+] as const;
+---
+
+{/* The green hairline across the top (`before:`), inset like the design's. */}
+<div
+  class="relative mx-auto max-w-[1322px] px-5 pb-10 font-inter before:block before:h-px before:bg-brand-moss before:opacity-85 lg:max-w-[1402px] lg:px-10 lg:pb-3"
+>
+  {/* Five across from lg, in the design's 1361px row. */}
+  <ul
+    class="mx-auto flex flex-wrap justify-center gap-y-8 pt-10 lg:-mx-[19.5px] lg:max-w-[1361px] lg:flex-nowrap lg:pt-[49px]"
+  >
+    {
+      CLAIMS.map(({ icon: Icon, title, note }, i) => (
+        <li
+          class:list={[
+            "relative flex flex-[0_0_50%] flex-col items-center px-2 text-center sm:basis-[33.333%] lg:min-w-0 lg:flex-1",
+            // The short rule between claims, from lg.
+            i > 0 &&
+              "lg:before:absolute lg:before:top-[56px] lg:before:left-0 lg:before:h-[85px] lg:before:w-px lg:before:bg-brand-moss",
+          ]}
+        >
+          <span
+            class="grid size-[72px] place-items-center rounded-full border border-claims-ring text-claims-icon lg:size-[84px]"
+            aria-hidden="true"
+          >
+            {Icon === "leaf" ? (
+              <svg class={icon} viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M19.5 3.5c-6.7.3-11.6 2.4-13.6 6.6-1.4 2.9-.9 5.8.4 7.6l-2 2.6 1.2.9 2-2.5c1.9 1.2 4.8 1.5 7.4-.1 4-2.5 4.9-8.2 4.6-15.1z"
+                />
+                <path
+                  fill="none"
+                  stroke="#f7f5ea"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  d="M8.6 15.6c2-2.9 4.3-5.2 7.3-7.3"
+                />
+              </svg>
+            ) : (
+              <Icon class={icon} stroke-width={2} />
+            )}
+          </span>
+          <h3 class="mt-4 text-[16px] leading-[21px] font-bold text-claims-title lg:mt-[17px] lg:text-[length:clamp(15px,1.23vw,18px)] lg:leading-[1.333]">
+            {title.map((line, i) => (i ? [<br />, line] : line))}
+          </h3>
+          <p class="mt-1 text-[13px] leading-[18px] text-claims-note lg:mt-[3px] lg:text-[length:clamp(13px,1vw,14.5px)] lg:leading-[1.38]">
+            {note.map((line, i) => (i ? [<br />, line] : line))}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</div>

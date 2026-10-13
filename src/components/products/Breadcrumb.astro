@@ -1,0 +1,49 @@
+---
+/**
+ * Products › Brand › Product, on the detail page's ivory top. The
+ * last step is the current page and isn't a link. Its JSON-LD twin is built
+ * in `seo/JsonLd.astro`.
+ */
+interface Props {
+  items: { label: string; href?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class="font-inter text-[13px] leading-5">
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-ink-body/70">
+    {items.map((item, i) => (
+      <li class="flex items-center gap-2">
+        {i > 0 && (
+          <svg
+            viewBox="0 0 16 16"
+            class="size-3 text-ink-body/35"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            aria-hidden="true"
+          >
+            <path
+              d="M6 3.5 10.5 8 6 12.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        )}
+        {item.href ? (
+          <a
+            href={item.href}
+            class="rounded-sm transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss"
+          >
+            {item.label}
+          </a>
+        ) : (
+          <span aria-current="page" class="font-semibold text-ink-heading">
+            {item.label}
+          </span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

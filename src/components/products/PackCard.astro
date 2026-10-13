@@ -1,0 +1,98 @@
+---
+import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
+import Check from "@lucide/astro/icons/check";
+
+import ArrowRightIcon from "../icons/ArrowRightIcon.astro";
+import { categoryLabel } from "../../config/products";
+import { productHref, type Product } from "./range";
+import { tintOf } from "./tint";
+
+/**
+ * A pack on the Products listing, two cards wide: its picture on the left,
+ * then category, name, summary and what's in the box. The whole card is the
+ * link.
+ */
+interface Props {
+  product: Product;
+}
+
+const { id, data } = Astro.props.product;
+const tint = tintOf(id);
+const lead = data.gallery[0];
+const cover = lead.fit === "cover";
+
+const choices = await Promise.all(
+  (data.mix?.flavours ?? []).map(async (flavour) => (await getEntry(flavour))?.data.name ?? ""),
+);
+---
+
+<a
+  href={productHref(id)}
+  class="group relative isolate flex h-full flex-col overflow-hidden rounded-[24px] bg-white font-inter text-ink-heading shadow-card ring-1 ring-brand-leaf/6 transition-[translate,box-shadow] duration-500 ease-rise hover:-translate-y-1 hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss sm:grid sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+>
+  <div class="relative aspect-[5/4] overflow-hidden bg-brand-ivory sm:aspect-auto sm:min-h-[300px]">
+    <div
+      aria-hidden="true"
+      class:list={[
+        "absolute inset-0 scale-90 opacity-80 transition-[opacity,scale] duration-700 ease-rise group-hover:scale-105 group-hover:opacity-100 motion-reduce:transition-none",
+        tint.halo,
+      ]}
+    ></div>
+    <Image
+      src={lead.src}
+      alt={lead.alt}
+      widths={[360, 560, 800]}
+      sizes="(min-width: 1024px) 420px, (min-width: 640px) 50vw, 100vw"
+      quality={82}
+      loading="lazy"
+      class:list={[
+        "absolute inset-0 transition-[translate,scale] duration-700 ease-rise select-none group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100",
+        cover
+          ? "size-full object-cover"
+          : "m-auto h-[84%] w-auto max-w-[88%] object-contain drop-shadow-[0_22px_24px_rgb(13_43_18/0.25)] group-hover:-translate-y-1.5 motion-reduce:group-hover:translate-y-0",
+      ]}
+    />
+  </div>
+
+  <div class="flex flex-1 flex-col p-6 lg:p-8">
+    <p class="text-[11px] leading-4 font-bold tracking-[2.2px] text-brand-fern uppercase">
+      {categoryLabel(data.category)}
+    </p>
+    <h3 class="mt-2 font-display text-[28px] leading-[1.1] font-bold tracking-[-0.3px] text-balance lg:text-[30px]">
+      {data.name}
+    </h3>
+    <p class="mt-2 max-w-xs text-[14px] leading-[1.6] text-ink-body">
+      {data.summary}
+    </p>
+    {choices.length > 0 && (
+      <>
+      <p class="mt-5 text-[13px] leading-5 font-semibold text-ink-heading">
+        Any {data.mix?.cans} cans, mixed from:
+      </p>
+      <ul class="mt-2 flex flex-col gap-2 text-[14px] leading-5 text-ink-body">
+        {choices.map((name) => (
+          <li class="flex items-center gap-2.5">
+            <Check
+              class="size-4 shrink-0 text-brand-moss"
+              stroke-width={2.5}
+              aria-hidden="true"
+            />
+            {name}
+          </li>
+        ))}
+      </ul>
+      </>
+    )}
+
+    <div class="mt-auto flex items-center justify-between gap-4 pt-7">
+      <span class="text-[13px] leading-none text-ink-body tabular-nums">
+        {data.size}
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-brand-moss">
+        View Details
+        <ArrowRightIcon class="size-4 transition-transform duration-300 ease-rise group-hover:translate-x-1 motion-reduce:transition-none" />
+      </span>
+    </div>
+  </div>
+</a>

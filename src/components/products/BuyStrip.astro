@@ -1,0 +1,72 @@
+---
+import Store from "@lucide/astro/icons/store";
+
+import PillLink from "../ui/PillLink.astro";
+import { inquiryHref } from "../../config/site";
+
+/**
+ * The close of each product page: one deep-green bar for offices, cafés and
+ * shops, with the bulk enquiry (more than a 6-can pack) and the way to a
+ * stockist. Both links carry the product.
+ */
+interface Props {
+  product?: string;
+}
+
+const { product } = Astro.props;
+---
+
+<section
+  aria-labelledby="buy-heading"
+  class="bg-brand-ivory pb-20 font-inter lg:pb-24"
+>
+  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+    <div
+      data-reveal
+      class="relative isolate flex flex-col gap-6 overflow-hidden rounded-[24px] bg-brand-leaf px-6 py-7 text-white md:flex-row md:items-center md:gap-8 md:px-10 md:py-8"
+    >
+      <div
+        aria-hidden="true"
+        class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_50%_120%_at_100%_0%,color-mix(in_oklab,var(--color-brand-green)_22%,transparent),transparent_70%)]"
+      ></div>
+      <div class="flex items-center gap-6 md:flex-1 md:gap-8">
+        <span
+          aria-hidden="true"
+          class="hidden size-14 shrink-0 place-items-center rounded-2xl text-white/90 ring-1 ring-white/25 sm:grid"
+        >
+          <Store class="size-7" stroke-width={1.4} />
+        </span>
+        <span
+          aria-hidden="true"
+          class="hidden h-12 w-px bg-white/20 sm:block"
+        ></span>
+        <div>
+          <h2
+            id="buy-heading"
+            class="font-display text-[clamp(22px,2.6vw,28px)] leading-[1.15] font-bold tracking-[-0.3px] text-balance"
+          >
+            Ordering for an office, caf&eacute; or shop?
+          </h2>
+          <p class="mt-1.5 text-[14px] leading-5 text-white/75">
+            Get your favourite Thynkers Lyquid in bulk.
+          </p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <PillLink
+          href={inquiryHref({ intent: "bulk", product })}
+          arrow
+          class="h-12 gap-2 px-6 text-[14px]"
+        >
+          Bulk Inquiry
+        </PillLink>
+        <a
+          href={inquiryHref({ intent: "store", product })}
+          class="inline-flex h-12 items-center rounded-full border border-white/60 px-6 text-[14px] font-semibold text-white transition-colors hover:bg-white hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
+        >
+          Find a Store
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

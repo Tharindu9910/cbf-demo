@@ -1,0 +1,104 @@
+---
+import { Image } from "astro:assets";
+
+import leavesRight from "../../assets/images/footer/leaves-right.png";
+import cansTrio from "../../assets/images/cans-trio.png";
+import ArrowRightIcon from "../icons/ArrowRightIcon.astro";
+import { BRANDS, LISTING } from "../../config/products";
+import { listingPhoto } from "./listingPhoto";
+
+/**
+ * The Products page's opening: eyebrow, the page's only <h1>, the intro and
+ * two pills on a light, sunlit ground, dark copy on the left.
+ *
+ * With `products-page/hero.jpg` in place the photo fills the section, faded to
+ * ivory behind the copy. Without it, a sage glow with the three cans on the
+ * right stands in. A soft deep-green wash along the top keeps the white
+ * header readable either way.
+ */
+const { eyebrow, title, intro, ctas } = LISTING;
+const photo = listingPhoto("hero");
+---
+
+<section
+  aria-labelledby="products-hero-heading"
+  class="relative isolate overflow-hidden bg-brand-ivory font-inter"
+>
+  {photo ? (
+    <Image
+      src={photo}
+      alt=""
+      widths={[800, 1400, 2000, 2600]}
+      sizes="100vw"
+      quality={80}
+      loading="eager"
+      fetchpriority="high"
+      class="absolute inset-0 -z-20 size-full object-cover object-right"
+    />
+  ) : (
+    <>
+      <div
+        aria-hidden="true"
+        class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_55%_75%_at_78%_55%,var(--color-brand-sage),transparent_72%),radial-gradient(ellipse_40%_50%_at_95%_100%,color-mix(in_oklab,var(--color-brand-green)_28%,transparent),transparent_70%)]"
+      ></div>
+      <Image
+        src={leavesRight}
+        alt=""
+        loading="eager"
+        class="pointer-events-none absolute -right-[4%] -bottom-[12%] -z-10 h-[70%] w-auto opacity-70 select-none"
+      />
+    </>
+  )}
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-linear-to-r from-brand-ivory via-brand-ivory/70 via-40% to-transparent to-65%"
+  ></div>
+  <div
+    aria-hidden="true"
+    class="absolute inset-x-0 top-0 -z-10 h-40 bg-linear-to-b from-brand-leaf/45 to-transparent"
+  ></div>
+
+  <div class="mx-auto grid max-w-[1200px] items-end gap-10 px-5 pt-36 pb-16 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] md:px-10 md:pt-44 md:pb-0 lg:min-h-[560px]">
+    <div class="md:pb-20 lg:pb-24">
+      <p class="text-[12px] leading-4 font-bold tracking-[2.6px] text-brand-fern uppercase">
+        {eyebrow}
+      </p>
+      <h1
+        id="products-hero-heading"
+        class="mt-4 max-w-[11ch] font-display text-[clamp(44px,8vw,80px)] leading-[0.98] font-bold tracking-[-1px] text-balance text-ink-heading"
+      >
+        {title}
+      </h1>
+      <p class="mt-6 max-w-sm text-[17px] leading-[1.55] text-ink-body md:text-[18px]">
+        {intro}
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href={`#${BRANDS[0].id}`}
+          class="group inline-flex h-[52px] items-center gap-2.5 rounded-full bg-brand-leaf px-7 text-[15px] font-semibold text-white transition-colors hover:bg-brand-pine focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
+        >
+          {ctas.range}
+          <ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+        </a>
+        <a
+          href={ctas.ingredients.href}
+          class="inline-flex h-[52px] items-center rounded-full border border-brand-leaf/30 bg-white/40 px-7 text-[15px] font-semibold text-brand-leaf backdrop-blur-sm transition-colors hover:border-brand-leaf hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
+        >
+          {ctas.ingredients.label}
+        </a>
+      </div>
+    </div>
+    {!photo && (
+      <Image
+        src={cansTrio}
+        alt="Thynkers Lyquid cans in Pineapple, Mango & Passion and Matcha Original"
+        widths={[360, 560, 800]}
+        sizes="(min-width: 768px) 440px, 0px"
+        quality={82}
+        loading="eager"
+        fetchpriority="high"
+        class="mx-auto hidden h-auto w-full max-w-[420px] translate-y-[6%] drop-shadow-[0_30px_40px_rgb(13_43_18/0.28)] select-none md:block"
+      />
+    )}
+  </div>
+</section>

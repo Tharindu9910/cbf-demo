@@ -1,0 +1,64 @@
+---
+import { Image } from "astro:assets";
+
+import { ABOUT } from "../../config/about";
+import { heading } from "../../styles/section";
+
+/**
+ * "Our Story": who the company is and why it exists. Photo on the left, copy
+ * on the right from `lg`; stacked below. The copy follows the mockup: title
+ * one sentence per line, two paragraphs, then the ambition beside a green
+ * rule with its key phrases in green. The number strip under it shows
+ * only the stats that have a value, and only when there are at least two.
+ */
+const { eyebrow, title, paragraphs, ambition, image, stats } = ABOUT.story;
+const titleLines = title.split(/(?<=\.)\s+/);
+const shownStats = stats.filter((s) => s.value);
+---
+
+<section id="our-story" aria-labelledby="story-heading" class="scroll-mt-24 bg-brand-ivory py-20 lg:py-28">
+  <div
+    class="mx-auto grid max-w-[1200px] items-center gap-12 px-5 md:px-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,10fr)] lg:gap-16"
+  >
+    <Image
+      src={image.src}
+      alt={image.alt}
+      widths={[458, 727, 916]}
+      sizes="(min-width: 1024px) min(52vw, 620px), min(100vw - 40px, 560px)"
+      quality={82}
+      loading="lazy"
+      data-reveal class="mx-auto block aspect-[4/3] h-auto w-full max-w-[560px] rounded-2xl object-cover select-none lg:max-w-none"
+    />
+
+    <div data-reveal class="max-w-[560px] font-inter">
+      <p class="text-[12px] leading-4 font-bold tracking-[2.6px] uppercase text-brand-fern">{eyebrow}</p>
+      <h2
+        id="story-heading"
+        class:list={[heading, "mt-3 text-ink-heading lg:text-[44px]"]}
+      >
+        {titleLines.map((line) => <span class="block">{line}</span>)}
+      </h2>
+      <div class="mt-5 space-y-5 text-[16px] leading-[25px] text-ink-body">
+        {paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+      <p class="mt-6 border-l-[3px] border-brand-pine py-0.5 pl-6 text-[16px] leading-[25px] font-semibold text-ink-heading">
+        {ambition.map((part) => (part.accent ? <span class="text-brand-fern">{part.text}</span> : part.text))}
+      </p>
+    </div>
+  </div>
+
+  {
+    shownStats.length >= 2 && (
+      <dl data-reveal class="mx-auto mt-16 grid max-w-[1200px] grid-cols-2 gap-px overflow-hidden px-5 md:px-10 lg:mt-20 lg:grid-cols-4">
+        {shownStats.map((s) => (
+          <div class="flex flex-col border-t-2 border-brand-moss/30 pt-5 pr-4 pb-2">
+            <dt class="font-inter text-[13px] leading-5 text-ink-body">{s.label}</dt>
+            <dd class="order-first mb-2 font-display text-[clamp(28px,4vw,38px)] leading-none font-bold text-ink-heading">
+              {s.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    )
+  }
+</section>

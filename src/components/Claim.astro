@@ -1,0 +1,43 @@
+---
+// Every Lucide icon component shares this one type.
+import type Leaf from "@lucide/astro/icons/leaf";
+
+/**
+ * One pack claim or spec: a gold-ringed icon beside a bold headline and a
+ * small note. A hairline gold glyph on ivory all but disappears at this size,
+ * so the ring keeps the gold and the glyph is drawn in ink.
+ */
+interface Props {
+  icon: typeof Leaf;
+  headline: string;
+  note?: string;
+  /** Renders the superscript "+" of the pack's "No⁺" lockup. */
+  plus?: boolean;
+  /** Marks the note as per-product copy, for the flavour-change timeline. */
+  swaps?: boolean;
+  /** Icon on the right, copy right-aligned — for the can's right shoulder. */
+  mirrored?: boolean;
+}
+
+const { icon: Icon, headline, note, plus, swaps, mirrored } = Astro.props;
+---
+
+<li class:list={["flex items-center gap-2.5", mirrored && "flex-row-reverse text-right"]}>
+  <span
+    aria-hidden="true"
+    class="grid size-11 shrink-0 place-items-center rounded-full border-2 border-brand-gold/70 bg-brand-gold/10 text-brand-ink"
+  >
+    <Icon class="size-5" stroke-width={2} />
+  </span>
+  <span class="min-w-0 leading-tight">
+    <span class="block text-sm font-semibold">
+      {headline}{plus && <sup class="text-[0.6em]">+</sup>}
+    </span>
+    <span
+      class:list={["block text-[0.7rem] text-neutral-500", swaps && "flavor-swap"]}
+      data-flavor-extract={swaps ? "" : undefined}
+    >
+      {note}
+    </span>
+  </span>
+</li>

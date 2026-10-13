@@ -1,0 +1,53 @@
+---
+import { Image } from "astro:assets";
+
+import { CONTACT } from "../../config/contact";
+
+/**
+ * The Contact page's opening, built like the About hero: a full-height photo
+ * with the eyebrow, the page's only <h1> and the intro down the left, under
+ * the same darkening gradients for the header and the copy.
+ */
+const { eyebrow, title, intro, image } = CONTACT.hero;
+---
+
+<section
+  aria-labelledby="contact-hero-heading"
+  class="relative isolate flex min-h-[max(600px,100svh)] overflow-hidden bg-brand-leaf text-white"
+>
+  <Image
+    src={image.src}
+    alt={image.alt}
+    widths={[768, 1280, 1920, 2560]}
+    sizes="100vw"
+    quality={80}
+    loading="eager"
+    fetchpriority="high"
+    class="absolute inset-0 -z-20 h-full w-full object-cover"
+  />
+  {/* Darkens the top for the header, the left for the copy and the bottom edge. */}
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgb(6_22_14/0.7)_0%,rgb(6_22_14/0.4)_45%,rgb(6_22_14/0.05)_80%),linear-gradient(to_bottom,rgb(6_22_14/0.55)_0%,rgb(6_22_14/0.05)_28%,rgb(6_22_14/0.05)_65%,rgb(6_22_14/0.6)_100%)]"
+  >
+  </div>
+
+  <div
+    class="relative flex w-full flex-col justify-end px-5 pt-32 pb-32 md:px-10 md:pb-[max(56px,9svh)] lg:pr-10 lg:pl-[11vw]"
+  >
+    <p class="font-poppins text-[11px] leading-4 font-medium tracking-[4px] text-white/90 uppercase md:text-[12px]">
+      {eyebrow}
+    </p>
+    <h1
+      id="contact-hero-heading"
+      class="mt-4 font-display text-[clamp(44px,5.6vw,96px)] leading-[1.02] font-bold tracking-[-0.5px] drop-shadow-[0_2px_24px_rgb(0_0_0/0.3)]"
+    >
+      {title}
+    </h1>
+    <p
+      class="mt-5 max-w-[27em] font-poppins text-[15px] leading-[1.55] font-medium text-white/95 drop-shadow-[0_1px_10px_rgb(0_0_0/0.3)] md:text-[clamp(16px,1.3vw,20px)]"
+    >
+      {intro}
+    </p>
+  </div>
+</section>

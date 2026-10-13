@@ -1,0 +1,56 @@
+{
+  "order": 2,
+  "category": "fruit",
+  "can": "../../assets/images/cans/mango-passion.png",
+  "name": "Mango & Passion",
+  "key": "grape",
+  "color": "#E2762B",
+  "background": {
+    "left": "../../assets/images/flavours/mango-left.png",
+    "right": "../../assets/images/flavours/mango-right.png"
+  },
+  "description": "Thynkers Lyquid Mango & Passion is a Gotukola-infused drink with ripe mango and passion fruit flavour, crafted in Sri Lanka to support clear thinking and mindful energy.",
+  "facts": {
+    "extract": "Gotukola Extract",
+    "volume": "250ml",
+    "shelfLife": "12 Months"
+  },
+  "tagline": "Bold in Taste. Made to Inspire.",
+  "tags": [
+    "Tropical",
+    "Bold",
+    "Juicy"
+  ],
+  "summary": "Sweet mango and vibrant passion fruit, blended with our signature gotu kola infusion.",
+  "story": [
+    "Sweet mango meets the vibrant character of passion fruit. Our signature gotu kola infusion is blended with bold, juicy tropical flavours for a refreshing everyday moment."
+  ],
+  "finish": "Powered by gotu kola. Flavored with mango & passion fruit.",
+  "ingredients": "Carbonated water, Gotu Kola Extract, Citric Acid (INS 330), Mango Natural Flavour, Passion Natural Flavour, L-Theanine, Vitamin B12.",
+  "gallery": [
+    {
+      "src": "../../assets/images/products/mango-passion.jpg",
+      "alt": "A can of Thynkers Lyquid Mango & Passion, 250 ml"
+    },
+    {
+      "src": "../../assets/images/gotu-kola/gotu-kola-can.jpg",
+      "alt": "A Thynkers Lyquid can among fresh gotu kola leaves and a bowl of gotu kola powder",
+      "fit": "cover"
+    },
+    {
+      "src": "../../assets/images/order/beach-six-pack.jpg",
+      "alt": "The six-can Thynkers Lyquid box beside all three flavours on a Sri Lankan beach",
+      "fit": "cover",
+      "focus": "right"
+    }
+  ],
+  "size": "250 ml",
+  "packs": [
+    {
+      "id": "single",
+      "label": "Single Can",
+      "detail": "250 ml",
+      "orderable": false
+    }
+  ]
+}

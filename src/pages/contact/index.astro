@@ -1,0 +1,35 @@
+---
+import Base from "../../layouts/Base.astro";
+import ContactFaq from "../../components/contact/ContactFaq.astro";
+import ContactForm from "../../components/contact/ContactForm.astro";
+import ContactHero from "../../components/contact/ContactHero.astro";
+import HelpCards from "../../components/contact/HelpCards.astro";
+import MoreLinks from "../../components/contact/MoreLinks.astro";
+// import PartnerWithUs from "../../components/contact/PartnerWithUs.astro";
+import WhereToBuy from "../../components/contact/WhereToBuy.astro";
+import { CONTACT } from "../../config/contact";
+
+/**
+ * Contact Us: helps consumers find the product and captures business
+ * enquiries, since the site has no checkout. Copy lives in
+ * `config/contact.ts`; the form posts to `public/contact.php`. No 3D here.
+ */
+const { seo } = CONTACT;
+---
+
+<Base title={seo.title} description={seo.description} pageType="ContactPage" products={false} stage={false}>
+  <ContactHero />
+  <HelpCards />
+  <ContactForm />
+  <WhereToBuy />
+  {/* <PartnerWithUs /> */}
+  <ContactFaq />
+  <MoreLinks />
+</Base>
+
+<script>
+  import { revealOnScroll } from "../../scripts/anim/aboutReveal";
+  import { initContactForm } from "../../scripts/contact/form";
+  initContactForm();
+  revealOnScroll();
+</script>

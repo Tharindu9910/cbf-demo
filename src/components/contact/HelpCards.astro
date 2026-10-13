@@ -1,0 +1,45 @@
+---
+import ArrowRightIcon from "../icons/ArrowRightIcon.astro";
+import SectionHeading from "../about/SectionHeading.astro";
+import { CONTACT } from "../../config/contact";
+import { inquiryHref } from "../../config/site";
+import { ICONS, type IconName } from "./icons";
+
+/**
+ * "How can we help?": four doors. "Find a Store" lands on Where to Buy, the
+ * others on the form with their inquiry type selected. Each is a real link
+ * (`inquiryHref`), so they work without script; `scripts/contact/form.ts`
+ * picks them up via `data-intent` and switches the form in place instead of
+ * reloading.
+ */
+const { title, cards } = CONTACT.help;
+---
+
+<section aria-labelledby="help-heading" class="bg-brand-ivory pt-20 lg:pt-24">
+  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+    <SectionHeading id="help-heading" title={title} data-reveal />
+    <ul class="mt-10 grid gap-4 font-inter sm:grid-cols-2 lg:grid-cols-4">
+      {
+        cards.map((card) => {
+          const Icon = ICONS[card.icon as IconName];
+          return (
+            <li data-reveal>
+              <a
+                href={inquiryHref({ intent: card.intent })}
+                data-intent={card.intent}
+                class="group flex h-full flex-col rounded-[24px] bg-white p-7 ring-1 ring-brand-leaf/8 transition-[box-shadow,translate] hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgb(13_43_18/0.35)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+              >
+                <span class="grid size-12 place-items-center rounded-full bg-brand-cream text-brand-moss">
+                  <Icon class="size-6" stroke-width={1.8} aria-hidden="true" />
+                </span>
+                <span class="mt-6 text-[19px] leading-7 font-semibold text-ink-heading">{card.title}</span>
+                <span class="mt-2 flex-1 text-[15px] leading-[1.6] text-ink-body">{card.body}</span>
+                <ArrowRightIcon class="mt-6 size-5 text-brand-moss transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>

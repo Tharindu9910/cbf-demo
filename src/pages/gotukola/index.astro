@@ -1,0 +1,33 @@
+---
+import Base from "../../layouts/Base.astro";
+import Evidence from "../../components/gotukola/Evidence.astro";
+import GotukolaHero from "../../components/gotukola/GotukolaHero.astro";
+import Overview from "../../components/gotukola/Overview.astro";
+import { GOTUKOLA } from "../../config/gotukola";
+
+/**
+ * Gotukola in two screens: the herb in brief, then what research up to 2026
+ * says and how safe it is, with sources. Copy, figures and sources live in
+ * `config/gotukola.ts`. No 3D here, so the WebGL stage is skipped.
+ */
+const { seo } = GOTUKOLA;
+---
+
+<Base
+  title={seo.title}
+  description={seo.description}
+  image={seo.image}
+  imageAlt={seo.imageAlt}
+  pageType="WebPage"
+  products={false}
+  stage={false}
+>
+  <GotukolaHero />
+  <Overview />
+  <Evidence />
+</Base>
+
+<script>
+  import { revealOnScroll } from "../../scripts/anim/aboutReveal";
+  revealOnScroll();
+</script>

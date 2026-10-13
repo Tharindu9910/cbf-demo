@@ -1,0 +1,90 @@
+---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import Clock from "@lucide/astro/icons/clock";
+import Mail from "@lucide/astro/icons/mail";
+import MapPin from "@lucide/astro/icons/map-pin";
+import MessageCircle from "@lucide/astro/icons/message-circle";
+import Phone from "@lucide/astro/icons/phone";
+
+import { CONTACT } from "../../config/contact";
+import { FULL_ADDRESS, SITE } from "../../config/site";
+
+/**
+ * Beside the form: address, phone, WhatsApp, email and hours, each row only
+ * when its value is set. Address, phone and email are `SITE`'s, the same as
+ * the footer and the JSON-LD.
+ *
+ * The map is a link to Google Maps rather than an embedded one: the page's
+ * CSP (`default-src 'self'`) blocks third-party iframes, and a link costs no
+ * cookies or megabyte of map script. It appears once the street address is
+ * known, as a town alone would pin the wrong place.
+ */
+const { title, hours, whatsapp } = CONTACT.details;
+const { email, telephone } = SITE.contact;
+
+const digits = (n: string) => n.replace(/[^\d+]/g, "");
+const mapHref = SITE.address.streetAddress
+  ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${SITE.legalName}, ${FULL_ADDRESS}`)}`
+  : "";
+
+const rows = [
+  { icon: MapPin, label: "Address", value: FULL_ADDRESS, href: "" },
+  { icon: Phone, label: "Phone", value: telephone, href: telephone && `tel:${digits(telephone)}` },
+  { icon: MessageCircle, label: "WhatsApp", value: whatsapp, href: whatsapp && `https://wa.me/${digits(whatsapp).replace("+", "")}` },
+  { icon: Mail, label: "Email", value: email, href: email && `mailto:${email}` },
+  { icon: Clock, label: "Business hours", value: hours, href: "" },
+].filter((row) => row.value);
+
+const link =
+  "rounded-sm wrap-anywhere transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss";
+---
+
+<aside data-reveal aria-labelledby="details-heading" class="font-inter lg:pt-4">
+  <h2 id="details-heading" class="font-display text-[clamp(28px,4vw,34px)] leading-[1.1] font-bold text-ink-heading">{title}</h2>
+  <p class="mt-2 text-[16px] leading-[1.6] text-ink-body">{SITE.legalName}</p>
+
+  <dl class="mt-8 grid gap-6">
+    {
+      rows.map(({ icon: Icon, label, value, href }) => (
+        <div class="flex gap-4">
+          <span class="grid size-11 shrink-0 place-items-center rounded-full bg-white text-brand-moss ring-1 ring-brand-leaf/8">
+            <Icon class="size-5" stroke-width={1.8} aria-hidden="true" />
+          </span>
+          <div class="min-w-0 pt-0.5">
+            <dt class="text-[12px] leading-4 font-bold tracking-[2px] text-brand-fern uppercase">{label}</dt>
+            <dd class="mt-1 text-[16px] leading-6 text-ink-heading">
+              {href ? (
+                <a href={href} class={link} {...(label === "WhatsApp" && { target: "_blank", rel: "noopener noreferrer" })}>
+                  {value}
+                </a>
+              ) : (
+                value
+              )}
+            </dd>
+          </div>
+        </div>
+      ))
+    }
+  </dl>
+
+  {
+    mapHref && (
+      <a
+        href={mapHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group relative mt-10 flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-[24px] bg-brand-cream bg-[radial-gradient(rgb(13_43_18/0.14)_1px,transparent_1px)] bg-size-[18px_18px] ring-1 ring-brand-leaf/8 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
+      >
+        <span class="flex flex-col items-center gap-3 text-center">
+          <span class="grid size-14 place-items-center rounded-full bg-brand-moss text-white shadow-pill transition-transform group-hover:-translate-y-1 motion-reduce:transition-none">
+            <MapPin class="size-7" stroke-width={1.8} aria-hidden="true" />
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[14px] font-semibold text-brand-leaf shadow-[0_6px_16px_-8px_rgb(13_43_18/0.4)]">
+            Open in Google Maps
+            <ArrowUpRight class="size-4" stroke-width={2} aria-hidden="true" />
+          </span>
+        </span>
+      </a>
+    )
+  }
+</aside>

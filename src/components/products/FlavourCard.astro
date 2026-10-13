@@ -1,0 +1,55 @@
+---
+import CanScene from "./CanScene.astro";
+import ArrowRightIcon from "../icons/ArrowRightIcon.astro";
+import { categoryLabel } from "../../config/products";
+import { productHref, type Product } from "./range";
+
+/**
+ * A product as a card: its still life (`CanScene`: the can in front of its
+ * fruit, or a pack's cans), then category, name, three tags and the size.
+ * The whole card is the link. Used on the Products listing and in "You may
+ * also like".
+ *
+ * On hover the card lifts, the halo blooms, the fruit spreads a little and
+ * the can rises.
+ */
+interface Props {
+  product: Product;
+}
+
+const { id, data } = Astro.props.product;
+const artAlt = data.can
+  ? `A can of ${data.brand} ${data.name}, ${data.size}`
+  : data.gallery[0].alt;
+---
+
+<a
+  href={productHref(id)}
+  class="group relative isolate flex h-full flex-col overflow-hidden rounded-[24px] bg-white font-inter text-ink-heading shadow-card ring-1 ring-brand-leaf/6 transition-[translate,box-shadow] duration-500 ease-rise hover:-translate-y-1 hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+>
+  <div class="relative aspect-[5/4] overflow-hidden bg-brand-ivory">
+    <CanScene product={Astro.props.product} alt={artAlt} />
+  </div>
+
+  <div class="flex flex-1 flex-col p-6 lg:p-7">
+    <p class="text-[11px] leading-4 font-bold tracking-[2.2px] text-brand-fern uppercase">
+      {categoryLabel(data.category)}
+    </p>
+    <h3 class="mt-2 font-display text-[26px] leading-[1.1] font-bold tracking-[-0.3px] text-balance lg:text-[28px]">
+      {data.name}
+    </h3>
+    <p class="mt-1.5 text-[14px] leading-5 text-ink-body/70">
+      {data.tags.join(" · ")}
+    </p>
+
+    <div class="mt-auto flex items-center justify-between gap-4 pt-7">
+      <span class="text-[13px] leading-none text-ink-body tabular-nums">
+        {data.size}
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-brand-moss">
+        View Product
+        <ArrowRightIcon class="size-4 transition-transform duration-300 ease-rise group-hover:translate-x-1 motion-reduce:transition-none" />
+      </span>
+    </div>
+  </div>
+</a>

@@ -1,0 +1,55 @@
+{
+  "order": 1,
+  "category": "fruit",
+  "can": "../../assets/images/cans/pineapple.png",
+  "name": "Pineapple",
+  "key": "blackCherry",
+  "color": "#F2A93B",
+  "background": {
+    "left": "../../assets/images/flavours/pineapple-left.png",
+    "right": "../../assets/images/flavours/pineapple-right.png"
+  },
+  "description": "Thynkers Lyquid Pineapple is a Gotukola-infused drink with a bright pineapple flavour, crafted in Sri Lanka to support clear thinking and mindful energy.",
+  "facts": {
+    "extract": "Gotukola Extract",
+    "volume": "250ml",
+    "shelfLife": "12 Months"
+  },
+  "tagline": "Rich in Taste. Bright in Spirit.",
+  "tags": [
+    "Bright",
+    "Crisp",
+    "Refreshing"
+  ],
+  "summary": "Bright pineapple meets our signature gotu kola infusion, crisp and refreshing.",
+  "story": [
+    "Bright pineapple meets our signature gotu kola infusion, delivering a crisp and refreshing experience for everyday moments."
+  ],
+  "finish": "Powered by gotu kola. Flavored with pineapple.",
+  "gallery": [
+    {
+      "src": "../../assets/images/products/pineapple.jpg",
+      "alt": "A can of Thynkers Lyquid Pineapple, 250 ml"
+    },
+    {
+      "src": "../../assets/images/gotu-kola/gotu-kola-can.jpg",
+      "alt": "A Thynkers Lyquid can among fresh gotu kola leaves and a bowl of gotu kola powder",
+      "fit": "cover"
+    },
+    {
+      "src": "../../assets/images/order/beach-six-pack.jpg",
+      "alt": "The six-can Thynkers Lyquid box beside all three flavours on a Sri Lankan beach",
+      "fit": "cover",
+      "focus": "right"
+    }
+  ],
+  "size": "250 ml",
+  "packs": [
+    {
+      "id": "single",
+      "label": "Single Can",
+      "detail": "250 ml",
+      "orderable": false
+    }
+  ]
+}

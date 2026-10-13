@@ -1,0 +1,60 @@
+---
+import { Image } from "astro:assets";
+
+import logo from "../assets/images/cfb-icon.png";
+import ArrowRightIcon from "./icons/ArrowRightIcon.astro";
+import { CONTACT_HREF, NAV_LINKS, SITE } from "../config/site";
+import { url } from "../config/url";
+---
+
+<header class="absolute inset-x-0 top-0 z-[100] px-6 py-6 md:px-10 md:py-8">
+  <div class="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-6">
+    <a
+      href={url("/")}
+      aria-label={`${SITE.name} — home`}
+      class="site-nav-item flex items-center gap-[0.45em] font-aonic text-base/[0.82] font-black tracking-tight text-white uppercase drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)] md:text-lg/[0.82] lg:text-xl/[0.95]"
+    >
+      {/* Drawn at most ~35px wide; three densities cover every screen. */}
+      <Image
+        src={logo}
+        alt=""
+        width={36}
+        densities={[1, 2, 3]}
+        loading="eager"
+        class="h-[2.9em] w-auto drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]"
+      />
+      <span>
+        <span class="block">Ceylon</span>
+        <span class="block">Future</span>
+        <span class="block">Beverages</span>
+      </span>
+    </a>
+
+    <nav aria-label="Primary" class="flex items-center gap-8">
+      <ul class="hidden items-center gap-8 md:flex">
+        {
+          NAV_LINKS.map((link) => (
+            <li class="site-nav-item">
+              <a href={link.href} class="text-sm text-white/85 transition-colors hover:text-white">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <a
+        href={CONTACT_HREF}
+        class="site-nav-item group inline-flex items-center gap-3 rounded-full border border-white/60 px-5 py-3 text-sm text-white transition-colors hover:bg-white hover:text-brand-leaf md:px-6"
+      >
+        Contact
+        <ArrowRightIcon class="h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  import { animateHeader } from "../scripts/anim/header";
+  animateHeader();
+</script>

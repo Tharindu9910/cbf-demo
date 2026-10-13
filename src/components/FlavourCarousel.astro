@@ -1,0 +1,214 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+import PackSpecs from "./PackSpecs.astro";
+import ProductFacts from "./ProductFacts.astro";
+import ChevronIcon from "./icons/ChevronIcon.astro";
+
+/**
+ * "Choose your Flavor": one can on a stage between two pieces of corner
+ * artwork per flavour, with the pack claims under it. Everything is static
+ * HTML; `scripts/anim/carousel.ts` drives the change and the shared canvas
+ * draws the can into `[data-view="carousel"]`.
+ */
+interface Props {
+  heading?: string;
+}
+
+const { heading = "Choose your Flavor" } = Astro.props;
+
+// The flavours only: packs have no can of their own to put on the stage.
+const flavours = (await getCollection("flavours"))
+  .map((entry) => entry.data)
+  .flatMap(({ key, background, ...rest }) => (key && background ? [{ ...rest, key, background }] : []))
+  .sort((a, b) => a.order - b.order);
+const first = flavours[0];
+
+// Two voices: a letterspaced sans eyebrow over one big display word — the last
+// word of the heading.
+const headingWords = heading.trim().split(/\s+/);
+const displayWord = headingWords.at(-1) ?? "";
+const eyebrow = headingWords.slice(0, -1).join(" ");
+
+// What the client script needs to swap a flavour in, and nothing more.
+const clientData = JSON.stringify(
+  flavours.map(({ key, name, facts }) => ({ key, name, extract: facts.extract })),
+);
+
+/**
+ * One size drives the can, the gold ring and the halo, so they stay locked
+ * together. The three terms are the three ways the stage runs out of room:
+ * the design size on a roomy screen, the height the heading and claims leave
+ * free, and a narrow phone with both arrows beside it.
+ */
+const ARROW_BUTTON =
+  "grid size-10 shrink-0 place-items-center rounded-full bg-white/90 text-neutral-700 shadow-[0_6px_20px_-6px_rgba(28,26,23,0.35)] ring-brand-gold backdrop-blur-xs transition hover:bg-white hover:text-brand-ink focus:outline-hidden focus-visible:ring-2 sm:size-12 md:size-14 lg:size-16";
+---
+
+<section
+  id="products"
+  aria-labelledby="products-heading"
+  data-flavours={clientData}
+  class="carousel relative grid h-dvh min-h-[34rem] grid-rows-[auto_4fr_auto] justify-center overflow-hidden bg-brand-ivory px-4 py-8 text-brand-ink [--can:min(80vmin,calc(100dvh_-_20rem),calc(100vw_-_9rem))] sm:py-12"
+>
+  {/*
+    Each flavour's backdrop is a pair of corner pieces. On a change the pair
+    breaks apart to its own edges while the incoming one slides in from both
+    sides. A piece keeps its size at every breakpoint; the smaller the screen,
+    the further past the edge it sits.
+  */}
+  {
+    flavours.map(({ background }, i) => (
+      <div aria-hidden="true">
+        <div
+          data-side="left"
+          data-index={i}
+          class:list={[
+            "flavor-piece pointer-events-none absolute inset-y-0 left-[-32%] w-1/2 select-none sm:left-[-24%] md:left-[-12%] lg:left-0",
+            i > 0 && "opacity-0 noscript:hidden",
+          ]}
+        >
+          <Image
+            src={background.left}
+            alt=""
+            widths={[320, 480, background.left.width]}
+            sizes="50vw"
+            class="absolute inset-0 h-full w-full object-contain object-left"
+          />
+        </div>
+        <div
+          data-side="right"
+          data-index={i}
+          class:list={[
+            "flavor-piece pointer-events-none absolute inset-y-0 right-[-32%] w-1/2 select-none sm:right-[-24%] md:right-[-12%] lg:right-0",
+            i > 0 && "opacity-0 noscript:hidden",
+          ]}
+        >
+          <Image
+            src={background.right}
+            alt=""
+            widths={[240, background.right.width]}
+            sizes="50vw"
+            class="absolute inset-0 h-full w-full object-contain object-right"
+          />
+        </div>
+      </div>
+    ))
+  }
+
+  <h2 id="products-heading" class="relative text-center">
+    {/* The indent offsets the trailing letter-space so the line optically centres. */}
+    {
+      eyebrow && (
+        <span class="block indent-[0.3em] text-[0.65rem] font-bold tracking-[0.3em] text-neutral-500 uppercase sm:indent-[0.42em] sm:text-xs sm:tracking-[0.42em] md:text-sm">
+          {eyebrow}
+        </span>
+      )
+    }
+    <span
+      class="mt-1 block font-display text-4xl leading-none font-semibold tracking-tight sm:text-5xl md:text-7xl lg:text-8xl"
+    >
+      {displayWord}
+    </span>
+  </h2>
+
+  <div class="relative grid grid-cols-[auto_auto_auto] items-center gap-2 sm:gap-4 md:gap-6">
+    <button type="button" data-flavor-prev class={ARROW_BUTTON}>
+      <ChevronIcon class="size-4 sm:size-5 md:size-6" />
+      <span class="sr-only">Previous Flavor</span>
+    </button>
+
+    {/*
+      The can's box. The halo and ring are anchored to it rather than to the
+      section, so the circle tracks the can at every size.
+    */}
+    <div class="relative aspect-square h-[var(--can)] min-h-32">
+      {/* Warm halo, lifting the can off the ivory ground. */}
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute top-[62%] left-1/2 aspect-square w-[115%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,#fdf6e6_0%,#faf2e4_45%,transparent_70%)]"
+      >
+      </div>
+
+      {/* Thin gold ring, broken top and bottom. */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 200 200"
+        class="pointer-events-none absolute top-[62%] left-1/2 aspect-square w-[82%] -translate-x-1/2 -translate-y-1/2 text-brand-gold"
+      >
+        <circle
+          cx="100"
+          cy="100"
+          r="98"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="0.6"
+          stroke-opacity="0.85"
+          stroke-linecap="round"
+          pathLength="100"
+          stroke-dasharray="34 16"
+          stroke-dashoffset="17"></circle>
+      </svg>
+
+      <div data-view="carousel" data-flavor={first.key} aria-hidden="true" class="absolute inset-0">
+      </div>
+
+      {/*
+        Net contents and shelf life, one on each shoulder of the can. Below
+        `md` those corners are too tight; the pair moves under the claims.
+      */}
+      <PackSpecs
+        volume={first.facts.volume}
+        shelfLife={first.facts.shelfLife}
+        layout="flank"
+        class="hidden md:flex"
+      />
+    </div>
+
+    <button type="button" data-flavor-next class={ARROW_BUTTON}>
+      <ChevronIcon class="size-4 -scale-x-100 sm:size-5 md:size-6" />
+      <span class="sr-only">Next Flavor</span>
+    </button>
+  </div>
+
+  <div class="text-area relative mx-auto max-w-full text-center">
+    <div
+      class="text-wrapper text-2xl font-medium text-balance sm:text-3xl md:text-4xl"
+      aria-live="polite"
+    >
+      <p data-flavor-name>{first.name}</p>
+    </div>
+  </div>
+
+  <ProductFacts extract={first.facts.extract} class="relative mx-auto mt-4 w-full max-w-xl" />
+
+  <PackSpecs
+    volume={first.facts.volume}
+    shelfLife={first.facts.shelfLife}
+    class="relative mt-3 md:hidden"
+  />
+
+  {/*
+    The whole range, in text. The carousel only ever shows one flavour, so
+    without this a screen reader — or a crawler — would only meet the first.
+  */}
+  <div class="sr-only">
+    <h3>The Thynkers Lyquid range</h3>
+    <ul>
+      {
+        flavours.map((flavour) => (
+          <li>
+            <strong>{flavour.name}</strong>: {flavour.description} {flavour.facts.volume}, shelf
+            life {flavour.facts.shelfLife}.
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<script>
+  import { runCarousel } from "../scripts/anim/carousel";
+  runCarousel();
+</script>

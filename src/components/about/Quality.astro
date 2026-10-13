@@ -1,0 +1,78 @@
+---
+import { Image } from "astro:assets";
+
+import SectionHeading from "./SectionHeading.astro";
+import { ABOUT } from "../../config/about";
+
+/**
+ * "Quality": trust for consumers and export buyers. Facility photo and copy
+ * on the deep green (copy only, centred, until a facility photo is set). The
+ * certification cards list only what `config/about.ts`
+ * marks as held, each with its logo when one is supplied, otherwise a text
+ * badge. With none confirmed, the section stands on its copy alone.
+ */
+const { eyebrow, title, intro, image, certifications } = ABOUT.quality;
+const held = certifications.filter((c) => c.held);
+---
+
+<section aria-labelledby="quality-heading" class="bg-brand-leaf py-20 text-white lg:py-28">
+  <div
+    class:list={[
+      "mx-auto grid max-w-[1200px] items-center gap-12 px-5 md:px-10",
+      image ? "lg:grid-cols-[minmax(0,10fr)_minmax(0,11fr)] lg:gap-16" : "text-center",
+    ]}
+  >
+    <div data-reveal class:list={["font-inter", !image && "mx-auto max-w-3xl"]}>
+      <SectionHeading
+        id="quality-heading"
+        eyebrow={eyebrow}
+        title={title}
+        tone="light"
+        align={image ? "start" : "center"}
+      />
+      <p class="mt-6 text-[16px] leading-[25px] text-white/80">{intro}</p>
+
+      {
+        held.length > 0 && (
+          <ul class="mt-10 grid gap-4 text-left sm:grid-cols-2">
+            {held.map((cert) => (
+              <li class="flex items-start gap-4 rounded-[18px] border border-white/15 bg-white/[0.04] p-5">
+                {cert.logo ? (
+                  <Image
+                    src={cert.logo.src}
+                    alt={cert.logo.alt}
+                    height={48}
+                    densities={[1, 2]}
+                    loading="lazy"
+                    class="h-12 w-auto shrink-0 rounded-md bg-white p-1"
+                  />
+                ) : (
+                  <span class="grid h-12 min-w-12 shrink-0 place-items-center rounded-full border border-brand-green/60 px-2 text-[12px] font-bold tracking-[1px] text-brand-green">
+                    {cert.code}
+                  </span>
+                )}
+                <p class="text-[14px] leading-[1.5] text-white/80">
+                  <strong class="block text-[15px] text-white">{cert.code}</strong>
+                  {cert.label}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    {image && (
+    <Image
+      src={image.src}
+      alt={image.alt}
+      widths={[458, 727, 916]}
+      sizes="(min-width: 1024px) min(52vw, 620px), min(100vw - 40px, 560px)"
+      quality={82}
+      loading="lazy"
+      data-reveal
+      class="mx-auto block h-auto w-full max-w-[560px] select-none lg:order-first lg:max-w-none"
+    />
+    )}
+  </div>
+</section>

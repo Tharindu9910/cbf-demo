@@ -1,0 +1,22 @@
+---
+// Hand-drawn hero icon, 24px grid, 1.5 stroke. Decorative: always aria-hidden.
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  class={className}
+>
+  <ellipse cx="12" cy="15.2" rx="5" ry="6" />
+  <path d="M8.2 11.6 15.6 19M7.1 15.1l4.6 4.6M9.9 9.7l6.9 6.9M15.8 11.6 8.4 19M16.9 15.1l-4.6 4.6M14.1 9.7l-6.9 6.9" />
+  <path d="M12 9.2c0-2.4.3-4.4 1-6.2M12 9.2c-.6-2-2-3.6-4-4.4M12 9.2c.8-1.8 2.3-3 4.4-3.6M12 9.2c-1.2-1-2.7-1.5-4.5-1.4M12 9.2c1.3-.9 2.8-1.2 4.5-1" />
+</svg>

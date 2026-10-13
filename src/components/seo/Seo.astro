@@ -1,0 +1,67 @@
+---
+import { SITE } from "../../config/site";
+import { url } from "../../config/url";
+
+/**
+ * Everything a search engine or a link preview reads from <head>: title,
+ * description, canonical, robots, Open Graph, Twitter, icons and ownership
+ * verification. URLs are absolute, built off `site` in astro.config.mjs.
+ */
+interface Props {
+  title?: string;
+  description?: string;
+  /** Path (from /public) or absolute URL of the 1200x630 share image. */
+  image?: string;
+  imageAlt?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  image = "/og/home.jpg",
+  imageAlt = `${SITE.name} — ${SITE.brand} Gotukola drinks`,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const imageUrl = new URL(url(image), Astro.site);
+const robots = noindex
+  ? "noindex, follow"
+  : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={robots} />
+
+<meta name="theme-color" content={SITE.themeColor} />
+<meta name="application-name" content={SITE.name} />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="icon" href={url("/favicon.ico")} sizes="48x48" />
+<link rel="icon" type="image/png" sizes="32x32" href={url("/favicon-32.png")} />
+<link rel="apple-touch-icon" href={url("/apple-touch-icon.png")} />
+<link rel="manifest" href={url("/site.webmanifest")} />
+<link rel="sitemap" href={url("/sitemap-index.xml")} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content={SITE.locale} />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+<meta name="twitter:image:alt" content={imageAlt} />
+
+{SITE.verification.google && <meta name="google-site-verification" content={SITE.verification.google} />}
+{SITE.verification.bing && <meta name="msvalidate.01" content={SITE.verification.bing} />}

@@ -1,0 +1,61 @@
+---
+import { Image } from "astro:assets";
+
+import type { Retailer } from "../../config/products";
+
+/**
+ * A stockist's logo, or its initials in a circle until a logo file is added.
+ * `size` matches the slot: `sm` for the inline "Available at" rows, `md` for
+ * logo rows, `lg` for the Contact page's cards. `tone="dark"` is for dark
+ * grounds (the product page's info panel): the logo turns white.
+ */
+interface Props {
+  retailer: Retailer;
+  size?: "sm" | "md" | "lg";
+  tone?: "light" | "dark";
+}
+
+const { retailer, size = "md", tone = "light" } = Astro.props;
+
+const HEIGHT = { sm: 20, md: 40, lg: 56 } as const;
+
+/** Words that say what a place is, not which one: "ABC Supermarket" is "ABC", not "AS". */
+const GENERIC = /^(supermarkets?|campus)$/i;
+
+const words = retailer.name.split(/\s+/).filter((word) => /^[A-Za-z0-9]/.test(word) && !GENERIC.test(word));
+const initials = /^[A-Z0-9]{2,4}$/.test(words[0] ?? "")
+  ? words[0]
+  : words
+      .slice(0, 2)
+      .map((word) => word[0].toUpperCase())
+      .join("");
+---
+
+{
+  retailer.logo ? (
+    <Image
+      src={retailer.logo}
+      alt={retailer.name}
+      height={HEIGHT[size]}
+      densities={[1, 2]}
+      loading="lazy"
+      class:list={[
+        "w-auto max-w-[180px] object-contain",
+        { "h-5": size === "sm", "h-10": size === "md", "h-14": size === "lg" },
+        tone === "dark" && "brightness-0 invert",
+      ]}
+    />
+  ) : (
+    <span
+      role="img"
+      aria-label={retailer.name}
+      class:list={[
+        "grid shrink-0 place-items-center rounded-full font-inter font-bold tracking-[0.5px]",
+        { "size-6 text-[9px]": size === "sm", "size-10 text-[13px]": size === "md", "size-14 text-[17px]": size === "lg" },
+        tone === "dark" ? "bg-white/15 text-white" : "bg-brand-cream text-brand-moss ring-1 ring-brand-moss/20",
+      ]}
+    >
+      {initials}
+    </span>
+  )
+}

@@ -1,0 +1,26 @@
+---
+import Base from "../layouts/Base.astro";
+import { url } from "../config/url";
+---
+
+<Base
+  title="Page not found | Ceylon Future Beverages"
+  description="The page you were looking for isn't here."
+  noindex
+  stage={false}
+  structuredData={false}
+>
+  <section class="grid min-h-screen place-items-center bg-brand-leaf px-6 text-center text-brand-cream">
+    <div>
+      <p class="font-aonic text-[6rem] leading-none font-black md:text-[9rem]">404</p>
+      <h1 class="mt-4 font-display text-3xl font-bold md:text-4xl">This page has wandered off</h1>
+      <p class="mt-4 text-brand-cream/80">The page you were looking for isn&rsquo;t here.</p>
+      <a
+        href={url("/")}
+        class="mt-10 inline-flex items-center gap-3 rounded-full border border-brand-cream/50 px-7 py-4 text-sm font-semibold transition-colors hover:bg-brand-cream hover:text-brand-leaf"
+      >
+        Back to home
+      </a>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,241 @@
+---
+import { Image } from "astro:assets";
+
+import GotuKolaClaims from "./GotuKolaClaims.astro";
+import { MATCHA_INGREDIENTS, NUTRITION } from "../config/products";
+import { heading } from "../styles/section";
+
+import gotuKolaCan from "../assets/images/gotu-kola/gotu-kola-can-leaves.png";
+
+/**
+ * "Gotu Kola — Nature's Brain Booster": the ingredient story ahead of the
+ * flavour carousel. Copy, three benefit icons and the nutrition card (per
+ * 100 ml and per 250 ml serving) on the left; the can in the leaves on the
+ * right.
+ *
+ * Started from the "Gotu Kola – Product Hero" mockup, retuned to the page's
+ * faces and type scale (Inter / Playfair Display, as in `CompanyIntro`) and
+ * to fit one screen. From `lg` up every length is the frame's px times `--u`
+ * (see `frame-*` in global.css). This frame sets `--u` itself so it shrinks
+ * with the section's width or the viewport's height, whichever is tighter
+ * (text has floors so it stays legible). Below `lg` it stacks:
+ * copy, photo, nutrition card. The claims strip (`GotuKolaClaims`) closes
+ * the section.
+ *
+ * The photo is the can among gotu kola leaves and a bowl of powder.
+ */
+
+const BENEFITS = [
+  {
+    label: ["Focus &", "Clarity"],
+    paths: [
+      "M12 21c-5-3-8-6.5-8-11a8 8 0 0 1 16 0c0 4.5-3 8-8 11z",
+      "M12 16c-2.5-1.5-3.5-3.2-3.5-5.2A3.5 3.5 0 0 1 15.5 10",
+      "M12 16c0-3 1-5 3.5-6",
+    ],
+  },
+  {
+    label: ["Memory", "Support"],
+    paths: ["M5 3h14v18l-7-5-7 5z", "M8.5 14c.8-1.6 2-2.3 3.5-2.3s2.7.7 3.5 2.3"],
+    circles: [{ cx: 12, cy: 8.5, r: 2 }],
+  },
+  {
+    label: ["Natural", "Adaptogen"],
+    paths: ["M9 4.5a3 3 0 0 1 6 0V7H9z", "M12 7v14M5 13h14"],
+    rects: [{ x: 5, y: 7, width: 14, height: 14, rx: 3 }],
+    circles: [
+      { cx: 8.5, cy: 10, r: 0.6 },
+      { cx: 15.5, cy: 10, r: 0.6 },
+      { cx: 8.5, cy: 17, r: 0.6 },
+      { cx: 15.5, cy: 17, r: 0.6 },
+    ],
+  },
+];
+
+/** The label panel, shared with the product pages (see `config/products.ts`). */
+const INGREDIENTS = MATCHA_INGREDIENTS;
+
+/** Nutrition table cells. A table cell's height is its minimum. */
+const cell = "h-[34px] p-0 lg:h-[calc(24*var(--u))]";
+const headCell =
+  "h-8 p-0 text-[11px] font-bold tracking-[1.6px] text-gk-card-muted uppercase lg:h-[calc(26*var(--u))] lg:text-[length:max(10px,calc(11*var(--u)))] lg:tracking-[calc(1.6*var(--u))]";
+const name = "text-left whitespace-normal";
+const num = "text-right whitespace-nowrap";
+---
+
+<section
+  id="gotu-kola"
+  aria-labelledby="gotu-kola-heading"
+  class="@container relative overflow-hidden bg-brand-ivory font-inter text-gk-ink"
+>
+  {
+    /*
+      Below lg: one column — copy, photo, card. From lg: a 1464 x 830 frame,
+      copy over the nutrition card on the left, the photo on the right. `--u`
+      is 1px when the frame fits and otherwise shrinks with whichever of the
+      section's width or the viewport's height runs out first, so the whole
+      block always fits one screen. (The claims strip follows below it.)
+    */
+  }
+  <div
+    class="mx-auto max-lg:flex max-lg:max-w-[600px] max-lg:flex-col max-lg:gap-8 max-lg:px-5 max-lg:py-14 lg:grid lg:max-w-[1464px] lg:grid-cols-[calc(600*var(--u))_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:gap-x-[calc(56*var(--u))] lg:gap-y-[calc(26*var(--u))] lg:pt-[calc(36*var(--u))] lg:pr-[calc(40*var(--u))] lg:pb-[calc(32*var(--u))] lg:pl-[calc(106*var(--u))] lg:[--u:min(1px,calc(100cqw/1464),calc(100svh/830))]"
+  >
+    <div class="lg:col-start-1 lg:row-start-1">
+      <h2
+        id="gotu-kola-heading"
+        class:list={[
+          heading,
+          "mt-3 text-brand-pine lg:mt-[calc(12*var(--u))] lg:text-[length:max(32px,calc(44*var(--u)))] lg:tracking-[calc(-0.5*var(--u))]",
+        ]}
+      >
+        Gotu Kola
+      </h2>
+      <p
+        class="mt-2 font-display text-[length:clamp(20px,5.5vw,24px)] leading-[1.25] font-normal text-gk-subtitle lg:mt-[calc(8*var(--u))] lg:text-[length:max(18px,calc(24*var(--u)))]"
+      >
+        Nature&rsquo;s Brain Booster.
+      </p>
+      <p
+        class="mt-4 text-[16px] leading-[25px] text-gk-lede lg:mt-[calc(14*var(--u))] lg:text-[length:max(14px,calc(16.5*var(--u)))] lg:leading-[1.515]"
+      >
+        A centuries-old Ayurvedic herb, now embraced by modern science, Gotu Kola helps to support
+        focus, memory and overall well-being, giving your mind and body the natural support they
+        need.
+      </p>
+
+      <ul
+        class="mt-6 flex flex-wrap gap-x-7 gap-y-4 lg:mt-[calc(20*var(--u))] lg:gap-x-[calc(40*var(--u))] lg:gap-y-[calc(12*var(--u))]"
+      >
+        {
+          BENEFITS.map(({ label, paths, circles = [], rects = [] }) => (
+            <li class="flex items-center gap-3 text-[15px] leading-[21px] text-gk-benefit lg:gap-[calc(12*var(--u))] lg:text-[length:max(13px,calc(15*var(--u)))] lg:leading-[1.333]">
+              <span
+                class="grid size-11 shrink-0 place-items-center rounded-full border border-gk-ring bg-gk-ring-fill lg:size-[max(34px,calc(40*var(--u)))]"
+                aria-hidden="true"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#6a9a2d"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="size-[22px] lg:size-[max(18px,calc(21*var(--u)))]"
+                >
+                  {rects.map((r) => <rect {...r} />)}
+                  {paths.map((d) => <path d={d} />)}
+                  {circles.map((c) => <circle {...c} />)}
+                </svg>
+              </span>
+              <span>
+                {label[0]}
+                <br />
+                {label[1]}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    {
+      /*
+        From lg the photo is sized to the frame's height (570 wide is 758
+        tall).
+      */
+    }
+    <div
+      class="relative lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:w-[min(100%,calc(570*var(--u)))] lg:self-center lg:justify-self-center"
+    >
+      {
+        /*
+          All four edges fade out so the render's cream ground (a touch darker
+          and yellower than the section's) melts into it. The fades are kept
+          short, as the leaves run close to the edges. The two gradients intersect, so the corners fade both ways.
+        */
+      }
+      <Image
+        src={gotuKolaCan}
+        alt="Thynkers Lyquid Gotukola can surrounded by fresh gotu kola leaves and a bowl of gotu kola powder"
+        widths={[448, 734, 896]}
+        sizes="(min-width: 1024px) min(50vw, 734px), min(100vw - 40px, 600px)"
+        quality={85}
+        loading="lazy"
+        class="block h-auto w-full select-none [mask-image:linear-gradient(90deg,transparent,#000_6%,#000_94%,transparent),linear-gradient(180deg,transparent,#000_3%,#000_95%,transparent)] [mask-composite:intersect]"
+      />
+    </div>
+
+    <div
+      class="w-full rounded-2xl bg-brand-olive px-5 pt-[18px] pb-1.5 text-white lg:col-start-1 lg:row-start-2 lg:self-start lg:rounded-[calc(16*var(--u))] lg:px-[calc(26*var(--u))] lg:pt-[calc(18*var(--u))] lg:pb-[calc(10*var(--u))]"
+    >
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3
+            class="text-[22px] leading-[28px] font-semibold lg:text-[length:max(18px,calc(22*var(--u)))] lg:leading-[1.2]"
+          >
+            <span
+              class="mb-1 block text-[11px] leading-[16px] font-bold tracking-[2.4px] text-gk-card-muted uppercase lg:mb-[calc(4*var(--u))] lg:text-[length:max(10px,calc(11*var(--u)))] lg:leading-[max(14px,calc(14*var(--u)))] lg:tracking-[calc(2.4*var(--u))]"
+              >Thynkers liquid</span
+            >
+            Nutrition Facts
+          </h3>
+          <p
+            class="mt-px text-[14px] leading-[20px] text-gk-card-soft lg:mt-[calc(2*var(--u))] lg:text-[length:max(12px,calc(13.5*var(--u)))] lg:leading-[1.333]"
+          >
+            Serving size 250 ml &middot; 1 serving per pack
+          </p>
+        </div>
+        <span
+          class="flex h-9 shrink-0 items-center rounded-[18px] bg-gk-kcal px-4 text-[14px] font-semibold text-gk-kcal-ink max-lg:mt-1 lg:h-[max(28px,calc(34*var(--u)))] lg:rounded-full lg:px-[calc(16*var(--u))] lg:text-[length:max(12px,calc(14*var(--u)))]"
+          >75 kcal</span
+        >
+      </div>
+      <table
+        class="mt-5 w-full border-collapse text-[15px] tabular-nums lg:mt-[calc(14*var(--u))] lg:text-[length:max(12px,calc(14.5*var(--u)))]"
+      >
+        <thead>
+          <tr class="border-t border-b border-t-white/28 border-b-white/45">
+            <th scope="col" class:list={[headCell, name]}>Nutrients</th>
+            {/* The 100 ml and 250 ml columns share the space the names leave. */}
+            <th scope="col" class:list={[headCell, num, "w-[26%]"]}>100 ml</th>
+            <th scope="col" class:list={[headCell, num, "w-[26%]"]}>250 ml</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            NUTRITION.map(({ name: label, per100, perServing, sub }) => (
+              <tr class="border-b border-white/22 last:border-b-0">
+                {/* `sub` rows sit indented under their parent. */}
+                <th
+                  scope="row"
+                  class:list={[
+                    cell,
+                    name,
+                    "font-normal",
+                    sub && "pl-4 text-gk-card-muted lg:pl-[calc(16*var(--u))]",
+                  ]}
+                >
+                  {label}
+                </th>
+                <td class:list={[cell, num, "font-normal"]}>{per100}</td>
+                {/* The serving column carries the weight, as on the printed label. */}
+                <td class:list={[cell, num, "font-semibold"]}>{perServing}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <p
+        class="mb-3 border-t border-white/28 pt-3 text-[13px] leading-[19px] text-gk-card-soft lg:mb-[calc(4*var(--u))] lg:pt-[calc(10*var(--u))] lg:text-[length:max(11px,calc(12.5*var(--u)))] lg:leading-[1.55]"
+      >
+        <span
+          class="mb-0.5 block text-[11px] font-bold tracking-[1.6px] text-white uppercase lg:mb-[calc(2*var(--u))] lg:text-[length:max(10px,calc(11*var(--u)))] lg:tracking-[calc(1.6*var(--u))]"
+          >Ingredients:</span
+        >
+        {INGREDIENTS}
+      </p>
+    </div>
+  </div>
+
+  <GotuKolaClaims />
+</section>

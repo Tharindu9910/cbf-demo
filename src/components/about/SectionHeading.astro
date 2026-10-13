@@ -1,0 +1,47 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import { heading } from "../../styles/section";
+
+/**
+ * The About page's section heading: an uppercase eyebrow over a Playfair
+ * title, in the type of `CompanyIntro` (12px / 2.6px tracked eyebrow, 44px
+ * title at 0.98). `tone="light"` is for the dark grounds.
+ */
+interface Props extends HTMLAttributes<"div"> {
+  /** Optional: leave it out for a title-only heading. */
+  eyebrow?: string;
+  title: string;
+  /** The h2's id, for the section's `aria-labelledby`. */
+  id: string;
+  align?: "start" | "center";
+  tone?: "dark" | "light";
+  class?: string;
+}
+
+const { eyebrow, title, id, align = "start", tone = "dark", class: className, ...rest } = Astro.props;
+---
+
+<div class:list={[align === "center" && "mx-auto text-center", className]} {...rest}>
+  {
+    eyebrow && (
+      <p
+        class:list={[
+          "mb-3 text-[12px] leading-4 font-bold tracking-[2.6px] uppercase",
+          tone === "dark" ? "text-brand-fern" : "text-brand-green",
+        ]}
+      >
+        {eyebrow}
+      </p>
+    )
+  }
+  <h2
+    id={id}
+    class:list={[
+      heading, "text-balance lg:text-[44px]",
+      tone === "dark" ? "text-ink-heading" : "text-white",
+    ]}
+  >
+    {title}
+  </h2>
+</div>

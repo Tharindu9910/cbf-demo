@@ -1,0 +1,56 @@
+{
+  "order": 4,
+  "kind": "pack",
+  "category": "bundle",
+  "name": "Mixed Pack",
+  "color": "#E9B949",
+  "description": "The Thynkers Lyquid Mixed Pack: six 250 ml cans of gotu kola-infused sparkling drinks, mixed any way you like from Matcha Original, Mango & Passion and Pineapple. Made in Sri Lanka.",
+  "facts": {
+    "extract": "Gotukola Extract",
+    "volume": "6 × 250ml",
+    "shelfLife": "12 Months"
+  },
+  "tagline": "Your Flavours. Your Mix.",
+  "tags": [
+    "Any 6 cans"
+  ],
+  "size": "6 × 250 ml",
+  "summary": "Six cans, your way. Mix Matcha Original, Mango & Passion and Pineapple however you like.",
+  "story": [
+    "Choose any six cans from the range: two of each, all one flavour, or whatever mix suits you. Build your mix right here, on any flavour’s page, and it’s sent with your enquiry.",
+    "Each can carries our signature gotu kola infusion, crafted for clear thinking and mindful energy."
+  ],
+  "finish": "Powered by gotu kola. Mixed your way.",
+  "gallery": [
+    {
+      "src": "../../assets/images/cans-trio.png",
+      "alt": "Thynkers Lyquid cans in Pineapple, Mango & Passion and Matcha Original"
+    },
+    {
+      "src": "../../assets/images/order/beach-six-pack.jpg",
+      "alt": "The six-can Thynkers Lyquid box beside all three flavours on a Sri Lankan beach",
+      "fit": "cover",
+      "focus": "right"
+    },
+    {
+      "src": "../../assets/images/gotu-kola/gotu-kola-can.jpg",
+      "alt": "A Thynkers Lyquid can among fresh gotu kola leaves and a bowl of gotu kola powder",
+      "fit": "cover"
+    }
+  ],
+  "packs": [
+    {
+      "id": "mixed-6",
+      "label": "Mixed Pack",
+      "detail": "6 × 250 ml"
+    }
+  ],
+  "mix": {
+    "cans": 6,
+    "flavours": [
+      "matcha-original",
+      "mango-passion",
+      "pineapple"
+    ]
+  }
+}

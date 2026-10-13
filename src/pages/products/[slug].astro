@@ -1,0 +1,111 @@
+---
+import type { GetStaticPaths } from "astro";
+
+import Base from "../../layouts/Base.astro";
+import Breadcrumb from "../../components/products/Breadcrumb.astro";
+import BuyStrip from "../../components/products/BuyStrip.astro";
+import GotuKolaBlock from "../../components/products/GotuKolaBlock.astro";
+import ProductFaqs from "../../components/products/ProductFaqs.astro";
+import ProductGallery from "../../components/products/ProductGallery.astro";
+import ProductInfo from "../../components/products/ProductInfo.astro";
+import ProductReviews from "../../components/products/ProductReviews.astro";
+import ProductSpecs from "../../components/products/ProductSpecs.astro";
+import RelatedProducts from "../../components/products/RelatedProducts.astro";
+import WhatsInside from "../../components/products/WhatsInside.astro";
+import { getRange, type Product } from "../../components/products/range";
+import { BRANDS } from "../../config/products";
+import { url } from "../../config/url";
+
+/**
+ * One page per product in `content/flavours`, from one template.
+ *
+ * All on the listing's ivory: the gallery (the can in front of its fruit)
+ * beside the info panel, a soft green wash along the top so the white header
+ * reads; then the label's details, what's in the box (packs only), gotu kola, reviews, FAQs, the rest of the range and the bulk bar.
+ * No 3D, so the WebGL stage is skipped.
+ */
+export const getStaticPaths = (async () =>
+  (await getRange()).map((product) => ({
+    params: { slug: product.id },
+    props: { product },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const { id, data } = product;
+const brand = BRANDS.find((b) => b.name === data.brand);
+
+/** The pre-rendered share images in /public/products exist for the flavours. */
+const ogImage =
+  data.kind === "flavour" ? `/products/${id}.jpg` : "/og/home.jpg";
+---
+
+<Base
+  title={`${data.name} | ${data.brand}`}
+  description={data.description}
+  image={ogImage}
+  imageAlt={data.gallery[0].alt}
+  pageType="ItemPage"
+  product={id}
+  stage={false}
+>
+  <section
+    aria-label={data.name}
+    class="relative isolate overflow-hidden bg-brand-ivory"
+  >
+    <div
+      aria-hidden="true"
+      class="absolute inset-x-0 top-0 -z-10 h-40 bg-linear-to-b from-brand-leaf/45 to-transparent"
+    ></div>
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_45%_55%_at_22%_45%,var(--color-brand-sage),transparent_72%)]"
+    ></div>
+
+    <div class="mx-auto max-w-[1200px] px-5 pt-28 pb-14 md:px-10 md:pt-32 lg:pb-16">
+      <Breadcrumb
+        items={[
+          { label: "Products", href: url("/products/") },
+          {
+            label: data.brand,
+            href: brand ? url(`/products/#${brand.id}`) : "/products/",
+          },
+          { label: data.name },
+        ]}
+      />
+      <div class="mt-6 grid gap-10 md:mt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-14">
+        <ProductGallery product={product} />
+        <ProductInfo product={product} />
+      </div>
+    </div>
+  </section>
+
+  <ProductSpecs product={product} />
+  <WhatsInside product={product} />
+  <GotuKolaBlock />
+  {/*<ProductReviews productId={id} />*/}
+  {/*<ProductFaqs />*/}
+  {/*<RelatedProducts productId={id} />*/}
+  <BuyStrip product={id} />
+</Base>
+
+<script>
+  import { revealOnScroll } from "../../scripts/anim/aboutReveal";
+  import {
+    initGallery,
+    initPackSelect,
+    initQuantity,
+    initReviewRow,
+    initShare,
+  } from "../../scripts/products/productPage";
+
+  initGallery();
+  initPackSelect();
+  initQuantity();
+  initShare();
+  initReviewRow();
+  revealOnScroll();
+</script>

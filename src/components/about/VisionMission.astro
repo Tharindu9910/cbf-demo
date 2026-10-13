@@ -1,0 +1,50 @@
+---
+import { ABOUT } from "../../config/about";
+
+/**
+ * Vision and Mission as one full-width band on deep green: two columns split
+ * by a hairline from `md`, stacked with a horizontal rule below. Each label
+ * carries a small brand-green ring, over a Playfair statement.
+ */
+const ITEMS = [
+  { id: "vision", label: "Our Vision", text: ABOUT.vision },
+  { id: "mission", label: "Our Mission", text: ABOUT.mission },
+];
+---
+
+<section aria-label="Vision and mission" class="relative isolate overflow-hidden bg-brand-leaf text-white">
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_45%_80%_at_85%_40%,rgb(79_122_58/0.45),transparent_70%),radial-gradient(ellipse_40%_70%_at_30%_100%,rgb(79_122_58/0.3),transparent_70%),radial-gradient(ellipse_35%_60%_at_5%_0%,rgb(141_198_63/0.12),transparent_70%)]"
+  >
+  </div>
+
+  <div
+    data-reveal
+    class="mx-auto grid max-w-[1200px] px-5 py-16 md:grid-cols-2 md:px-10 md:py-20 lg:py-24"
+  >
+    {
+      ITEMS.map((item, i) => (
+        <article
+          aria-labelledby={`${item.id}-heading`}
+          class:list={[
+            i === 0
+              ? "pb-10 md:pr-10 md:pb-0 lg:pr-16"
+              : "border-t border-white/15 pt-10 md:border-t-0 md:border-l md:pt-0 md:pl-10 lg:pl-16",
+          ]}
+        >
+          <h2
+            id={`${item.id}-heading`}
+            class="flex items-center gap-2 font-inter text-[12px] leading-4 font-bold tracking-[2.6px] uppercase text-white/90"
+          >
+            <span aria-hidden="true" class="size-3.5 shrink-0 rounded-full border-[2.5px] border-brand-green" />
+            {item.label}
+          </h2>
+          <p class="mt-5 max-w-[30ch] font-display text-[clamp(22px,2.5vw,32px)] leading-[1.3] font-semibold">
+            {item.text}
+          </p>
+        </article>
+      ))
+    }
+  </div>
+</section>

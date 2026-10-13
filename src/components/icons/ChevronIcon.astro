@@ -1,0 +1,21 @@
+---
+// The carousel's arrow glyph. Points left; mirror it with a class for right.
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  fill="none"
+  viewBox="0 0 24 24"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  class={className}
+>
+  <path d="M15 4 7 12l8 8"></path>
+</svg>
