@@ -5,13 +5,16 @@ import { ABOUT } from "../../config/about";
 import { heading } from "../../styles/section";
 
 /**
- * "Our Story": who the company is and why it exists. Photo on the left, copy
- * on the right from `lg`; stacked below. The copy follows the mockup: title
+ * "Our Story": who the company is and why it exists. A three-photo collage on
+ * the left, copy on the right from `lg`; stacked below. The collage reads
+ * origin to product: the farm as a tall portrait, centred against the
+ * production line and the lab stacked beside it, so the columns stagger.
+ * One gap and one corner radius throughout; no borders or shadows. The copy follows the mockup: title
  * one sentence per line, two paragraphs, then the ambition beside a green
  * rule with its key phrases in green. The number strip under it shows
  * only the stats that have a value, and only when there are at least two.
  */
-const { eyebrow, title, paragraphs, ambition, image, stats } = ABOUT.story;
+const { eyebrow, title, paragraphs, ambition, images, stats } = ABOUT.story;
 const titleLines = title.split(/(?<=\.)\s+/);
 const shownStats = stats.filter((s) => s.value);
 ---
@@ -20,15 +23,40 @@ const shownStats = stats.filter((s) => s.value);
   <div
     class="mx-auto grid max-w-[1200px] items-center gap-12 px-5 md:px-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,10fr)] lg:gap-16"
   >
-    <Image
-      src={image.src}
-      alt={image.alt}
-      widths={[458, 727, 916]}
-      sizes="(min-width: 1024px) min(52vw, 620px), min(100vw - 40px, 560px)"
-      quality={82}
-      loading="lazy"
-      data-reveal class="mx-auto block aspect-[4/3] h-auto w-full max-w-[560px] rounded-2xl object-cover select-none lg:max-w-none"
-    />
+    <div
+      data-reveal
+      class="mx-auto grid w-full max-w-[560px] grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-center gap-3 select-none sm:gap-4 lg:max-w-none"
+    >
+      <Image
+        src={images.farm.src}
+        alt={images.farm.alt}
+        widths={[240, 360, 540]}
+        sizes="(min-width: 1024px) min(24vw, 280px), min(44vw, 250px)"
+        quality={82}
+        loading="lazy"
+        class="aspect-[3/4] w-full rounded-2xl sm:rounded-[22px] object-cover object-[62%_35%]"
+      />
+      <div class="grid gap-3 sm:gap-4">
+        <Image
+          src={images.production.src}
+          alt={images.production.alt}
+          widths={[300, 450, 680]}
+          sizes="(min-width: 1024px) min(28vw, 340px), min(52vw, 300px)"
+          quality={82}
+          loading="lazy"
+          class="aspect-[4/3] w-full rounded-2xl sm:rounded-[22px] object-cover"
+        />
+        <Image
+          src={images.lab.src}
+          alt={images.lab.alt}
+          widths={[300, 450, 680]}
+          sizes="(min-width: 1024px) min(28vw, 340px), min(52vw, 300px)"
+          quality={82}
+          loading="lazy"
+          class="aspect-[4/3] w-full rounded-2xl sm:rounded-[22px] object-cover object-[50%_55%]"
+        />
+      </div>
+    </div>
 
     <div data-reveal class="max-w-[560px] font-inter">
       <p class="text-[12px] leading-4 font-bold tracking-[2.6px] uppercase text-brand-fern">{eyebrow}</p>

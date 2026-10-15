@@ -232,7 +232,10 @@ function initIntentLinks(intent: HTMLSelectElement, switched: (topic: string | n
     const target = document.getElementById(url.hash.slice(1));
     target?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
     // On the form, put the reader in its first field; elsewhere on the section.
-    const focusable = value === "store" ? target : document.getElementById("cf-name");
+    // Not on touch screens: focusing a field there opens the keyboard in the
+    // middle of the smooth scroll, and the page jumps.
+    const touch = matchMedia("(pointer: coarse)").matches;
+    const focusable = value === "store" || touch ? target : document.getElementById("cf-name");
     focusable?.focus({ preventScroll: true });
   });
 }

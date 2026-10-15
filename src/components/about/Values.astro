@@ -30,13 +30,13 @@ const { eyebrow, title, items } = ABOUT.values;
           return (
             <li
               data-reveal
-              class="flex items-center gap-6 rounded-[20px] bg-white/85 px-7 py-8 shadow-[0_10px_30px_-20px_rgb(30_50_20/0.35)] lg:px-8"
+              class="flex items-center gap-4 rounded-[20px] bg-white/85 px-5 py-7 sm:gap-6 sm:px-7 sm:py-8 shadow-[0_10px_30px_-20px_rgb(30_50_20/0.35)] lg:px-8"
             >
               <span
-                class="grid size-[76px] shrink-0 place-items-center rounded-full bg-gk-card-muted text-brand-pine"
+                class="grid size-14 shrink-0 place-items-center rounded-full bg-gk-card-muted text-brand-pine sm:size-[76px]"
                 aria-hidden="true"
               >
-                <Icon class="size-9" stroke-width={1.75} />
+                <Icon class="size-7 sm:size-9" stroke-width={1.75} />
               </span>
               <div>
                 <h3 class="text-[17px] leading-6 font-semibold text-ink-heading">{item.title}</h3>

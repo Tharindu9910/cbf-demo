@@ -37,35 +37,63 @@ const clientData = JSON.stringify(
 );
 
 /**
- * One size drives the can, the gold ring and the halo, so they stay locked
- * together. The three terms are the three ways the stage runs out of room:
- * the design size on a roomy screen, the height the heading and claims leave
- * free, and a narrow phone with both arrows beside it.
+ * One size, `--can`, drives the can, the gold ring and the halo, so they stay
+ * locked together. The three terms are the three ways the stage runs out of
+ * room: the design size on a roomy screen, the height the heading and claims
+ * leave free, and a narrow phone with both arrows beside it. A phone on its
+ * side has no height to give, so there the section grows past one screen
+ * and the can takes most of a screen's height instead.
+ *
+ * The arrows are 44px at the smallest: they are thumb targets.
  */
 const ARROW_BUTTON =
-  "grid size-10 shrink-0 place-items-center rounded-full bg-white/90 text-neutral-700 shadow-[0_6px_20px_-6px_rgba(28,26,23,0.35)] ring-brand-gold backdrop-blur-xs transition hover:bg-white hover:text-brand-ink focus:outline-hidden focus-visible:ring-2 sm:size-12 md:size-14 lg:size-16";
+  "grid size-11 shrink-0 place-items-center rounded-full bg-white/90 text-neutral-700 shadow-[0_6px_20px_-6px_rgba(28,26,23,0.35)] ring-brand-gold backdrop-blur-xs transition hover:bg-white hover:text-brand-ink focus:outline-hidden focus-visible:ring-2 sm:size-12 md:size-14 lg:size-16";
+
+/**
+ * Phones (portrait): the section is as tall as its content (no spare
+ * screen to open gaps around the stage), and the arrows ride over the
+ * stage's edges instead of flanking it, so the can gets the column's full
+ * width. The stage may run a
+ * little past the column on both sides (`unsafe` centring: plain `center`
+ * would let it overflow to the right only), into the side padding, which only
+ * the halo and ring reach. The arrows sit on the column's edges.
+ */
+const ARROW_OVERLAY =
+  "max-sm:portrait:absolute max-sm:portrait:top-1/2 max-sm:portrait:z-10 max-sm:portrait:-translate-y-1/2";
 ---
 
 <section
   id="products"
   aria-labelledby="products-heading"
   data-flavours={clientData}
-  class="carousel relative grid h-dvh min-h-[34rem] grid-rows-[auto_4fr_auto] justify-center overflow-hidden bg-brand-ivory px-4 py-8 text-brand-ink [--can:min(80vmin,calc(100dvh_-_20rem),calc(100vw_-_9rem))] sm:py-12"
+  class="carousel relative isolate grid h-svh min-h-[34rem] touch-pan-y grid-rows-[auto_4fr_auto] justify-center overflow-hidden bg-brand-ivory px-4 py-8 text-brand-ink [--can:min(80vmin,calc(100svh_-_20rem),calc(100vw_-_8.5rem))] sm:py-12 short:h-auto! short:min-h-svh! short:gap-y-3 short:py-6! short:[--can:min(72svh,20rem)] max-sm:portrait:h-auto max-sm:portrait:min-h-0 max-sm:portrait:gap-y-2 max-sm:portrait:[--stage-top:calc(84px+13vw)] max-sm:portrait:grid-cols-[100%] max-sm:portrait:justify-items-center max-sm:portrait:[--can:min(calc(100vw_+_2rem),calc(100svh_-_19rem))]"
 >
   {/*
     Each flavour's backdrop is a pair of corner pieces. On a change the pair
     breaks apart to its own edges while the incoming one slides in from both
     sides. A piece keeps its size at every breakpoint; the smaller the screen,
-    the further past the edge it sits.
+    the further past the edge it sits. The wrapper is absolute so it stays
+    out of the section's grid rows. On a phone (portrait) a half-width piece
+    shows as a sliver, so there each piece is sized off the screen's width
+    instead, whole and uncropped (the box shrink-wraps the image at its own
+    ratio). Both cover the stage's lower 90%: the stage starts at
+    `--stage-top` (padding, eyebrow, the 13vw heading and its 24px gap) and is `--can`
+    tall. At that height they're wider than the room beside the can, so as
+    on desktop they run off the
+    screen's edges, and their inner edges tuck behind the can (the canvas
+    draws over the page). `-z-10` inside the section's own stacking context
+    (`isolate`) keeps the art under every other layer of the section (ring,
+    arrows and copy included) while still over its ground. On phones the
+    halo drops under it too (`-z-20`), so it doesn't wash out the fruit.
   */}
   {
     flavours.map(({ background }, i) => (
-      <div aria-hidden="true">
+      <div aria-hidden="true" class="absolute inset-0 -z-10">
         <div
           data-side="left"
           data-index={i}
           class:list={[
-            "flavor-piece pointer-events-none absolute inset-y-0 left-[-32%] w-1/2 select-none sm:left-[-24%] md:left-[-12%] lg:left-0",
+            "flavor-piece pointer-events-none absolute inset-y-0 left-[-32%] w-1/2 select-none max-sm:portrait:top-[calc(var(--stage-top)+0.12*var(--can))] max-sm:portrait:bottom-auto max-sm:portrait:left-[-41vw] max-sm:portrait:h-[calc(0.9*var(--can))] max-sm:portrait:w-auto sm:left-[-24%] md:left-[-12%] lg:left-0",
             i > 0 && "opacity-0 noscript:hidden",
           ]}
         >
@@ -74,14 +102,14 @@ const ARROW_BUTTON =
             alt=""
             widths={[320, 480, background.left.width]}
             sizes="50vw"
-            class="absolute inset-0 h-full w-full object-contain object-left"
+            class="absolute inset-0 h-full w-full object-contain object-left max-sm:portrait:static max-sm:portrait:h-full max-sm:portrait:w-auto max-sm:portrait:max-w-none"
           />
         </div>
         <div
           data-side="right"
           data-index={i}
           class:list={[
-            "flavor-piece pointer-events-none absolute inset-y-0 right-[-32%] w-1/2 select-none sm:right-[-24%] md:right-[-12%] lg:right-0",
+            "flavor-piece pointer-events-none absolute inset-y-0 right-[-32%] w-1/2 select-none max-sm:portrait:top-[calc(var(--stage-top)+0.12*var(--can))] max-sm:portrait:right-auto max-sm:portrait:bottom-auto max-sm:portrait:left-[66vw] max-sm:portrait:h-[calc(0.9*var(--can))] max-sm:portrait:w-auto sm:right-[-24%] md:right-[-12%] lg:right-0",
             i > 0 && "opacity-0 noscript:hidden",
           ]}
         >
@@ -90,7 +118,7 @@ const ARROW_BUTTON =
             alt=""
             widths={[240, background.right.width]}
             sizes="50vw"
-            class="absolute inset-0 h-full w-full object-contain object-right"
+            class="absolute inset-0 h-full w-full object-contain object-right max-sm:portrait:static max-sm:portrait:h-full max-sm:portrait:w-auto max-sm:portrait:max-w-none"
           />
         </div>
       </div>
@@ -101,20 +129,20 @@ const ARROW_BUTTON =
     {/* The indent offsets the trailing letter-space so the line optically centres. */}
     {
       eyebrow && (
-        <span class="block indent-[0.3em] text-[0.65rem] font-bold tracking-[0.3em] text-neutral-500 uppercase sm:indent-[0.42em] sm:text-xs sm:tracking-[0.42em] md:text-sm">
+        <span class="block indent-[0.3em] text-[0.65rem] font-bold tracking-[0.3em] text-neutral-500 uppercase sm:indent-[0.42em] sm:text-xs sm:tracking-[0.42em] md:text-sm short:hidden">
           {eyebrow}
         </span>
       )
     }
     <span
-      class="mt-1 block font-display text-4xl leading-none font-semibold tracking-tight sm:text-5xl md:text-7xl lg:text-8xl"
+      class="mt-1 block font-display text-[length:min(11.5vw,3.25rem)] leading-none font-semibold max-sm:portrait:text-[length:13vw] tracking-tight sm:text-5xl md:text-7xl lg:text-8xl short:text-4xl!"
     >
       {displayWord}
     </span>
   </h2>
 
-  <div class="relative grid grid-cols-[auto_auto_auto] items-center gap-2 sm:gap-4 md:gap-6">
-    <button type="button" data-flavor-prev class={ARROW_BUTTON}>
+  <div class="relative grid grid-cols-[auto_auto_auto] items-center gap-2 max-sm:portrait:mt-6 max-sm:portrait:grid-cols-1 sm:gap-4 md:gap-6">
+    <button type="button" data-flavor-prev class:list={[ARROW_BUTTON, ARROW_OVERLAY, "max-sm:portrait:left-0"]}>
       <ChevronIcon class="size-4 sm:size-5 md:size-6" />
       <span class="sr-only">Previous Flavor</span>
     </button>
@@ -123,11 +151,11 @@ const ARROW_BUTTON =
       The can's box. The halo and ring are anchored to it rather than to the
       section, so the circle tracks the can at every size.
     */}
-    <div class="relative aspect-square h-[var(--can)] min-h-32">
+    <div class="relative aspect-square h-[var(--can)] min-h-32 max-sm:portrait:[justify-self:unsafe_center]" data-flavor-stage>
       {/* Warm halo, lifting the can off the ivory ground. */}
       <div
         aria-hidden="true"
-        class="pointer-events-none absolute top-[62%] left-1/2 aspect-square w-[115%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,#fdf6e6_0%,#faf2e4_45%,transparent_70%)]"
+        class="pointer-events-none absolute top-[62%] left-1/2 aspect-square w-[115%] -translate-x-1/2 -translate-y-1/2 rounded-full max-sm:portrait:-z-20 bg-[radial-gradient(circle,#fdf6e6_0%,#faf2e4_45%,transparent_70%)]"
       >
       </div>
 
@@ -162,11 +190,11 @@ const ARROW_BUTTON =
         volume={first.facts.volume}
         shelfLife={first.facts.shelfLife}
         layout="flank"
-        class="hidden md:flex"
+        class="hidden md:flex short:hidden!"
       />
     </div>
 
-    <button type="button" data-flavor-next class={ARROW_BUTTON}>
+    <button type="button" data-flavor-next class:list={[ARROW_BUTTON, ARROW_OVERLAY, "max-sm:portrait:right-0"]}>
       <ChevronIcon class="size-4 -scale-x-100 sm:size-5 md:size-6" />
       <span class="sr-only">Next Flavor</span>
     </button>
@@ -174,20 +202,34 @@ const ARROW_BUTTON =
 
   <div class="text-area relative mx-auto max-w-full text-center">
     <div
-      class="text-wrapper text-2xl font-medium text-balance sm:text-3xl md:text-4xl"
+      class="text-wrapper text-2xl font-medium text-balance sm:text-3xl md:text-4xl short:text-2xl!"
       aria-live="polite"
     >
       <p data-flavor-name>{first.name}</p>
     </div>
   </div>
 
-  <ProductFacts extract={first.facts.extract} class="relative mx-auto mt-4 w-full max-w-xl" />
+  {/*
+    Phones (portrait): the four claims, then the two specs centred under
+    them, as quarter-width stacked badges — both lists dissolve into one
+    wrapping row (`contents`). Everywhere
+    else the wrapper is `contents` itself, so the lists sit in the section's
+    grid exactly as before.
+  */}
+  <div
+    class="contents max-sm:portrait:relative max-sm:portrait:-mx-2 max-sm:portrait:mt-8 max-sm:portrait:flex max-sm:portrait:w-auto max-sm:portrait:flex-wrap max-sm:portrait:items-start max-sm:portrait:justify-center max-sm:portrait:gap-y-7 max-sm:portrait:[&_li]:basis-1/4"
+  >
+    <ProductFacts
+      extract={first.facts.extract}
+      class="relative mx-auto mt-4 w-full max-w-xl max-sm:portrait:contents"
+    />
 
-  <PackSpecs
-    volume={first.facts.volume}
-    shelfLife={first.facts.shelfLife}
-    class="relative mt-3 md:hidden"
-  />
+    <PackSpecs
+      volume={first.facts.volume}
+      shelfLife={first.facts.shelfLife}
+      class="relative mt-3 md:hidden max-sm:portrait:contents short:flex!"
+    />
+  </div>
 
   {/*
     The whole range, in text. The carousel only ever shows one flavour, so

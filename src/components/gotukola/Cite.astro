@@ -21,7 +21,7 @@ const { ids, class: className } = Astro.props;
         <a
           href={`#source-${sourceNumber(id)}`}
           title={GOTUKOLA.sources[id]?.label}
-          class="underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+          class="-mx-1.5 -my-3 inline-block px-1.5 py-3 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
         >
           {sourceNumber(id)}
         </a>

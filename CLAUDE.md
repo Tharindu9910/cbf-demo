@@ -20,7 +20,15 @@ Don't "tidy" a constant without checking it against `../cbf`.
 
 `scripts/bridge.ts` holds the promises that connect the page scripts to the lazily loaded 3D chunk. The hero copy waits on `heroReady`, with a 2.5s fallback so the text never stays hidden. The carousel arrows do nothing until `carouselReady`.
 
-three.js loads lazily (see the script in `Base.astro`): straight away on desktop, and on phones only after the first scroll. Phones have no hero cans.
+three.js loads lazily (see the script in `Base.astro`): straight away on desktop (wide, fine pointer, landscape), and elsewhere once the page has loaded and the main thread is idle.
+
+The hero cans run on every screen, in one of two choreographies picked from the view box's shape (`scenes/hero.ts`):
+- **Landscape:** the ported desktop choreography. Its numbers are untouched.
+- **Portrait:** the group stands in `[data-can-slot="top"]` above the headline. It is drawn shifted with the page (`view.offsetY`) until that slot leaves the screen. It then rises into `[data-can-slot="end"]` under the runway copy, landing as the sticky box lets go. `cans-trio.png` holds the top slot until the first 3D frame sets `data-hero-3d` on `.hero`.
+
+The render loop runs only while a `[data-view]` box is on screen (IntersectionObserver in `stage.ts`). Touch screens get a lower DPR cap and no MSAA.
+
+Mobile conventions: `short:` is a custom variant (landscape and at most 500px tall) for phones on their side. Desktop at `lg` and up stays pixel-identical, so phone-only sizes are written base-first with the original value restored at `lg:`. Phones get the header menu `<dialog>`.
 
 ## Styling: Tailwind only
 

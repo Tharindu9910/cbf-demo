@@ -14,13 +14,16 @@ const READY_TIMEOUT = 2500;
 
 /**
  * The hero's entrance, then its scroll choreography. On desktop the copy holds
- * until the cans are placed, so the two arrive together; phones have no cans
- * and start at once.
+ * until the cans are placed, so the two arrive together. Touch and portrait
+ * screens start at once: a photo of the cans holds their place there until
+ * the 3D (loaded after the page) takes over.
  */
 export function runHeroIntro() {
-  const isDesktop = matchMedia("(min-width: 768px)").matches;
+  const waitForCans = matchMedia(
+    "(min-width: 768px) and (pointer: fine) and (orientation: landscape)",
+  ).matches;
 
-  const ready = isDesktop
+  const ready = waitForCans
     ? Promise.race([
         heroReady.promise,
         new Promise((r) => setTimeout(r, READY_TIMEOUT)),

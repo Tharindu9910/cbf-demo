@@ -1,0 +1,24 @@
+---
+/*
+  Three bars that "squeeze" into a cross when an ancestor `group` gets
+  data-state="open": the outer bars slide to the middle, the middle bar drops
+  out, then the pair rotates. Closing runs the same steps backwards (unrotate,
+  then slide apart), so each direction reads as one deliberate motion.
+  Decorative: always aria-hidden.
+*/
+const bar =
+  "col-start-1 row-start-1 h-0.5 w-[18px] rounded-full bg-current motion-reduce:transition-none";
+const outer = `${bar} transition-[translate,rotate] duration-200 ease-[cubic-bezier(0.65,0,0.35,1)] [transition-delay:200ms,0ms] group-data-[state=open]:translate-y-0 group-data-[state=open]:[transition-delay:0ms,200ms]`;
+---
+
+<span class="grid place-items-center" aria-hidden="true">
+  <span
+    class={`${outer} -translate-y-1.5 group-data-[state=open]:rotate-45`}
+  ></span>
+  <span
+    class={`${bar} transition-opacity delay-200 duration-75 group-data-[state=open]:opacity-0`}
+  ></span>
+  <span
+    class={`${outer} translate-y-1.5 group-data-[state=open]:-rotate-45`}
+  ></span>
+</span>

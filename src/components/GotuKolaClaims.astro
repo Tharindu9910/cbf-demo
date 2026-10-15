@@ -24,7 +24,7 @@ const CLAIMS = [
 
 {/* The green hairline across the top (`before:`), inset like the design's. */}
 <div
-  class="relative mx-auto max-w-[1322px] px-5 pb-10 font-inter before:block before:h-px before:bg-brand-moss before:opacity-85 lg:max-w-[1402px] lg:px-10 lg:pb-3"
+  class="relative mx-auto max-w-[1322px] px-5 pb-16 font-inter max-lg:font-outfit before:block before:h-px before:bg-brand-moss before:opacity-85 lg:max-w-[1402px] lg:px-10 lg:pb-3"
 >
   {/* Five across from lg, in the design's 1361px row. */}
   <ul
@@ -41,7 +41,7 @@ const CLAIMS = [
           ]}
         >
           <span
-            class="grid size-[72px] place-items-center rounded-full border border-claims-ring text-claims-icon lg:size-[84px]"
+            class="grid size-14 place-items-center rounded-full border border-claims-ring text-claims-icon lg:size-[84px]"
             aria-hidden="true"
           >
             {Icon === "leaf" ? (
@@ -62,7 +62,7 @@ const CLAIMS = [
               <Icon class={icon} stroke-width={2} />
             )}
           </span>
-          <h3 class="mt-4 text-[16px] leading-[21px] font-bold text-claims-title lg:mt-[17px] lg:text-[length:clamp(15px,1.23vw,18px)] lg:leading-[1.333]">
+          <h3 class="mt-3 text-[15px] leading-[20px] font-bold text-claims-title lg:mt-[17px] lg:text-[length:clamp(15px,1.23vw,18px)] lg:leading-[1.333]">
             {title.map((line, i) => (i ? [<br />, line] : line))}
           </h3>
           <p class="mt-1 text-[13px] leading-[18px] text-claims-note lg:mt-[3px] lg:text-[length:clamp(13px,1vw,14.5px)] lg:leading-[1.38]">

@@ -14,7 +14,11 @@ export async function boot() {
   const host = document.querySelector<HTMLElement>("[data-stage]");
   if (!host) return;
 
-  mountLoader();
+  // drei's full-screen loader covers the desktop hero while its cans load.
+  // Touch screens show a photo of the cans meanwhile, and load this chunk
+  // after the page is up — a panel dropping over the page then would only
+  // get in the way.
+  if (matchMedia("(min-width: 768px) and (pointer: fine) and (orientation: landscape)").matches) mountLoader();
   createStage(host);
 
   const carouselEl = document.querySelector<HTMLElement>('[data-view="carousel"]');
@@ -28,17 +32,8 @@ export async function boot() {
     );
   }
 
-  // The hero's cans are a desktop-only effect (phones get a flat image), so
-  // they mount the first time the window is wide enough.
+  // The hero's cans run on every screen; the scene picks the landscape or the
+  // portrait choreography from its box.
   const heroEl = document.querySelector<HTMLElement>('[data-view="hero"]');
-  if (heroEl) {
-    const desktop = matchMedia("(min-width: 768px)");
-    const mountOnce = () => {
-      if (!desktop.matches) return;
-      desktop.removeEventListener("change", mountOnce);
-      mountHeroScene(heroEl);
-    };
-    desktop.addEventListener("change", mountOnce);
-    mountOnce();
-  }
+  if (heroEl) mountHeroScene(heroEl);
 }

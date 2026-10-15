@@ -31,7 +31,9 @@ const { brands, closing } = ABOUT;
         loading="lazy"
         class="absolute inset-0 -z-10 h-full w-full object-cover object-[78%_center]"
       />
-      <div class="flex min-h-[460px] max-w-md flex-col justify-end p-8 md:min-h-[520px] md:justify-center md:p-12 lg:min-h-[580px] lg:p-16">
+      {/* Phones crop the photo to its cans, right behind the copy: shade the bottom for it. */}
+      <div aria-hidden="true" class="absolute inset-0 -z-10 bg-linear-to-t from-brand-leaf/90 via-brand-leaf/45 to-transparent md:hidden"></div>
+      <div class="flex min-h-[460px] max-w-md flex-col justify-end p-6 sm:p-8 md:min-h-[520px] md:justify-center md:p-12 lg:min-h-[580px] lg:p-16">
         <h3
           class="font-display text-[clamp(38px,6vw,60px)] leading-[0.98] font-bold tracking-[-0.5px] text-white"
         >

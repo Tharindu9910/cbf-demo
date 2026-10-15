@@ -5,7 +5,7 @@ import PillLink from "./ui/PillLink.astro";
 import StoreLogo from "./stores/StoreLogo.astro";
 import { RETAILERS } from "../config/products";
 import { inquiryHref } from "../config/site";
-import { body } from "../styles/section";
+import { body, phoneBody, phoneEyebrow, phoneFont, phoneHeading } from "../styles/section";
 
 import beachSixPack from "../assets/images/order/beach-six-pack.jpg";
 import { url } from "../config/url";
@@ -33,7 +33,10 @@ import { url } from "../config/url";
 <section
   id="order"
   aria-labelledby="order-heading"
-  class="@container relative overflow-hidden bg-brand-ivory font-inter text-ink-body-deep max-lg:flex max-lg:flex-col lg:aspect-[1432/580] lg:max-h-[760px] lg:min-h-[440px] lg:frame-1432"
+  class:list={[
+    phoneFont,
+    "@container relative overflow-hidden bg-brand-ivory font-inter text-ink-body-deep max-lg:flex max-lg:flex-col lg:aspect-[1432/580] lg:max-h-[760px] lg:min-h-[440px] lg:frame-1432",
+  ]}
 >
   {/* Below lg the sky fades up into the copy's cream, so the two read as one. */}
   <Image
@@ -59,28 +62,34 @@ import { url } from "../config/url";
   </div>
 
   <div
-    class="mx-auto w-full max-lg:-order-1 max-lg:max-w-[600px] max-lg:px-5 max-lg:pt-12 max-lg:pb-9 lg:relative lg:flex lg:h-full lg:max-w-[1432px] lg:items-center lg:p-[calc(40*var(--u))] lg:pl-[calc(81*var(--u))]"
+    class="mx-auto w-full max-lg:-order-1 max-lg:max-w-[600px] max-lg:px-5 max-lg:pt-16 max-lg:pb-8 lg:relative lg:flex lg:h-full lg:max-w-[1432px] lg:items-center lg:p-[calc(40*var(--u))] lg:pl-[calc(81*var(--u))]"
   >
     <div class="lg:max-w-[max(340px,calc(400*var(--u)))]">
       <p
-        class="text-[12px] leading-[16px] font-bold tracking-[2.6px] text-brand-fern lg:text-[length:max(11px,calc(12.5*var(--u)))] lg:leading-[max(15px,calc(16*var(--u)))] lg:tracking-[calc(3.4*var(--u))]"
+        class:list={[
+          phoneEyebrow,
+          "text-[12px] leading-[16px] font-bold tracking-[2.6px] text-brand-fern lg:text-[length:max(11px,calc(12.5*var(--u)))] lg:leading-[max(15px,calc(16*var(--u)))] lg:tracking-[calc(3.4*var(--u))]",
+        ]}
       >
         Taste Nature, Reimagined.
       </p>
       <h2
         id="order-heading"
-        class="mt-2.5 font-display text-[length:clamp(44px,12vw,60px)] leading-none font-bold tracking-[-0.5px] text-ink-heading lg:mt-[calc(10*var(--u))] lg:ml-[calc(-3*var(--u))] lg:text-[length:max(52px,calc(72*var(--u)))] lg:tracking-[calc(-0.8*var(--u))]"
+        class:list={[
+          phoneHeading,
+          "mt-3 font-display text-[length:clamp(44px,12vw,60px)] leading-none font-bold tracking-[-0.5px] text-ink-heading lg:mt-[calc(10*var(--u))] lg:ml-[calc(-3*var(--u))] lg:text-[length:max(52px,calc(72*var(--u)))] lg:tracking-[calc(-0.8*var(--u))]",
+        ]}
       >
         Order Now
       </h2>
-      <p class:list={[body, "mt-3.5 lg:mt-[calc(18*var(--u))]"]}>
+      <p class:list={[body, phoneBody, "mt-4 lg:mt-[calc(18*var(--u))]"]}>
         Experience the natural goodness of Thynkers Lyquid, packed with Ceylon&rsquo;s finest
         botanicals.
       </p>
       <PillLink
         href={url("/products/")}
         arrow
-        class="mt-[22px] h-[52px] gap-2.5 px-8 text-[15px] lg:mt-[calc(34*var(--u))] lg:h-[max(46px,calc(54*var(--u)))] lg:gap-[calc(10*var(--u))] lg:px-[calc(35*var(--u))] lg:text-[length:max(14px,calc(15*var(--u)))]"
+        class="mt-8 h-12 gap-2.5 px-7 text-[15px] max-lg:font-outfit max-lg:font-medium lg:mt-[calc(34*var(--u))] lg:h-[max(46px,calc(54*var(--u)))] lg:gap-[calc(10*var(--u))] lg:px-[calc(35*var(--u))] lg:text-[length:max(14px,calc(15*var(--u)))]"
       >
         Shop Now
       </PillLink>
@@ -88,7 +97,7 @@ import { url } from "../config/url";
         RETAILERS.length > 0 && (
           <a
             href={inquiryHref({ intent: "store" })}
-            class="mt-6 flex w-fit flex-wrap items-center gap-x-4 gap-y-2 rounded-md text-[13px] leading-5 font-medium text-ink-body-deep/75 transition-colors hover:text-ink-heading focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss lg:mt-[calc(26*var(--u))] lg:gap-x-[calc(16*var(--u))] lg:text-[length:max(12px,calc(13*var(--u)))]"
+            class="mt-3.5 flex w-fit flex-wrap items-center gap-x-4 gap-y-2 rounded-md py-2.5 text-[13px] lg:py-0 leading-5 font-medium text-ink-body-deep/75 transition-colors hover:text-ink-heading focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss lg:mt-[calc(26*var(--u))] lg:gap-x-[calc(16*var(--u))] lg:text-[length:max(12px,calc(13*var(--u)))]"
           >
             Available at
             {RETAILERS.map((r) => (

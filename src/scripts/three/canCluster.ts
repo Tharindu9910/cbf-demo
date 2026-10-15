@@ -216,3 +216,27 @@ export function centredLayout(halfWidth: number): ClusterLayout {
 
   return { fit, anchorX: -CLUSTER_MID * fit };
 }
+
+/** The front can's height on screen at full size; it spans the group's full height. */
+const GROUP_HEIGHT = ANCHOR.height * ARTWORK_PX;
+
+/** Share of a slot's height the group may fill, leaving room for the float. */
+const SLOT_FILL = 0.88;
+
+/**
+ * The portrait (phone) placement: the group centred in a box on the page — a
+ * `[data-can-slot]` — and as large as that box allows on both axes. The front
+ * can is the group's tallest member and stands at the box's vertical middle,
+ * so the caller centres it on the slot and offsets the others by `screenY`.
+ *
+ * `halfWidth` and `height` are the slot's, in world units at z 0.
+ */
+export function slotLayout(halfWidth: number, height: number): ClusterLayout {
+  const fit = Math.min(
+    1,
+    centredLayout(halfWidth).fit,
+    (height * SLOT_FILL) / GROUP_HEIGHT,
+  );
+
+  return { fit, anchorX: -CLUSTER_MID * fit };
+}

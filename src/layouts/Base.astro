@@ -42,7 +42,10 @@ const {
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html
+  lang={SITE.lang}
+  class="scroll-pt-[84px] overflow-x-clip has-[dialog:modal]:overflow-hidden md:scroll-pt-0"
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -65,31 +68,65 @@ const {
       */
       stage && (
         <>
-          <link rel="preload" href={url("/models/real_can_250ml.glb")} as="fetch" crossorigin="anonymous" media="(min-width: 768px)" />
-          <link rel="preload" href={url("/hdr/lobby.hdr")} as="fetch" crossorigin="anonymous" media="(min-width: 768px)" />
-          <link rel="preload" href={url("/labels/pineapple.webp")} as="image" crossorigin="anonymous" media="(min-width: 768px)" />
-          <link rel="preload" href={url("/labels/mango-passion.webp")} as="image" crossorigin="anonymous" media="(min-width: 768px)" />
-          <link rel="preload" href={url("/labels/matcha-original.webp")} as="image" crossorigin="anonymous" media="(min-width: 768px)" />
+          <link
+            rel="preload"
+            href={url("/models/real_can_250ml.glb")}
+            as="fetch"
+            crossorigin="anonymous"
+            media="(min-width: 768px)"
+          />
+          <link
+            rel="preload"
+            href={url("/hdr/lobby.hdr")}
+            as="fetch"
+            crossorigin="anonymous"
+            media="(min-width: 768px)"
+          />
+          <link
+            rel="preload"
+            href={url("/labels/pineapple.webp")}
+            as="image"
+            crossorigin="anonymous"
+            media="(min-width: 768px)"
+          />
+          <link
+            rel="preload"
+            href={url("/labels/mango-passion.webp")}
+            as="image"
+            crossorigin="anonymous"
+            media="(min-width: 768px)"
+          />
+          <link
+            rel="preload"
+            href={url("/labels/matcha-original.webp")}
+            as="image"
+            crossorigin="anonymous"
+            media="(min-width: 768px)"
+          />
         </>
       )
     }
 
-    <Seo title={title} description={description} image={image} imageAlt={imageAlt} noindex={noindex} />
-    {
-      structuredData && (
-        <JsonLd
-          title={title}
-          description={description}
-          image={image}
-          pageType={pageType}
-          products={products}
-          product={product}
-        />
-      )
-    }
+    <Seo
+      title={title}
+      description={description}
+      image={image}
+      imageAlt={imageAlt}
+      noindex={noindex}
+    />
+    {structuredData && (
+      <JsonLd
+        title={title}
+        description={description}
+        image={image}
+        pageType={pageType}
+        products={products}
+        product={product}
+      />
+    )}
   </head>
 
-  <body class="overflow-x-hidden bg-[#FDF7E7]">
+  <body class="overflow-x-clip bg-[#FDF7E7]">
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1100] focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:text-sm focus:text-brand-leaf"
@@ -105,12 +142,13 @@ const {
         /*
           The one WebGL canvas for the site; see scripts/three/stage.ts. The
           same box the R3F <Canvas> wrapper drew: fixed to the viewport,
-          centred, clear of the pointer, under the header (z-100) and above
-          the page copy.
+          clear of the pointer, under the header (z-100) and above the page
+          copy. `h-lvh`, the tallest the viewport gets, so a phone's address
+          bar sliding in and out never resizes (and re-allocates) the canvas.
         */
         stage && (
           <div
-            class="pointer-events-none fixed top-0 left-1/2 z-30 size-full -translate-x-1/2 overflow-hidden *:block *:size-full"
+            class="pointer-events-none fixed inset-x-0 top-0 z-30 h-lvh overflow-hidden *:block *:size-full"
             data-stage
             aria-hidden="true"
           ></div>
@@ -120,41 +158,35 @@ const {
 
     <Footer />
 
-    {
-      stage && (
-        <script>
-          // three.js and the scenes stay out of the critical path: one chunk,
-          // never blocking first paint. Desktop fetches it at once — the hero
-          // copy waits on its cans. Phones have no hero cans, so it waits for
-          // the reader's first scroll (the carousel is at least a screen
-          // away), or for the carousel itself on a deep link, leaving the main
-          // thread free for the hero's entrance.
-          let started = false;
-          const load = () => {
-            if (started) return;
-            started = true;
-            import("../scripts/three/boot").then(({ boot }) => boot());
-          };
-          const desktop = matchMedia("(min-width: 768px)");
-          const carousel = document.querySelector("#products");
+    {stage && <script>
+      // three.js and the scenes stay out of the critical path: one chunk,
+      // never blocking first paint. Desktop fetches it at once — the hero
+      // copy waits on its cans. Touch screens show the cans as a photo
+      // first (the hero copy doesn't wait), so the chunk comes once the
+      // page has loaded and the main thread is idle, leaving the LCP photo
+      // and the hero's entrance uncontested. A scroll starts it sooner.
+      let started = false;
+      const load = () => {
+        if (started) return;
+        started = true;
+        import("../scripts/three/boot").then(({ boot }) => boot());
+      };
 
-          if (desktop.matches || !carousel) {
-            load();
-          } else {
-            const io = new IntersectionObserver(
-              (entries) => {
-                if (!entries.some((e) => e.isIntersecting)) return;
-                io.disconnect();
-                load();
-              },
-              { rootMargin: "50% 0px" },
-            );
-            io.observe(carousel);
-            addEventListener("scroll", load, { once: true, passive: true });
-            desktop.addEventListener("change", (e) => e.matches && load(), { once: true });
-          }
-        </script>
-      )
-    }
+      if (
+        matchMedia(
+          "(min-width: 768px) and (pointer: fine) and (orientation: landscape)",
+        ).matches
+      ) {
+        load();
+      } else {
+        const idle = () =>
+          "requestIdleCallback" in window
+            ? requestIdleCallback(load, { timeout: 1500 })
+            : setTimeout(load, 300);
+        if (document.readyState === "complete") idle();
+        else addEventListener("load", idle, { once: true });
+        addEventListener("scroll", load, { once: true, passive: true });
+      }
+    </script>}
   </body>
 </html>

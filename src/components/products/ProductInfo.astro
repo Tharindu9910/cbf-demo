@@ -77,12 +77,12 @@ const promises = BENEFITS.filter((b) => b.confirmed).slice(0, 4);
 
 const label = "text-[13px] leading-5 font-semibold text-ink-heading";
 const pill =
-  "inline-flex h-10 items-center rounded-full px-5 text-[14px] font-medium ring-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss";
+  "inline-flex h-11 items-center rounded-full px-5 text-[14px] font-medium ring-1 lg:h-10 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss";
 const pillIdle =
   "bg-white text-ink-heading ring-brand-leaf/14 hover:ring-brand-leaf/45";
 const pillOn = "bg-brand-moss text-white ring-brand-moss";
 const stepper =
-  "grid size-9 place-items-center rounded-full text-ink-heading ring-1 ring-brand-leaf/14 transition-colors hover:bg-brand-moss hover:text-white hover:ring-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss";
+  "grid size-11 place-items-center rounded-full text-ink-heading lg:size-9 ring-1 ring-brand-leaf/14 transition-colors hover:bg-brand-moss hover:text-white hover:ring-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss";
 ---
 
 <div class="font-inter text-ink-heading lg:pt-2">
@@ -248,7 +248,7 @@ const stepper =
                 type="button"
                 data-mix-step="-1"
                 aria-label={`One fewer ${f.data.name}`}
-                class:list={[stepper, "size-8 disabled:pointer-events-none disabled:opacity-35"]}
+                class:list={[stepper, "size-11 lg:size-8 disabled:pointer-events-none disabled:opacity-35"]}
               >
                 <Minus class="size-3.5" stroke-width={2} aria-hidden="true" />
               </button>
@@ -263,7 +263,7 @@ const stepper =
                 type="button"
                 data-mix-step="1"
                 aria-label={`One more ${f.data.name}`}
-                class:list={[stepper, "size-8 disabled:pointer-events-none disabled:opacity-35"]}
+                class:list={[stepper, "size-11 lg:size-8 disabled:pointer-events-none disabled:opacity-35"]}
               >
                 <Plus class="size-3.5" stroke-width={2} aria-hidden="true" />
               </button>
@@ -298,7 +298,7 @@ const stepper =
         max="99999"
         step="1"
         value="1"
-        class="h-9 w-14 rounded-full bg-white text-center text-[15px] font-semibold tabular-nums ring-1 ring-brand-leaf/14 [appearance:textfield] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        class="h-11 w-14 rounded-full bg-white text-center text-[16px] font-semibold tabular-nums lg:h-9 lg:text-[15px] ring-1 ring-brand-leaf/14 [appearance:textfield] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
       />
       <button
         type="button"
@@ -370,7 +370,7 @@ const stepper =
     {RETAILERS.length > 0 && (
       <a
         href={inquiryHref({ intent: "store", product: id })}
-        class="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md text-[13px] font-semibold text-ink-heading transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss"
+        class="-my-2.5 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md py-2.5 text-[13px] font-semibold text-ink-heading lg:my-0 lg:py-0 transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss"
       >
         Available at
         {RETAILERS.map((r) => (
@@ -390,7 +390,7 @@ const stepper =
         type="button"
         data-share
         data-share-title={`${data.brand} ${data.name}`}
-        class="inline-flex h-9 items-center gap-2 rounded-full px-1 text-[14px] font-medium text-ink-body transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss"
+        class="inline-flex h-11 items-center gap-2 rounded-full px-3 text-[14px] lg:h-9 lg:px-1 font-medium text-ink-body transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss"
       >
         <Share2 class="size-4" stroke-width={1.8} aria-hidden="true" />
         Share

@@ -14,6 +14,7 @@ import {
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { url } from "../../config/url";
+import { COARSE_POINTER } from "./stage";
 
 /**
  * The can: a bare aluminium model with no UVs, given a printed wrap at runtime.
@@ -79,7 +80,8 @@ function labelMaterialFor(map: Texture) {
     map.colorSpace = SRGBColorSpace;
     // The wrap is read at a slant almost everywhere; without this the printed
     // text turns to mush towards the edges of the can.
-    map.anisotropy = 8;
+    // Touch devices draw the can small, so 4 taps is plenty there.
+    map.anisotropy = COARSE_POINTER ? 4 : 8;
     // Triangles across the seam carry U past 1 (see `prepareBody`).
     map.wrapS = RepeatWrapping;
     map.needsUpdate = true;
@@ -260,9 +262,9 @@ export async function createSodaCan(flavor: Flavor): Promise<SodaCan> {
   root.add(fitted);
 
   const place = (node: Mesh, material: Mesh["material"]) => {
+    // No shadow flags: nothing casts one, and the renderer's shadow map is
+    // off (`stage.ts`). The floor shadows are `contactShadow` planes.
     const mesh = new Mesh(node.geometry, material);
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
     // Some parts sit inside a group (the lid is a child of `Can_Body`), so
     // take each part's full transform within the model, not just its own.
     node.matrixWorld.decompose(mesh.position, mesh.quaternion, mesh.scale);

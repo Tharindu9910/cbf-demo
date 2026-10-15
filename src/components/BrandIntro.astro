@@ -60,31 +60,48 @@ const FLAVOURS = [
       />
     </p>*/}
 
+    {/*
+      Phones: the brand name is the section's hero, so it breaks onto two
+      lines and sizes to the column (`cqw`) rather than shrinking to fit one,
+      with a smaller "Meet" over it. From `sm` it's the mockup's single line.
+      The phone sizes and gaps also cap on `svh`, so the copy and the cans
+      share one screen (the cans' slot in Hero takes what's left).
+    */}
     <h2
-      class="mt-[calc(24*var(--u))] font-display text-[length:calc(70*var(--u))] leading-none font-black tracking-[-0.01em] text-ink-heading"
+      class="font-display text-[length:min(8cqw,3.6svh)] leading-none font-black tracking-[-0.01em] text-ink-heading sm:mt-[calc(24*var(--u))] sm:text-[length:calc(70*var(--u))]"
     >
       Meet
-      {/* `leading-[1.15]` leaves the gradient room for the "y" descenders. */}
+      {/*
+        `leading-[1.15]` leaves the gradient room for the "y" descenders. On
+        phones the gradient moves to the inner span, cloned per line, so each
+        word gets the full light-to-dark fall.
+      */}
       <span
-        class="-mt-[calc(13*var(--u))] block bg-linear-to-b from-intro-title-top to-intro-title-bottom bg-clip-text text-[length:calc(90*var(--u))] leading-[1.15] tracking-[-0.015em] whitespace-nowrap text-transparent drop-shadow-intro-title"
+        class="mt-[0.5svh] block text-[length:min(15cqw,7.5svh)] leading-[1.02] tracking-[-0.02em] text-transparent drop-shadow-intro-title sm:-mt-[calc(13*var(--u))] sm:bg-linear-to-b sm:from-intro-title-top sm:to-intro-title-bottom sm:bg-clip-text sm:text-[length:calc(90*var(--u))] sm:leading-[1.15] sm:tracking-[-0.015em] sm:whitespace-nowrap"
       >
-        Thynkers Lyquid
+        <span
+          class="box-decoration-clone max-sm:bg-linear-to-b max-sm:from-intro-title-top max-sm:to-intro-title-bottom max-sm:bg-clip-text"
+          >Thynkers <br class="sm:hidden" />Lyquid</span
+        >
       </span>
     </h2>
 
     <p
-      class="mt-[calc(13*var(--u))] text-[length:max(16px,calc(23*var(--u)))] leading-[1.3] font-medium text-intro-lede"
+      class="mt-[1.2svh] max-w-[22em] text-[length:max(16px,calc(23*var(--u)))] leading-[1.35] font-medium text-balance text-intro-lede sm:mt-[calc(13*var(--u))] sm:max-w-none sm:leading-[1.3] sm:text-wrap"
     >
       Sparkling, gotu kola&ndash;infused drinks in three refreshing flavours.
     </p>
 
-    <ul class="mt-[calc(28*var(--u))] flex gap-[calc(88*var(--u))]">
+    {/* Phones: three equal columns across the full width, so the chips sit evenly. */}
+    <ul
+      class="mt-[2.2svh] grid grid-cols-3 gap-x-2 sm:mt-[calc(28*var(--u))] sm:flex sm:flex-wrap sm:gap-x-[calc(88*var(--u))] sm:gap-y-4"
+    >
       {
         FLAVOURS.map(({ Icon, lines, label, chip }) => (
           <li class="flex flex-col items-center">
             <span
               class:list={[
-                "grid size-[max(48px,calc(70*var(--u)))] place-items-center rounded-full border-[max(1.5px,calc(2*var(--u)))]",
+                "grid size-[clamp(36px,5.5svh,48px)] place-items-center rounded-full border-[max(1.5px,calc(2*var(--u)))] sm:size-[max(48px,calc(70*var(--u)))]",
                 chip,
               ]}
             >
@@ -92,7 +109,7 @@ const FLAVOURS = [
             </span>
             <span
               class:list={[
-                "mt-[calc(9*var(--u))] text-center text-[length:max(11px,calc(15*var(--u)))] leading-[1.45] font-semibold tracking-[0.15em] whitespace-nowrap uppercase",
+                "mt-[0.8svh] text-center text-[length:10.5px] leading-[1.3] font-semibold tracking-[0.12em] sm:mt-[calc(9*var(--u))] sm:text-[length:max(11px,calc(15*var(--u)))] sm:leading-[1.45] sm:tracking-[0.15em] whitespace-nowrap uppercase",
                 label,
               ]}
             >
@@ -108,7 +125,7 @@ const FLAVOURS = [
       class="mt-[calc(26*var(--u))] block h-[1.5px] w-[calc(50*var(--u))] bg-intro-rule"></span>*/}
 
     <div
-      class="mt-[calc(25*var(--u))] max-w-[28.2em] space-y-[calc(9*var(--u))] text-[length:max(15px,calc(17*var(--u)))] leading-[1.47]"
+      class="mt-[2.2svh] max-w-[28.2em] space-y-[1svh] text-[length:max(15px,calc(17*var(--u)))] leading-[1.45] sm:mt-[calc(25*var(--u))] sm:space-y-[calc(9*var(--u))] sm:leading-[1.47]"
     >
       <p>
         Thynkers Lyquid is a Gotukola based beverage crafted to support clear thinking and mindful
@@ -122,7 +139,7 @@ const FLAVOURS = [
       </p>
     </div>
 
-    <div class="mt-[calc(38*var(--u))] flex items-center gap-[calc(12*var(--u))]">
+    <div class="mt-[2.5svh] flex items-center sm:mt-[calc(38*var(--u))] gap-[calc(12*var(--u))]">
       <ProductsLink />
       {/*<SparkIcon
         class="size-[calc(26*var(--u))] -translate-y-[calc(6*var(--u))] text-intro-eyebrow"

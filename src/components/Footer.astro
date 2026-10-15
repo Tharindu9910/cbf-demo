@@ -22,37 +22,37 @@ import { url } from "../config/url";
  * (`xl:frame-1919`), so the layout is the mockup's at any width (capped at
  * 1px past 1919). Below that
  * the columns reflow: brand on top, then contact / links / follow in three
- * columns on tablets and stacked on phones. Icons are sized in `em`, so they
+ * columns on tablets and stacked on phones (brand centred). Icons are sized in `em`, so they
  * track their row's text at every size.
  */
 
 const { contact } = SITE;
 const telHref = `tel:${contact.telephone.replace(/\s+/g, "")}`;
-const siteHost = new URL(Astro.site!).host;
 const year = new Date().getFullYear();
 
 /* Every link: a colour fade and the accent focus ring. Column links also take the accent on hover. */
 const link =
   "transition-[color] duration-150 ease-[ease] focus-visible:rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-footer-accent motion-reduce:transition-none";
-const colLink = `${link} hover:text-footer-accent focus-visible:text-footer-accent`;
+// Below `xl` the column links get a taller hit area; the negative margin keeps the rows where they were.
+const colLink = `${link} hover:text-footer-accent focus-visible:text-footer-accent max-xl:-my-2 max-xl:inline-block max-xl:py-2`;
 
 /* The three ruled columns, from xl: the hairline at the left edge, the copy inset from it. */
 const col =
   "not-italic xl:relative xl:before:absolute xl:before:top-0 xl:before:left-0 xl:before:h-[calc(270*var(--u))] xl:before:w-[max(1px,calc(1.5*var(--u)))] xl:before:bg-footer-col-rule xl:before:shadow-[1px_0_1px_rgb(0_12_4/0.6)]";
 const head =
-  "font-normal max-xl:text-[17px] max-xl:leading-[24px] max-xl:tracking-[0.4px] xl:text-[length:calc(21*var(--u))] xl:leading-[calc(30*var(--u))]";
-const list =
-  "flex flex-col max-xl:mt-4 max-xl:gap-3.5 max-xl:text-[14px] max-xl:leading-[20px] xl:text-[length:calc(17*var(--u))] xl:leading-[calc(24*var(--u))]";
+  "font-semibold text-footer-heading max-xl:text-[17px] max-xl:leading-[24px] max-xl:tracking-[0.4px] xl:text-[length:calc(21*var(--u))] xl:leading-[calc(30*var(--u))]";
+/* Sub text takes the header nav's face and size (font-sans, text-sm) at every width. */
+const list = "flex flex-col font-sans text-sm max-xl:mt-4 max-xl:gap-3.5";
 
 /* Icons are sized in `em`; contact and follow rows give theirs a fixed slot, so the labels line up whatever the glyph's width. */
-const icon = "flex-none overflow-visible drop-shadow-footer-icon";
+const icon = "flex-none overflow-visible text-footer-icon drop-shadow-footer-icon";
 const contactIcon = `${icon} w-[1.48em] max-xl:text-[15px]`;
 const followIcon = `${icon} w-[1.43em] max-xl:text-[15px]`;
 ---
 
 <footer
   id="contact"
-  class="@container relative overflow-hidden bg-footer-ground font-poppins font-light text-white xl:frame-1919"
+  class="@container relative overflow-hidden bg-footer-ground bg-[radial-gradient(45%_60%_at_100%_55%,color-mix(in_srgb,var(--color-footer-glow)_90%,transparent),transparent),radial-gradient(40%_35%_at_100%_0%,color-mix(in_srgb,var(--color-footer-glow)_35%,transparent),transparent)] font-poppins font-normal text-footer-text xl:frame-1919"
   aria-labelledby="footer-heading"
 >
   {/* The leaf bunches, cut out of the mockup's backdrop, in the bottom corners. On phones small and dimmed, so they frame the copy instead of sitting under it. */}
@@ -64,11 +64,15 @@ const followIcon = `${icon} w-[1.43em] max-xl:text-[15px]`;
   >
     <h2 id="footer-heading" class="sr-only">{SITE.name}: contact and links</h2>
 
-    {/* Below xl the columns reflow: brand on top, then contact / links / follow in three columns on tablets and stacked on phones. */}
+    {/*
+      Below xl the columns reflow: brand on top, then contact / links / follow
+      in three columns on tablets and stacked on phones, where the brand
+      centres above the left-aligned columns.
+    */}
     <div
       class="max-xl:grid max-xl:gap-y-10 max-md:grid-cols-2 max-md:gap-x-6 md:max-xl:grid-cols-[1.7fr_1fr_1fr] md:max-xl:gap-x-10 xl:grid xl:min-h-[calc(270*var(--u))] xl:grid-cols-[calc(392*var(--u))_calc(605*var(--u))_calc(324*var(--u))_1fr] xl:pl-[calc(128*var(--u))]"
     >
-      <div class="max-xl:col-span-full xl:mt-[calc(14*var(--u))]">
+      <div class="max-xl:col-span-full max-md:text-center xl:mt-[calc(14*var(--u))]">
         <a href={url("/")} class:list={["inline-flex items-center", link]} aria-label={`${SITE.name} — home`}>
           <Image src={logo} alt="" width={84} densities={[1, 2, 3]} loading="lazy" class="w-auto drop-shadow-footer max-xl:h-[92px] xl:h-[calc(140*var(--u))]" />
           <span
@@ -89,33 +93,23 @@ const followIcon = `${icon} w-[1.43em] max-xl:text-[15px]`;
         <p class={head}>{SITE.legalName}</p>
         <ul class:list={[list, "xl:mt-[calc(27*var(--u))] xl:gap-[calc(25*var(--u))]"]}>
           <li class="flex items-center max-xl:gap-4 xl:gap-[calc(36*var(--u))]">
-            <svg class={contactIcon} width="1.1em" height="1.48em" viewBox="0 0 23 31" fill="#cfdfaa" aria-hidden="true">
+            <svg class={contactIcon} width="1.1em" height="1.48em" viewBox="0 0 23 31" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M11.5 0C5.15 0 0 5.1 0 11.4c0 8.2 9.3 17 11.5 19.6C13.7 28.4 23 19.6 23 11.4 23 5.1 17.85 0 11.5 0zM11.5 7.2a4.2 4.2 0 1 0 0 8.4 4.2 4.2 0 0 0 0-8.4z" />
             </svg>
             <span>{FULL_ADDRESS}</span>
           </li>
           <li class="flex items-center max-xl:gap-4 xl:gap-[calc(36*var(--u))]">
-            <svg class={contactIcon} width="1.29em" height="1.33em" viewBox="3 3 18 18" fill="#c4de8c" aria-hidden="true">
+            <svg class={contactIcon} width="1.29em" height="1.33em" viewBox="3 3 18 18" fill="currentColor" aria-hidden="true">
               <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
             </svg>
             <a href={telHref} class:list={[colLink, "wrap-anywhere"]}>{contact.telephone}</a>
           </li>
           <li class="flex items-center max-xl:gap-4 xl:gap-[calc(36*var(--u))]">
-            <svg class={contactIcon} width="1.43em" height="1.05em" viewBox="0 0 30 22" fill="#b3d475" aria-hidden="true">
+            <svg class={contactIcon} width="1.43em" height="1.05em" viewBox="0 0 30 22" fill="currentColor" aria-hidden="true">
               <rect width="30" height="22" rx="3.5" />
-              <path d="M3 5.6 15 14 27 5.6" fill="none" stroke="#0c321d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M3 5.6 15 14 27 5.6" fill="none" class="stroke-footer-ground" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <a href={`mailto:${contact.email}`} class:list={[colLink, "wrap-anywhere"]}>{contact.email}</a>
-          </li>
-          <li class="flex items-center max-xl:gap-4 xl:gap-[calc(36*var(--u))]">
-            <svg class={contactIcon} width="1.48em" height="1.43em" viewBox="0 0 31 30" aria-hidden="true">
-              <g fill="none" stroke="#aacb63" stroke-width="2.2">
-                <circle cx="15.5" cy="15" r="13.8" />
-                <ellipse cx="15.5" cy="15" rx="6.2" ry="13.8" />
-                <path d="M15.5 1.2v27.6M2 15h27M4.2 8h22.6M4.2 22h22.6" />
-              </g>
-            </svg>
-            <a href={url("/")} class:list={[colLink, "wrap-anywhere"]}>{siteHost}</a>
           </li>
         </ul>
       </address>
@@ -139,29 +133,29 @@ const followIcon = `${icon} w-[1.43em] max-xl:text-[15px]`;
             <li class="flex items-center max-xl:gap-4 xl:gap-[calc(37*var(--u))]">
               {icon === "facebook" && (
                 <svg class={followIcon} width="1.43em" height="1.38em" viewBox="0 0 30 29" aria-hidden="true">
-                  <rect width="30" height="29" rx="7" fill="#b8d97e" />
-                  <path fill="#0c321d" d="M16.3 29V19h3.5l.6-4.3h-4.1v-2.6c0-1.2.4-2.1 2.1-2.1h2.2V6.2c-.4-.1-1.7-.2-3.1-.2-3.1 0-5.2 1.9-5.2 5.3v2.5H8.8V19h3.5v10z" />
+                  <rect width="30" height="29" rx="7" fill="currentColor" />
+                  <path class="fill-footer-ground" d="M16.3 29V19h3.5l.6-4.3h-4.1v-2.6c0-1.2.4-2.1 2.1-2.1h2.2V6.2c-.4-.1-1.7-.2-3.1-.2-3.1 0-5.2 1.9-5.2 5.3v2.5H8.8V19h3.5v10z" />
                 </svg>
               )}
               {icon === "youtube" && (
                 <svg class={followIcon} width="1.43em" height="1.1em" viewBox="0 0 30 23" aria-hidden="true">
-                  <rect width="30" height="23" rx="5.5" fill="#e8eed2" />
-                  <path fill="#0c321d" d="M12 6.3v10.4l8.6-5.2z" />
+                  <rect width="30" height="23" rx="5.5" fill="currentColor" />
+                  <path class="fill-footer-ground" d="M12 6.3v10.4l8.6-5.2z" />
                 </svg>
               )}
               {icon === "instagram" && (
                 <svg class={followIcon} width="1.43em" height="1.38em" viewBox="0 0 30 29" aria-hidden="true">
-                  <g fill="none" stroke="#e2e8d0" stroke-width="2.6">
+                  <g fill="none" stroke="currentColor" stroke-width="2.6">
                     <rect x="1.3" y="1.3" width="27.4" height="26.4" rx="7.5" />
                     <circle cx="15" cy="14.5" r="6.2" />
                   </g>
-                  <circle cx="23" cy="6.8" r="1.8" fill="#e2e8d0" />
+                  <circle cx="23" cy="6.8" r="1.8" fill="currentColor" />
                 </svg>
               )}
               {icon === "linkedin" && (
                 <svg class={followIcon} width="1.43em" height="1.38em" viewBox="0 0 30 29" aria-hidden="true">
-                  <rect width="30" height="29" rx="5" fill="#b3d476" />
-                  <g fill="#0c321d">
+                  <rect width="30" height="29" rx="5" fill="currentColor" />
+                  <g class="fill-footer-ground">
                     <circle cx="8.8" cy="8.6" r="2.3" />
                     <rect x="6.8" y="12.2" width="4" height="11.5" rx=".6" />
                     <path d="M13.2 12.2H17v1.6c.6-1.1 1.9-1.9 3.7-1.9 3.5 0 4.2 2.3 4.2 5.3v6.3h-4v-5.6c0-1.4-.1-2.7-1.7-2.7s-2 1.2-2 2.6v5.7h-4z" />
@@ -170,7 +164,7 @@ const followIcon = `${icon} w-[1.43em] max-xl:text-[15px]`;
               )}
               {icon === "tiktok" && (
                 <svg class={followIcon} width="1.24em" height="1.43em" viewBox="0 0 26 30" aria-hidden="true">
-                  <g fill="none" stroke="#c0d889" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+                  <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="9.5" cy="21" r="6.2" />
                     <path d="M15.7 21V3.5M15.7 3.5c.5 4.2 3.7 6.6 7.8 6.8" />
                   </g>
@@ -196,11 +190,11 @@ const followIcon = `${icon} w-[1.43em] max-xl:text-[15px]`;
     </div>
 
     <div
-      class="flex max-md:flex-col max-xl:gap-[18px] max-xl:pt-6 max-xl:text-[12.5px] max-xl:leading-[18px] md:items-center md:justify-between xl:pt-[calc(37*var(--u))] xl:pr-[calc(202*var(--u))] xl:pl-[calc(198*var(--u))] xl:text-[length:calc(15.5*var(--u))] xl:leading-[calc(22*var(--u))]"
+      class="flex font-sans text-sm max-md:flex-col max-xl:gap-[18px] max-xl:pt-6 md:items-center md:justify-between xl:pt-[calc(37*var(--u))] xl:pr-[calc(202*var(--u))] xl:pl-[calc(198*var(--u))]"
     >
       <p>&copy; {year} {SITE.name}. All rights reserved.</p>
 
-      <div class="flex items-center max-xl:gap-[18px] xl:gap-[calc(24*var(--u))]">
+      <div class="flex items-center max-xl:gap-[18px] max-sm:gap-3 xl:gap-[calc(24*var(--u))]">
         <svg class:list={[icon, "max-xl:text-[13px]"]} width="2.26em" height="2.21em" viewBox="0 0 43 42" aria-hidden="true">
           <defs>
             <linearGradient id="footer-leaf-grad" x1="0" y1="1" x2="1" y2="0">
@@ -216,14 +210,14 @@ const followIcon = `${icon} w-[1.43em] max-xl:text-[15px]`;
           class="flex-none bg-footer-values-rule max-xl:h-[26px] max-xl:w-px xl:mr-[calc(9*var(--u))] xl:h-[calc(35*var(--u))] xl:w-[max(1px,calc(1.5*var(--u)))]"
           aria-hidden="true"
         ></span>
-        <ul class="flex items-center whitespace-nowrap text-footer-values max-md:text-[12px] max-xl:tracking-[0.4px] xl:tracking-normal">
+        <ul class="flex items-center whitespace-nowrap text-footer-values max-xl:tracking-[0.4px] xl:tracking-normal">
           {
             /* `{value}` hugs its tags: whitespace would open a gap after each dot. */
             ["Natural", "Innovative", "Sri Lankan"].map((value, i) => (
               <li
                 class:list={[
                   i > 0 &&
-                    "before:inline-block before:size-[3px] before:rounded-full before:bg-footer-values before:align-middle max-md:before:mx-2.5 md:max-xl:before:mx-3.5 xl:before:mx-[calc(23*var(--u))] xl:before:size-[calc(3*var(--u))]",
+                    "before:inline-block before:size-[3px] before:rounded-full before:bg-footer-values before:align-middle max-md:before:mx-2.5 max-sm:before:mx-2 md:max-xl:before:mx-3.5 xl:before:mx-[calc(23*var(--u))] xl:before:size-[calc(3*var(--u))]",
                 ]}
               >{value}</li>
             ))

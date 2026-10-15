@@ -54,7 +54,7 @@ const { sources } = GOTUKOLA;
 
     <div class="mt-12">
       <h3 class="text-[12px] leading-4 font-semibold tracking-[2px] text-brand-fern uppercase">Sources</h3>
-      <ol class="mt-4 grid gap-x-10 gap-y-2 text-[12px] leading-[1.5] text-ink-body md:grid-cols-2">
+      <ol class="mt-4 grid gap-x-10 gap-y-3 text-[12px] md:gap-y-2 leading-[1.5] text-ink-body md:grid-cols-2">
         {
           SOURCE_IDS.map((id, i) => (
             <li id={`source-${i + 1}`} class="grid scroll-mt-8 grid-cols-[2em_1fr] target:text-ink-heading">
@@ -63,7 +63,7 @@ const { sources } = GOTUKOLA;
                 href={sources[id].href}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="underline decoration-brand-moss/30 underline-offset-2 hover:decoration-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss"
+                class="-my-1.5 py-1.5 underline decoration-brand-moss/30 underline-offset-2 hover:decoration-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss"
               >
                 {sources[id].label}
               </a>

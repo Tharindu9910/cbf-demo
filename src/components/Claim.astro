@@ -5,7 +5,9 @@ import type Leaf from "@lucide/astro/icons/leaf";
 /**
  * One pack claim or spec: a gold-ringed icon beside a bold headline and a
  * small note. A hairline gold glyph on ivory all but disappears at this size,
- * so the ring keeps the gold and the glyph is drawn in ink.
+ * so the ring keeps the gold and the glyph is drawn in ink. Phones (portrait)
+ * stack it as a badge: a larger, unfilled full-gold ring, a larger glyph,
+ * and a plain "No" (the "+" drops).
  */
 interface Props {
   icon: typeof Leaf;
@@ -17,24 +19,27 @@ interface Props {
   swaps?: boolean;
   /** Icon on the right, copy right-aligned — for the can's right shoulder. */
   mirrored?: boolean;
+  /** A different glyph for the phone (portrait) badge, where one reads better. */
+  mobileIcon?: typeof Leaf;
 }
 
-const { icon: Icon, headline, note, plus, swaps, mirrored } = Astro.props;
+const { icon: Icon, headline, note, plus, swaps, mirrored, mobileIcon: MobileIcon } = Astro.props;
 ---
 
-<li class:list={["flex items-center gap-2.5", mirrored && "flex-row-reverse text-right"]}>
+<li class:list={["flex items-center gap-2.5 max-sm:portrait:flex-col max-sm:portrait:gap-2 max-sm:portrait:text-center", mirrored && "flex-row-reverse text-right"]}>
   <span
     aria-hidden="true"
-    class="grid size-11 shrink-0 place-items-center rounded-full border-2 border-brand-gold/70 bg-brand-gold/10 text-brand-ink"
+    class="grid size-11 shrink-0 place-items-center rounded-full border-2 border-brand-gold/70 bg-brand-gold/10 text-brand-ink max-sm:portrait:size-12 max-sm:portrait:border-brand-gold max-sm:portrait:bg-transparent"
   >
-    <Icon class="size-5" stroke-width={2} />
+    <Icon class:list={["size-5 max-sm:portrait:size-6", MobileIcon && "max-sm:portrait:hidden"]} stroke-width={2} />
+    {MobileIcon && <MobileIcon class="hidden size-6 max-sm:portrait:block" stroke-width={2} />}
   </span>
   <span class="min-w-0 leading-tight">
-    <span class="block text-sm font-semibold">
-      {headline}{plus && <sup class="text-[0.6em]">+</sup>}
+    <span class="block text-sm font-semibold max-sm:portrait:text-[13px] max-sm:portrait:whitespace-nowrap">
+      {headline}{plus && <sup class="text-[0.6em] max-sm:portrait:hidden">+</sup>}
     </span>
     <span
-      class:list={["block text-[0.7rem] text-neutral-500", swaps && "flavor-swap"]}
+      class:list={["block text-[0.7rem] text-neutral-500 max-sm:portrait:mt-0.5 max-sm:portrait:text-[10.5px] max-sm:portrait:whitespace-nowrap", swaps && "flavor-swap"]}
       data-flavor-extract={swaps ? "" : undefined}
     >
       {note}

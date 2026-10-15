@@ -2,7 +2,15 @@
 import { Image } from "astro:assets";
 
 import PillLink from "./ui/PillLink.astro";
-import { body, eyebrow, heading } from "../styles/section";
+import {
+  body,
+  eyebrow,
+  heading,
+  phoneBody,
+  phoneEyebrow,
+  phoneFont,
+  phoneHeading,
+} from "../styles/section";
 
 import bottlingLine from "../assets/images/about/bottling-line.png";
 import { url } from "../config/url";
@@ -23,10 +31,13 @@ import { url } from "../config/url";
 <section
   id="company"
   aria-labelledby="company-heading"
-  class="@container relative overflow-hidden bg-brand-ivory font-inter text-ink-body"
+  class:list={[
+    "@container relative overflow-hidden bg-brand-ivory font-inter text-ink-body",
+    phoneFont,
+  ]}
 >
   <div
-    class="mx-auto max-lg:flex max-lg:max-w-[600px] max-lg:flex-col max-lg:gap-8 max-lg:px-5 max-lg:pt-12 max-lg:pb-14 lg:grid lg:max-w-[1316px] lg:frame-1316 lg:grid-cols-[minmax(0,727fr)_minmax(0,559fr)] lg:items-center lg:pt-[calc(18*var(--u))] lg:pb-[calc(22*var(--u))] lg:pl-[calc(30*var(--u))]"
+    class="mx-auto max-lg:flex max-lg:max-w-[600px] max-lg:flex-col max-lg:gap-8 max-lg:px-5 max-lg:py-16 lg:grid lg:max-w-[1316px] lg:frame-1316 lg:grid-cols-[minmax(0,727fr)_minmax(0,559fr)] lg:items-center lg:pt-[calc(18*var(--u))] lg:pb-[calc(22*var(--u))] lg:pl-[calc(30*var(--u))]"
   >
     <Image
       src={bottlingLine}
@@ -42,29 +53,30 @@ import { url } from "../config/url";
     <div
       class="lg:box-content lg:max-w-[max(320px,calc(390*var(--u)))] lg:pt-[calc(62*var(--u))] lg:pl-[calc(68*var(--u))]"
     >
-      <p class:list={[eyebrow, "text-brand-fern"]}>Rooted in Ceylon. Built for the World.</p>
+      <p class:list={[eyebrow, "text-brand-fern", phoneEyebrow]}>Rooted in Ceylon. Built for the World.</p>
       <h2
         id="company-heading"
         class:list={[
           heading,
+          phoneHeading,
           "mt-3 text-ink-heading lg:mt-[calc(12*var(--u))] lg:text-[length:max(34px,calc(44*var(--u)))] lg:tracking-[calc(-0.5*var(--u))]",
         ]}
       >
         Ceylon Future Beverages
       </h2>
-      <p class:list={[body, "mt-4 lg:mt-[calc(16*var(--u))]"]}>
+      <p class:list={[body, phoneBody, "mt-4 lg:mt-[calc(16*var(--u))]"]}>
         Ceylon Future Beverages transforms Sri Lanka&rsquo;s rich natural heritage into world-class
         beverages for global markets. Blending botanical roots with modern food science, we craft
         natural drinks, juices, herbal infusions, and functional beverages designed for
         today&rsquo;s consumer, built on sustainable sourcing and international quality standards.
       </p>
-      <p class:list={[body, "mt-[25px] lg:mt-[1.515em]"]}>
+      <p class:list={[body, phoneBody, "mt-3 lg:mt-[1.515em]"]}>
         Our mission: globally competitive brands, rooted at origin.
       </p>
       <PillLink
         href={url("/about/")}
         arrow
-        class="mt-5 h-[52px] gap-2.5 px-8 text-[15px] lg:mt-[calc(18*var(--u))] lg:ml-[calc(5*var(--u))] lg:h-[max(46px,calc(54*var(--u)))] lg:gap-[calc(10*var(--u))] lg:px-[calc(33*var(--u))] lg:text-[length:max(14px,calc(15*var(--u)))]"
+        class="mt-8 h-12 gap-2.5 px-7 text-[15px] max-lg:font-outfit max-lg:font-medium lg:mt-[calc(18*var(--u))] lg:ml-[calc(5*var(--u))] lg:h-[max(46px,calc(54*var(--u)))] lg:gap-[calc(10*var(--u))] lg:px-[calc(33*var(--u))] lg:text-[length:max(14px,calc(15*var(--u)))]"
       >
         Learn More
       </PillLink>

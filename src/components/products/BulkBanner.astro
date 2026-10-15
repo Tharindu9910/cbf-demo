@@ -25,7 +25,7 @@ const photo = listingPhoto("bulk");
     {RETAILERS.length > 0 && (
       <div
         data-reveal
-        class="mb-6 rounded-[24px] bg-white p-8 ring-1 ring-brand-leaf/6 md:p-10"
+        class="mb-6 rounded-[24px] bg-white p-6 ring-1 sm:p-8 ring-brand-leaf/6 md:p-10"
       >
         <p class:list={[eyebrowClass, "text-brand-fern uppercase"]}>
           Where to buy
@@ -67,7 +67,7 @@ const photo = listingPhoto("bulk");
         ></div>
       )}
 
-      <div class="px-8 py-12 md:px-12 md:py-14 lg:px-14">
+      <div class="px-6 py-12 md:px-12 md:py-14 lg:px-14">
         <p class:list={[eyebrowClass, "text-white/75 uppercase"]}>
           {eyebrow}
         </p>
@@ -85,13 +85,13 @@ const photo = listingPhoto("bulk");
             href={inquiryHref({ intent: "bulk" })}
             data-inquiry="bulk"
             arrow
-            class="h-[52px] gap-2.5 px-7 text-[15px]"
+            class="min-h-[52px] gap-2.5 px-6 py-3 text-center text-[15px] sm:px-7"
           >
             {enquire}
           </PillLink>
           <a
             href={inquiryHref({ intent: "store" })}
-            class="inline-flex h-[52px] items-center rounded-full border border-white/60 px-7 text-[15px] font-semibold text-white transition-colors hover:bg-white hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
+            class="inline-flex min-h-[52px] items-center rounded-full border border-white/60 px-6 py-3 text-[15px] sm:px-7 font-semibold text-white transition-colors hover:bg-white hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
           >
             {retailer}
           </a>

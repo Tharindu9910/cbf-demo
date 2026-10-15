@@ -27,15 +27,16 @@
   --font-ubuntu: var(--ff-saira), sans-serif;
   --font-display: var(--ff-playfair), Georgia, serif; /* section headings */
   --font-inter: var(--ff-inter), system-ui, sans-serif; /* section body copy */
-  --font-outfit: var(--ff-outfit), system-ui, sans-serif; /* "Meet Thynkers Lyquid" copy */
+  --font-outfit:
+    var(--ff-outfit), system-ui, sans-serif; /* "Meet Thynkers Lyquid" copy */
   --font-poppins: var(--ff-poppins), system-ui, sans-serif; /* the footer */
 }
 
 @theme {
   /* drei's loader readout. */
   --font-system:
-    -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial,
-    Roboto, Ubuntu, sans-serif;
+    -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", "Helvetica Neue",
+    Helvetica, Arial, Roboto, Ubuntu, sans-serif;
 
   /* Brand palette, ported from the Next build's tailwind.config.js. */
   --color-brand-green: #8dc63f; /* brand green — ink on dark grounds, the Matcha chip */
@@ -68,8 +69,6 @@
   --color-intro-matcha: #4f7a3a;
   --color-intro-matcha-ring: #5f8a42;
   --color-intro-matcha-fill: #eef3e1;
-  --color-intro-cta-top: #3b6a2f; /* "View All Products" gradient */
-  --color-intro-cta-bottom: #2c5523;
 
   /* Copy on the ivory sections. */
   --color-ink-heading: #15241a; /* Playfair headings */
@@ -82,6 +81,19 @@
   --color-flavour-pineapple-deep: #9a5f17; /* pineapple as text on ivory (the can colour is too light to read) */
   --color-flavour-mango-deep: #b0521a; /* mango as text on ivory: the products tagline */
   --color-flavour-matcha: #5c7a29; /* the Matcha can; products pages' halo (brand-green stands in on dark grounds) */
+
+  /* Phone menu (Header.astro). */
+  --color-menu-ground: #0c2316;
+  --color-menu-ground-deep: #0b2014;
+  --color-menu-ground-top: #0d2618;
+  --color-menu-glow: #4c6e32; /* top-right and right-side glows */
+  --color-menu-glow-warm: #60822f; /* bottom-left glow */
+  /* The green CTA pill (`btn-glow`): lime ends, moss middle, a deep core glowing up from below. */
+  --color-cta-lime: #8fc43f;
+  --color-cta-mid: #4e8d38;
+  --color-cta-end: #6ba53b;
+  --color-cta-core: #2a6c33;
+  --color-cta-rim: #9ccd52;
 
   /* Gotu Kola section. */
   --color-gk-ink: #163822;
@@ -118,15 +130,18 @@
   /* Reviews. */
   --color-reviews-glow: #1a4a26;
 
-
   /* Footer. */
-  --color-footer-ground: #0b3320;
+  --color-footer-ground: #0c2114;
+  --color-footer-glow: #2c4a22; /* the soft olive light on the right edge */
+  --color-footer-heading: #9cc262; /* column headings */
+  --color-footer-text: #c9d3c2; /* body copy: softened off white */
+  --color-footer-icon: #b4dc80; /* contact and social icons */
   --color-footer-accent: #9ccb55; /* link hover and focus */
   --color-footer-tagline: #b0c874;
   --color-footer-rule: #a9c08a;
   --color-footer-col-rule: #92aa7c;
   --color-footer-values-rule: #98b376;
-  --color-footer-values: #e6eee2;
+  --color-footer-values: #c9d3c2;
 
   /* Contact form */
   --color-form-error: #a3261f; /* invalid field border, send-failure message */
@@ -137,16 +152,22 @@
   --color-loader-text: #f0f0f0;
 
   --shadow-pill: 0 6px 14px -4px rgb(30 50 20 / 0.35); /* moss CTA pills */
-  --shadow-card: 0 1px 2px rgb(30 50 20 / 0.04), 0 22px 44px -30px rgb(30 50 20 / 0.45); /* products: cards, gallery frame */
-  --shadow-card-hover: 0 1px 2px rgb(30 50 20 / 0.04), 0 34px 60px -30px rgb(30 50 20 / 0.5); /* products: a card lifted on hover */
-  --shadow-intro-cta: 0 12px 22px -8px rgb(30 50 20 / 0.5); /* BrandIntro's "View All Products" */
+  --shadow-card:
+    0 1px 2px rgb(30 50 20 / 0.04), 0 22px 44px -30px rgb(30 50 20 / 0.45); /* products: cards, gallery frame */
+  --shadow-card-hover:
+    0 1px 2px rgb(30 50 20 / 0.04), 0 34px 60px -30px rgb(30 50 20 / 0.5); /* products: a card lifted on hover */
   --drop-shadow-intro-title: 0 2px 2px rgb(30 50 20 / 0.18); /* "Thynkers Lyquid" */
   --text-shadow-footer: 0 2px 4px rgb(0 18 6 / 0.55);
   --drop-shadow-footer: 0 2px 4px rgb(0 18 6 / 0.55);
   --drop-shadow-footer-icon: 0 2px 2px rgb(0 16 6 / 0.45);
 
   --ease-rise: cubic-bezier(0.22, 1, 0.36, 1); /* reviews cards' entrance */
-  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1); /* review stars filling, a slight overshoot */
+  --ease-pop: cubic-bezier(
+    0.34,
+    1.56,
+    0.64,
+    1
+  ); /* review stars filling, a slight overshoot */
 
   --animate-slide-left: slide-left 3s linear infinite;
   --animate-spin-slow: spin 6s linear infinite;
@@ -173,6 +194,13 @@
 /* Without JavaScript, for initial states that only script would undo. */
 @custom-variant noscript (@media (scripting: none));
 
+/*
+ * A phone on its side: wide enough for the `md`/`lg` layouts, but only a few
+ * hundred pixels tall. Full-screen sections ease their height floors and
+ * drop secondary copy under it.
+ */
+@custom-variant short (@media (orientation: landscape) and (max-height: 500px));
+
 /* ---- 3. Utilities ---- */
 
 /*
@@ -190,6 +218,45 @@
  */
 @utility frame-* {
   --u: min(1px, calc(100cqw / --value(integer)));
+}
+
+/*
+  The green CTA pill, shared by every filled green button: a lime-to-moss
+  gradient with a deep core, a pale lime rim, a soft green glow under it and
+  a top highlight. Brightens on hover, gives a little on press. Shape and
+  sizing stay with each button.
+*/
+@utility btn-glow {
+  color: var(--color-white);
+  background:
+    radial-gradient(60% 120% at 50% 100%, var(--color-cta-core), transparent),
+    linear-gradient(
+      90deg,
+      var(--color-cta-lime) 0%,
+      var(--color-cta-mid) 50%,
+      var(--color-cta-end) 100%
+    );
+  border: 1px solid color-mix(in srgb, var(--color-cta-rim) 80%, transparent);
+  text-shadow: 0 1px 2px rgb(20 50 15 / 0.3);
+  box-shadow:
+    0 0 0 1px rgb(30 60 20 / 0.08),
+    0 10px 30px -8px rgb(110 170 50 / 0.45),
+    inset 0 1px 0 rgb(255 255 255 / 0.25);
+  transition:
+    filter 200ms ease,
+    scale 200ms ease;
+
+  @media (hover: hover) {
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+  &:active {
+    scale: 0.97;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 @utility scrollbar-none {

@@ -9,6 +9,7 @@ import {
   anchoredLayout,
   atDepth,
   canFootprint,
+  slotLayout,
 } from "../three/canCluster";
 import { createContactShadow, type ContactShadow } from "../three/contactShadow";
 import { applyEnvironment } from "../three/environment";
@@ -37,6 +38,14 @@ const SHADOW_TO = 0.97;
  * The hero's three cans: they frame the headline, drop in once, then spin and
  * settle into the artwork's arrangement as the hero scrolls. A port of the
  * Next build's `Hero/Scene.tsx`.
+ *
+ * That choreography needs a landscape frame — the cans stand either side of
+ * the headline. On a portrait screen (phones, upright tablets) there is no
+ * "either side", so the group instead stands assembled in a box above the
+ * headline (`[data-can-slot="top"]`), and the same scroll carries it, spinning,
+ * down into a box under the runway copy (`[data-can-slot="end"]`), which it
+ * reaches as the hero lets go of it. Rotating the device switches between the
+ * two.
  */
 export async function mountHeroScene(el: HTMLElement) {
   const scene = new Scene();
@@ -75,22 +84,37 @@ export async function mountHeroScene(el: HTMLElement) {
   for (const { key } of CLUSTER) group.add(wrappers[key]);
   addCanLights(scene);
 
-  // The scroll timeline, rebuilt by `build` below. The shadows read its
-  // progress every frame.
+  // The scroll timeline (landscape), rebuilt by `build` below. The shadows
+  // read its progress every frame.
   let scrollTl: gsap.core.Timeline | null = null;
+  /** The portrait choreography's state while it is the one running. */
+  let portrait: PortraitState | null = null;
   let lastElapsed = 0;
+
+  const hero = el.closest<HTMLElement>(".hero");
+  let drawn = false;
 
   const view = addView(el, scene);
   view.update = (elapsed) => {
     const dt = Math.min(elapsed - lastElapsed, 0.1);
     lastElapsed = elapsed;
 
+    // The photo of the cans holds their place on phones until the real ones
+    // are drawn; this frame is the first, so it can go.
+    if (!drawn) {
+      drawn = true;
+      requestAnimationFrame(() => hero?.setAttribute("data-hero-3d", ""));
+    }
+
+    if (portrait) portraitFrame(portrait, elapsed, dt);
+
     // The shadows belong to the arrangement: hidden while the scroll is
     // still spinning the cans in, rising over the end of the approach so
     // they are on the floor before the cans settle, and gone again when it
     // scrolls back. `presence` eases toward that target rather than jumping
     // to it, so a fast scroll can't flicker them.
-    const t = ((scrollTl?.progress() ?? 0) - SHADOW_FROM) / (SHADOW_TO - SHADOW_FROM);
+    const progress = portrait ? portrait.rise : (scrollTl?.progress() ?? 0);
+    const t = (progress - SHADOW_FROM) / (SHADOW_TO - SHADOW_FROM);
     const k = Math.min(1, Math.max(0, t));
     const target = k * k * (3 - 2 * k);
     const step = dt / SHADOW_FADE;
@@ -106,21 +130,174 @@ export async function mountHeroScene(el: HTMLElement) {
     }
   };
 
+  // ---- Portrait ----
+  //
+  // Two boxes in the page hold the group: `top`, above the headline, and
+  // `end`, under the runway copy. On the first screen the cans are drawn
+  // locked to `top` — the whole view is shifted up with the scroll, pixel
+  // for pixel — so they leave over the top of the screen with it instead of
+  // crossing the copy. Once the runway's cream ground is coming up, they rise
+  // from under the frame into `end`, spinning to a stop, and arrive as the
+  // hero lets go of its sticky box, so they then scroll away with the page.
+  // Driven per frame rather than by a scrubbed timeline: the first leg has to
+  // track the page exactly, which a scrub's lag can't.
+
+  const slotTop = document.querySelector<HTMLElement>('[data-can-slot="top"]');
+  const slotEnd = document.querySelector<HTMLElement>('[data-can-slot="end"]');
+  const runway = document.querySelector<HTMLElement>("#scroll");
+
+  /** How fast the rise catches up with the scroll, per second. */
+  const RISE_FOLLOW = 5;
+  /** Seconds between re-reading the page layout while portrait runs. */
+  const MEASURE_EVERY = 0.5;
+
+  /** A slot's group layout, in world units, where the pinned view sees it at `scrollY`. */
+  const measureSlot = (slot: HTMLElement | null, scrollY: number, box: DOMRect) => {
+    const k = view.viewport.height / (box.height || 1);
+    const r = slot?.getBoundingClientRect() ?? new DOMRect(0, box.height / 4, box.width, box.height / 2);
+    // Both moments it is read for are ones where the box is pinned at the top
+    // of the screen, so the box's own position now doesn't come into it.
+    const top = r.top + window.scrollY - scrollY;
+    const halfWidth = (r.width / 2) * k;
+    return {
+      cx: (r.left + r.width / 2 - box.width / 2) * k,
+      cy: (box.height / 2 - (top + r.height / 2)) * k,
+      ...slotLayout(halfWidth, r.height * k),
+    };
+  };
+  type Slot = ReturnType<typeof measureSlot>;
+
+  type PortraitState = {
+    top: Slot;
+    end: Slot;
+    /** Scroll at which the top slot has left the screen. */
+    holdUntil: number;
+    /** Scroll range over which the group rises into the end slot. */
+    riseFrom: number;
+    riseTo: number;
+    /** 0 below the frame, 1 settled in the end slot; eased toward the scroll. */
+    rise: number;
+    measuredAt: number;
+    /** World units per CSS pixel at z 0. */
+    k: number;
+  };
+
+  const measurePortrait = (state?: PortraitState): PortraitState => {
+    const box = el.getBoundingClientRect();
+    const y = window.scrollY;
+    const screen = window.innerHeight;
+    // Where the sticky box lets go: its parent's bottom reaching the box's.
+    const release = (el.parentElement ?? el).getBoundingClientRect().bottom + y;
+    const riseTo = Math.max(1, release - box.height);
+    const holdUntil = slotTop ? slotTop.getBoundingClientRect().bottom + y + 24 : 0;
+    const runwayTop = runway ? runway.getBoundingClientRect().top + y : holdUntil;
+    const riseFrom = Math.min(riseTo - 1, Math.max(holdUntil, runwayTop - screen * 0.55));
+    const next = {
+      top: measureSlot(slotTop, 0, box),
+      end: measureSlot(slotEnd, riseTo, box),
+      holdUntil,
+      riseFrom,
+      riseTo,
+      rise: state?.rise ?? 0,
+      measuredAt: lastElapsed,
+      k: view.viewport.height / (box.height || 1),
+    };
+
+    // The floor is the end slot's, under where each can settles.
+    for (const c of CLUSTER) {
+      const scale = c.scale * next.end.fit;
+      const { width, drop } = canFootprint(scale);
+      shadows[c.key].setWidth(width);
+      floorY[c.key] = atDepth(next.end.cy + c.screenY * next.end.fit, c.z) - drop - 0.14 * scale;
+    }
+    return next;
+  };
+
+  const portraitFrame = (state: PortraitState, elapsed: number, dt: number) => {
+    if (elapsed - state.measuredAt > MEASURE_EVERY) {
+      portrait = state = measurePortrait(state);
+    }
+
+    const y = window.scrollY;
+    const target = Math.min(1, Math.max(0, (y - state.riseFrom) / (state.riseTo - state.riseFrom)));
+    state.rise += (target - state.rise) * (1 - Math.exp(-dt * RISE_FOLLOW));
+    if (Math.abs(target - state.rise) < 1e-4) state.rise = target;
+
+    const holding = y < state.holdUntil;
+    // First leg: drawn with the page. Second: still frame, cans move.
+    view.offsetY = holding ? Math.max(0, y) : 0;
+
+    const slot = holding ? state.top : state.end;
+    // Rise: the end slot is measured where it stands once the scroll is
+    // done, so first follow it up the screen with the page, exactly — the
+    // cans then never sit over the copy above it — plus an ease-out lift from
+    // most of a frame below it.
+    const e = 1 - (1 - state.rise) ** 3;
+    const below = holding
+      ? 0
+      : Math.max(0, state.riseTo - y) * state.k + (1 - e) * view.viewport.height * 0.7;
+    group.rotation.y = holding
+      ? (y / Math.max(1, state.holdUntil)) * 0.6
+      : (1 - e) * Math.PI * 2;
+
+    for (const c of CLUSTER) {
+      const can = cans[c.key].group;
+      can.scale.setScalar(c.scale * slot.fit);
+      can.position.set(
+        atDepth(slot.cx + slot.anchorX + c.screenX * slot.fit, c.z),
+        atDepth(slot.cy + c.screenY * slot.fit - below, c.z),
+        c.z,
+      );
+      can.rotation.set(0, c.ry, 0);
+    }
+  };
+
+  const buildPortrait = () => {
+    portrait = measurePortrait();
+
+    if (!introPlayed && window.scrollY < 20) {
+      introPlayed = true;
+
+      // Up into the slot from under the frame, the back pair first and the
+      // front can last, so it lands in front of them.
+      const tl = gsap.timeline({ defaults: { duration: 2.2, ease: "back.out(1.3)" } });
+      CLUSTER.forEach(({ key }, i) => {
+        const at = key === "center" ? 0.3 : i * 0.12;
+        const x = key === "left" ? -0.4 : key === "right" ? 0.4 : 0;
+        tl.from(wrappers[key].position, { y: -3.2, x }, at).from(
+          wrappers[key].rotation,
+          { z: key === "right" ? -2 : 2 },
+          at,
+        );
+      });
+    }
+  };
+
   // The entrance plays once per page. A resize rebuilds the timelines below,
   // and without this it would replay the drop under the reader.
   let introPlayed = false;
   let ctx: gsap.Context | null = null;
-  let builtFor = NaN;
+  let builtFor = "";
 
   const build = () => {
     // Quantised so that dragging a window edge rebuilds the timelines a
     // handful of times rather than on every frame.
     const stageWidth = Math.round(view.viewport.width * 20) / 20;
     const halfWidth = stageWidth > 0 ? stageWidth / 2 : REFERENCE_HALF_WIDTH;
-    if (halfWidth === builtFor) return;
-    builtFor = halfWidth;
+    const isPortrait = view.viewport.width > 0 && view.viewport.width < view.viewport.height;
+    const key = `${isPortrait}:${halfWidth}`;
+    if (key === builtFor) return;
+    builtFor = key;
 
     ctx?.revert();
+    portrait = null;
+    view.offsetY = 0;
+    group.rotation.y = 0;
+
+    if (isPortrait) {
+      ctx = gsap.context(() => buildPortrait());
+      return;
+    }
 
     const { fit, anchorX } = anchoredLayout(halfWidth);
 

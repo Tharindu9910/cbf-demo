@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 
 import GotuKolaClaims from "./GotuKolaClaims.astro";
 import { MATCHA_INGREDIENTS, NUTRITION } from "../config/products";
-import { heading } from "../styles/section";
+import { heading, phoneBody, phoneFont, phoneHeading } from "../styles/section";
 
 import gotuKolaCan from "../assets/images/gotu-kola/gotu-kola-can-leaves.png";
 
@@ -66,7 +66,10 @@ const num = "text-right whitespace-nowrap";
 <section
   id="gotu-kola"
   aria-labelledby="gotu-kola-heading"
-  class="@container relative overflow-hidden bg-brand-ivory font-inter text-gk-ink"
+  class:list={[
+    "@container relative overflow-hidden bg-brand-ivory font-inter text-gk-ink",
+    phoneFont,
+  ]}
 >
   {
     /*
@@ -78,14 +81,15 @@ const num = "text-right whitespace-nowrap";
     */
   }
   <div
-    class="mx-auto max-lg:flex max-lg:max-w-[600px] max-lg:flex-col max-lg:gap-8 max-lg:px-5 max-lg:py-14 lg:grid lg:max-w-[1464px] lg:grid-cols-[calc(600*var(--u))_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:gap-x-[calc(56*var(--u))] lg:gap-y-[calc(26*var(--u))] lg:pt-[calc(36*var(--u))] lg:pr-[calc(40*var(--u))] lg:pb-[calc(32*var(--u))] lg:pl-[calc(106*var(--u))] lg:[--u:min(1px,calc(100cqw/1464),calc(100svh/830))]"
+    class="mx-auto max-lg:flex max-lg:max-w-[600px] max-lg:flex-col max-lg:gap-8 max-lg:px-5 max-lg:py-16 lg:grid lg:max-w-[1464px] lg:grid-cols-[calc(600*var(--u))_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:gap-x-[calc(56*var(--u))] lg:gap-y-[calc(26*var(--u))] lg:pt-[calc(36*var(--u))] lg:pr-[calc(40*var(--u))] lg:pb-[calc(32*var(--u))] lg:pl-[calc(106*var(--u))] lg:[--u:min(1px,calc(100cqw/1464),calc(100svh/830))]"
   >
     <div class="lg:col-start-1 lg:row-start-1">
       <h2
         id="gotu-kola-heading"
         class:list={[
           heading,
-          "mt-3 text-brand-pine lg:mt-[calc(12*var(--u))] lg:text-[length:max(32px,calc(44*var(--u)))] lg:tracking-[calc(-0.5*var(--u))]",
+          phoneHeading,
+          "text-brand-pine lg:mt-[calc(12*var(--u))] lg:text-[length:max(32px,calc(44*var(--u)))] lg:tracking-[calc(-0.5*var(--u))]",
         ]}
       >
         Gotu Kola
@@ -96,7 +100,10 @@ const num = "text-right whitespace-nowrap";
         Nature&rsquo;s Brain Booster.
       </p>
       <p
-        class="mt-4 text-[16px] leading-[25px] text-gk-lede lg:mt-[calc(14*var(--u))] lg:text-[length:max(14px,calc(16.5*var(--u)))] lg:leading-[1.515]"
+        class:list={[
+          phoneBody,
+          "mt-4 text-[16px] leading-[25px] text-gk-lede lg:mt-[calc(14*var(--u))] lg:text-[length:max(14px,calc(16.5*var(--u)))] lg:leading-[1.515]",
+        ]}
       >
         A centuries-old Ayurvedic herb, now embraced by modern science, Gotu Kola helps to support
         focus, memory and overall well-being, giving your mind and body the natural support they
@@ -104,11 +111,11 @@ const num = "text-right whitespace-nowrap";
       </p>
 
       <ul
-        class="mt-6 flex flex-wrap gap-x-7 gap-y-4 lg:mt-[calc(20*var(--u))] lg:gap-x-[calc(40*var(--u))] lg:gap-y-[calc(12*var(--u))]"
+        class="mt-7 grid grid-cols-3 gap-x-2 lg:mt-[calc(20*var(--u))] lg:flex lg:flex-wrap lg:gap-x-[calc(40*var(--u))] lg:gap-y-[calc(12*var(--u))]"
       >
         {
           BENEFITS.map(({ label, paths, circles = [], rects = [] }) => (
-            <li class="flex items-center gap-3 text-[15px] leading-[21px] text-gk-benefit lg:gap-[calc(12*var(--u))] lg:text-[length:max(13px,calc(15*var(--u)))] lg:leading-[1.333]">
+            <li class="flex flex-col items-center gap-2 text-center text-[13px] leading-[18px] text-gk-benefit lg:flex-row lg:text-left lg:gap-[calc(12*var(--u))] lg:text-[length:max(13px,calc(15*var(--u)))] lg:leading-[1.333]">
               <span
                 class="grid size-11 shrink-0 place-items-center rounded-full border border-gk-ring bg-gk-ring-fill lg:size-[max(34px,calc(40*var(--u)))]"
                 aria-hidden="true"

@@ -14,6 +14,8 @@ import type { ImageMetadata } from "astro";
 
 import canFillingLine from "../assets/images/about/can-filling-line.jpg";
 import coastline from "../assets/images/about/coastline-aerial.jpg";
+import farmerHarvest from "../assets/images/about/farmer-harvest.jpg";
+import labBeaker from "../assets/images/about/lab-beaker.jpg";
 import stepCraft from "../assets/images/about/step-craft.jpg";
 import stepResearch from "../assets/images/about/step-research.jpg";
 import stepSource from "../assets/images/about/step-source.jpg";
@@ -72,10 +74,24 @@ export const ABOUT = {
       { text: "while", accent: true },
       { text: " creating lasting value at origin, here in Sri\u00a0Lanka." },
     ] as { text: string; accent?: boolean }[],
-    image: {
-      src: canFillingLine,
-      alt: "Aluminium cans rising up a conveyor and lining up beneath a stainless steel can filling machine",
-    } as AboutImage,
+    /**
+     * The photo collage, from origin to product: the farm (tall, left), then
+     * the production line and the lab stacked on the right.
+     */
+    images: {
+      farm: {
+        src: farmerHarvest,
+        alt: "A smiling farmer crouching in a field, digging with a hand trowel and holding a bunch of freshly picked herbs",
+      },
+      production: {
+        src: canFillingLine,
+        alt: "Aluminium cans rising up a conveyor and lining up beneath a stainless steel can filling machine",
+      },
+      lab: {
+        src: labBeaker,
+        alt: "A gloved hand holding a 50ml beaker of orange fruit blend in the lab",
+      },
+    } satisfies Record<string, AboutImage>,
     /**
      * The number strip. Only stats with a value are shown, and the strip
      * needs at least two. TODO: the founding year and real counts.
@@ -169,11 +185,6 @@ export const ABOUT = {
     title: "Built on quality. Certified to international standards.",
     intro: `Every Ceylon Future Beverages product is made in ${facility} under internationally recognized food-safety and quality systems.`,
     /**
-     * TODO: a facility photo (~1000×900). Until then the section is copy only;
-     * the bottling-line photo already opens "Our Story".
-     */
-    image: undefined as AboutImage | undefined,
-    /**
      * Only certifications with `held: true` are shown. TODO: confirm each one
      * the company holds today, the exact standard (ISO 22000 or ISO 9001?)
      * and its certificate number, and get the logo files from the
@@ -211,7 +222,7 @@ export const ABOUT = {
 
   closing: {
     title: "From Ceylon’s natural heritage, for the world ahead.",
-    primary: { label: "Order Now", href: url("/#order") },
+    primary: { label: "Order Now", href: url("/products/") },
     secondary: { label: "Partner With Us", href: url("/contact/#partner") },
   },
 };

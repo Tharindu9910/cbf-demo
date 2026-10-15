@@ -24,7 +24,7 @@ const { volume, shelfLife, layout = "inline", class: className } = Astro.props;
   class:list={[
     layout === "flank"
       ? "pointer-events-none absolute inset-x-0 top-[7%] z-10 flex justify-between text-brand-ink"
-      : "flex justify-center gap-x-8 text-brand-ink",
+      : "flex flex-wrap justify-center gap-x-6 gap-y-3 text-brand-ink sm:gap-x-8",
     className,
   ]}
 >
