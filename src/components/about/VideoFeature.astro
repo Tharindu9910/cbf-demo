@@ -22,14 +22,14 @@ const label = duration ? `Play video, ${duration}` : "Play video";
 
 <section aria-labelledby="video-heading" class="bg-brand-ivory py-20 lg:py-28">
   <div
-    class="mx-auto grid max-w-[1200px] items-center gap-10 px-5 md:px-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-14"
+    class="mx-auto grid max-w-page items-center gap-10 px-5 md:px-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-14"
   >
     <div data-reveal class="font-inter">
       <SectionHeading id="video-heading" eyebrow={eyebrow} title={title} />
-      <p class="mt-5 text-[16px] leading-[25px] text-ink-body">{body}</p>
+      <p class="mt-5 text-[1rem] leading-[1.5625rem] text-ink-body">{body}</p>
       {
         duration && (
-          <p class="mt-4 text-[13px] leading-5 font-semibold tracking-[1px] text-brand-fern uppercase">
+          <p class="mt-4 text-[0.8125rem] leading-5 font-semibold tracking-[1px] text-brand-fern uppercase">
             Video &middot; {duration}
           </p>
         )
@@ -38,7 +38,7 @@ const label = duration ? `Play video, ${duration}` : "Play video";
 
     <div
       data-reveal
-      class="relative isolate aspect-video overflow-hidden rounded-[28px] bg-brand-leaf shadow-[0_24px_60px_-28px_rgb(13_43_18/0.6)]"
+      class="relative isolate aspect-video overflow-hidden rounded-[1.75rem] bg-brand-leaf shadow-[0_24px_60px_-28px_rgb(13_43_18/0.6)]"
       data-video-frame
     >
       {
@@ -84,7 +84,7 @@ const label = duration ? `Play video, ${duration}` : "Play video";
               <span class="grid size-20 place-items-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm md:size-24">
                 <Play class="ml-1 size-8 fill-current md:size-10" stroke-width={1.5} />
               </span>
-              <span class="rounded-full bg-white/15 px-4 py-1.5 font-inter text-[12px] leading-4 font-bold tracking-[2px] text-white uppercase">
+              <span class="rounded-full bg-white/15 px-4 py-1.5 font-inter text-[0.75rem] leading-4 font-bold tracking-[2px] text-white uppercase">
                 Coming soon
               </span>
             </div>

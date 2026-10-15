@@ -29,19 +29,19 @@ const held = certifications.filter((c) => c.held);
     loading="lazy"
     class="absolute inset-0 -z-20 h-full w-full object-cover object-[72%_center] lg:object-center"
   />
-  {/* Narrower screens crop the map in behind the copy: darken it there. */}
-  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-black/55 lg:hidden"></div>
+  {/* Narrower screens crop the map in behind the copy: darken it there. Wide ones (2xl) crop it top and bottom and set the copy over its middle: shade the left. */}
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-black/55 lg:hidden 2xl:block 2xl:bg-transparent 2xl:bg-linear-to-r 2xl:from-black/55 2xl:via-black/20 2xl:via-40% 2xl:to-transparent"></div>
 
-  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+  <div class="mx-auto max-w-page px-5 md:px-10">
     <div data-reveal class="max-w-xl font-inter">
       <SectionHeading id="quality-heading" eyebrow={eyebrow} title={title} tone="light" />
-      <p class="mt-6 text-[16px] leading-[25px] text-white/80">{intro}</p>
+      <p class="mt-6 text-[1rem] leading-[1.5625rem] text-white/80">{intro}</p>
 
       {
         held.length > 0 && (
           <ul class="mt-10 grid gap-4 sm:grid-cols-2">
             {held.map((cert) => (
-              <li class="flex items-start gap-4 rounded-[18px] border border-white/15 bg-white/[0.04] p-5">
+              <li class="flex items-start gap-4 rounded-[1.125rem] border border-white/15 bg-white/[0.04] p-5">
                 {cert.logo ? (
                   <Image
                     src={cert.logo.src}
@@ -52,12 +52,12 @@ const held = certifications.filter((c) => c.held);
                     class="h-12 w-auto shrink-0 rounded-md bg-white p-1"
                   />
                 ) : (
-                  <span class="grid h-12 min-w-12 shrink-0 place-items-center rounded-full border border-brand-green/60 px-2 text-[12px] font-bold tracking-[1px] text-brand-green">
+                  <span class="grid h-12 min-w-12 shrink-0 place-items-center rounded-full border border-brand-green/60 px-2 text-[0.75rem] font-bold tracking-[1px] text-brand-green">
                     {cert.code}
                   </span>
                 )}
-                <p class="text-[14px] leading-[1.5] text-white/80">
-                  <strong class="block text-[15px] text-white">{cert.code}</strong>
+                <p class="text-[0.875rem] leading-[1.5] text-white/80">
+                  <strong class="block text-[0.9375rem] text-white">{cert.code}</strong>
                   {cert.label}
                 </p>
               </li>

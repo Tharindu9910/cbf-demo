@@ -30,11 +30,11 @@ const arrow =
     aria-labelledby="reviews-heading"
     class="scroll-mt-24 bg-brand-ivory pb-16 font-inter lg:pb-20"
   >
-    <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+    <div class="mx-auto max-w-page px-5 md:px-10">
       <div data-reveal class="flex items-end justify-between gap-6">
         <h2
           id="reviews-heading"
-          class="font-display text-[clamp(28px,3.6vw,36px)] leading-[1.1] font-bold tracking-[-0.4px] text-ink-heading"
+          class="font-display text-[clamp(1.75rem,3.6vw,2.25rem)] leading-[1.1] font-bold tracking-[-0.4px] text-ink-heading"
         >
           Customer Reviews
         </h2>
@@ -61,7 +61,7 @@ const arrow =
       <div class="mt-8 grid gap-10 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,2fr)] lg:gap-12">
         <div data-reveal>
           <div class="flex items-center gap-3">
-            <span class="font-display text-[44px] leading-none font-bold text-ink-heading lining-nums">
+            <span class="font-display text-[2.75rem] leading-none font-bold text-ink-heading lining-nums">
               {average.toFixed(1)}
             </span>
             <div>
@@ -85,14 +85,14 @@ const arrow =
                   </svg>
                 ))}
               </div>
-              <p class="mt-1 text-[13px] text-ink-body/70">
+              <p class="mt-1 text-[0.8125rem] text-ink-body/70">
                 {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
               </p>
             </div>
           </div>
           <ul class="mt-6 flex flex-col gap-2" aria-label="Ratings breakdown">
             {breakdown.map((row) => (
-              <li class="flex items-center gap-3 text-[13px] text-ink-body tabular-nums">
+              <li class="flex items-center gap-3 text-[0.8125rem] text-ink-body tabular-nums">
                 <span class="w-8 shrink-0">
                   {row.stars}
                   <span aria-hidden="true" class="text-brand-moss">
@@ -114,7 +114,7 @@ const arrow =
           </ul>
           <a
             href={inquiryHref({ intent: "feedback", product: productId, topic: "review" })}
-            class="mt-7 inline-flex h-11 items-center rounded-full bg-white px-6 text-[14px] font-semibold text-brand-leaf ring-1 ring-brand-leaf/40 transition-colors hover:bg-brand-leaf hover:text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
+            class="mt-7 inline-flex h-11 items-center rounded-full bg-white px-6 text-[0.875rem] font-semibold text-brand-leaf ring-1 ring-brand-leaf/40 transition-colors hover:bg-brand-leaf hover:text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
           >
             Write a review
           </a>
@@ -127,9 +127,9 @@ const arrow =
           {reviews.map((review) => (
             <li
               data-reveal
-              class="flex-[0_0_min(82%,340px)] snap-start md:flex-[0_0_calc(50%-10px)]"
+              class="flex-[0_0_min(82%,21.25rem)] snap-start md:flex-[0_0_calc(50%-0.625rem)]"
             >
-              <figure class="flex h-full flex-col rounded-[22px] bg-white p-6 shadow-card ring-1 ring-brand-leaf/6 lg:p-7">
+              <figure class="flex h-full flex-col rounded-[1.375rem] bg-white p-6 shadow-card ring-1 ring-brand-leaf/6 lg:p-7">
                 <div
                   class="flex gap-0.5"
                   role="img"
@@ -150,10 +150,10 @@ const arrow =
                     </svg>
                   ))}
                 </div>
-                <blockquote class="mt-4 flex-1 font-display text-[18px] leading-[1.5] text-pretty text-ink-heading">
+                <blockquote class="mt-4 flex-1 font-display text-[1.125rem] leading-[1.5] text-pretty text-ink-heading">
                   <p>&ldquo;{review.quote}&rdquo;</p>
                 </blockquote>
-                <figcaption class="mt-5 text-[13px] text-ink-body/75">
+                <figcaption class="mt-5 text-[0.8125rem] text-ink-body/75">
                   <span class="font-semibold text-ink-heading">
                     {review.name}
                   </span>{" "}

@@ -19,14 +19,14 @@ const titleLines = title.split(/(?<=\.)\s+/);
 
 <section
   aria-labelledby="about-hero-heading"
-  class="relative isolate flex min-h-[max(600px,100svh)] short:min-h-svh! overflow-hidden bg-brand-leaf text-white"
+  class="relative isolate flex min-h-[min(max(37.5rem,100svh),70rem)] short:min-h-svh! overflow-hidden bg-brand-leaf text-white"
 >
   {
     image ? (
       <Image
         src={image.src}
         alt={image.alt}
-        widths={[768, 1280, 1920, 2560]}
+        widths={[768, 1280, 1920, 2560, 3840].filter((w) => w <= image.src.width)}
         sizes="100vw"
         quality={80}
         loading="eager"
@@ -62,19 +62,19 @@ const titleLines = title.split(/(?<=\.)\s+/);
   </div>
 
   <div
-    class="relative flex w-full flex-col justify-end px-5 pt-32 pb-32 md:px-10 md:pb-[max(56px,9svh)] lg:pr-10 lg:pl-[11vw]"
+    class="relative flex w-full flex-col justify-end px-5 pt-32 pb-32 md:px-10 md:pb-[max(3.5rem,9svh)] lg:pr-10 lg:pl-[clamp(2.5rem,11vw,12.5rem)]"
   >
-    <p class="font-poppins text-[11px] leading-4 font-medium tracking-[4px] text-white/90 uppercase md:text-[12px]">
+    <p class="font-poppins text-[0.6875rem] leading-4 font-medium tracking-[0.25rem] text-white/90 uppercase md:text-[0.75rem]">
       {eyebrow}
     </p>
     <h1
       id="about-hero-heading"
-      class="mt-4 font-display text-[clamp(44px,5.6vw,96px)] leading-[1.02] font-bold tracking-[-0.5px] drop-shadow-[0_2px_24px_rgb(0_0_0/0.3)]"
+      class="mt-4 font-display text-[clamp(2.75rem,5.6vw,6rem)] leading-[1.02] font-bold tracking-[-0.5px] drop-shadow-[0_2px_24px_rgb(0_0_0/0.3)]"
     >
       {titleLines.map((line) => <span class="block">{line}</span>)}
     </h1>
     <p
-      class="mt-5 max-w-[27em] font-poppins text-[15px] leading-[1.55] font-medium text-white/95 drop-shadow-[0_1px_10px_rgb(0_0_0/0.3)] md:text-[clamp(16px,1.3vw,20px)]"
+      class="mt-5 max-w-[27em] font-poppins text-[0.9375rem] leading-[1.55] font-medium text-white/95 drop-shadow-[0_1px_10px_rgb(0_0_0/0.3)] md:text-[clamp(1rem,1.3vw,1.25rem)]"
     >
       {intro}
     </p>
@@ -83,12 +83,12 @@ const titleLines = title.split(/(?<=\.)\s+/);
         <a
           href={cta.href}
           data-scroll-nudge
-          class="group mt-5 inline-flex items-center gap-2 self-start py-3 font-poppins lg:mt-8 lg:py-0 text-[14px] font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:text-[15px]"
+          class="group mt-5 inline-flex items-center gap-2 self-start py-3 font-poppins lg:mt-8 lg:fine:py-0 text-[0.875rem] font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:text-[0.9375rem]"
         >
           {cta.label}
           <ArrowDown
             aria-hidden="true"
-            class="size-4 transition-transform duration-300 group-hover:translate-y-1 md:size-[18px]"
+            class="size-4 transition-transform duration-300 group-hover:translate-y-1 md:size-[1.125rem]"
           />
         </a>
       )
@@ -97,9 +97,9 @@ const titleLines = title.split(/(?<=\.)\s+/);
 
   {
     tagline && (
-      <p class="absolute right-5 bottom-8 border-l-2 border-white/90 py-1 pl-5 font-poppins text-white md:right-10 md:bottom-[max(40px,6svh)] lg:right-[clamp(40px,3vw,72px)]">
-        <span class="block text-[16px] leading-tight font-medium md:text-[18px]">{tagline.title}</span>
-        <span class="mt-1 block text-[9px] leading-4 font-medium tracking-[2.5px] text-white/85 uppercase md:text-[10px]">
+      <p class="absolute right-5 bottom-8 border-l-2 border-white/90 py-1 pl-5 font-poppins text-white md:right-10 md:bottom-[max(2.5rem,6svh)] lg:right-[clamp(2.5rem,3vw,4.5rem)]">
+        <span class="block text-[1rem] leading-tight font-medium md:text-[1.125rem]">{tagline.title}</span>
+        <span class="mt-1 block text-[0.5625rem] leading-4 font-medium tracking-[0.1562rem] text-white/85 uppercase md:text-[0.625rem]">
           {tagline.kicker}
         </span>
       </p>

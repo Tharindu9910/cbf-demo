@@ -38,7 +38,7 @@ const colLink = `${link} hover:text-footer-accent focus-visible:text-footer-acce
 
 /* The three ruled columns, from xl: the hairline at the left edge, the copy inset from it. */
 const col =
-  "not-italic xl:relative xl:before:absolute xl:before:top-0 xl:before:left-0 xl:before:h-[calc(270*var(--u))] xl:before:w-[max(1px,calc(1.5*var(--u)))] xl:before:bg-footer-col-rule xl:before:shadow-[1px_0_1px_rgb(0_12_4/0.6)]";
+  "not-italic xl:relative xl:before:absolute xl:before:top-0 xl:before:left-0 xl:before:bottom-0 xl:before:w-[max(1px,calc(1.5*var(--u)))] xl:before:bg-footer-col-rule xl:before:shadow-[1px_0_1px_rgb(0_12_4/0.6)]";
 const head =
   "font-semibold text-footer-heading max-xl:text-[17px] max-xl:leading-[24px] max-xl:tracking-[0.4px] xl:text-[length:calc(21*var(--u))] xl:leading-[calc(30*var(--u))]";
 /* Sub text takes the header nav's face and size (font-sans, text-sm) at every width. */
@@ -57,7 +57,7 @@ const followIcon = `${icon} w-[1.43em] max-xl:text-[15px]`;
 >
   {/* The leaf bunches, cut out of the mockup's backdrop, in the bottom corners. On phones small and dimmed, so they frame the copy instead of sitting under it. */}
   <Image src={leavesLeft} alt="" loading="lazy" class="pointer-events-none absolute bottom-0 left-0 h-auto select-none max-md:w-[120px] max-md:opacity-55 md:max-xl:w-[170px] xl:w-[calc(190*var(--u))]" />
-  <Image src={leavesRight} alt="" loading="lazy" class="pointer-events-none absolute right-0 bottom-0 h-auto select-none max-md:w-[160px] max-md:opacity-55 md:max-xl:w-[232px] xl:w-[calc(290*var(--u))]" />
+  <Image src={leavesRight} alt="" loading="lazy" class="pointer-events-none absolute right-0 bottom-0 h-auto select-none max-md:w-[160px] max-md:opacity-55 md:max-xl:w-[180px] xl:w-[calc(290*var(--u))]" />
 
   <div
     class="relative mx-auto max-md:px-6 max-md:pt-12 max-md:pb-8 md:max-xl:px-12 md:max-xl:pt-14 md:max-xl:pb-9 max-xl:max-w-[1100px] xl:max-w-[calc(1919*var(--u))] xl:pt-[calc(110*var(--u))] xl:pb-[calc(96*var(--u))] [&_:is(p,li,a,span)]:text-shadow-footer"

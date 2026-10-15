@@ -17,10 +17,10 @@ const { brands, closing } = ABOUT;
 ---
 
 <section aria-labelledby="brands-heading" class="bg-brand-ivory pt-20 lg:pt-28">
-  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+  <div class="mx-auto max-w-page px-5 md:px-10">
     <SectionHeading id="brands-heading" title={brands.title} data-reveal class="mb-10 lg:mb-12" />
     <div
-      data-reveal class="relative isolate overflow-hidden rounded-[32px] bg-brand-leaf font-inter"
+      data-reveal class="relative isolate overflow-hidden rounded-[2rem] bg-brand-leaf font-inter"
     >
       <Image
         src={cansBg}
@@ -31,16 +31,16 @@ const { brands, closing } = ABOUT;
         loading="lazy"
         class="absolute inset-0 -z-10 h-full w-full object-cover object-[78%_center]"
       />
-      {/* Phones crop the photo to its cans, right behind the copy: shade the bottom for it. */}
-      <div aria-hidden="true" class="absolute inset-0 -z-10 bg-linear-to-t from-brand-leaf/90 via-brand-leaf/45 to-transparent md:hidden"></div>
-      <div class="flex min-h-[460px] max-w-md flex-col justify-end p-6 sm:p-8 md:min-h-[520px] md:justify-center md:p-12 lg:min-h-[580px] lg:p-16">
+      {/* Phones and tablets crop the photo to its cans, right behind the copy: shade under it (the bottom on phones, the left on tablets). */}
+      <div aria-hidden="true" class="absolute inset-0 -z-10 bg-linear-to-t from-brand-leaf/90 via-brand-leaf/45 to-transparent md:bg-linear-to-r md:from-brand-leaf/85 md:via-brand-leaf/40 lg:hidden"></div>
+      <div class="flex min-h-[28.75rem] max-w-md flex-col justify-end p-6 sm:p-8 md:min-h-[32.5rem] md:justify-center md:p-12 lg:min-h-[36.25rem] lg:p-16">
         <h3
-          class="font-display text-[clamp(38px,6vw,60px)] leading-[0.98] font-bold tracking-[-0.5px] text-white"
+          class="font-display text-[clamp(2.375rem,6vw,3.75rem)] leading-[0.98] font-bold tracking-[-0.5px] text-white"
         >
           {brands.name}
         </h3>
-        <p class="mt-5 text-[16px] leading-[1.6] text-white/85 lg:text-[17px]">{brands.body}</p>
-        <PillLink href={brands.cta.href} arrow class="mt-8 h-[52px] w-fit gap-2.5 px-8 text-[15px]">
+        <p class="mt-5 text-[1rem] leading-[1.6] text-white/85 lg:text-[1.0625rem]">{brands.body}</p>
+        <PillLink href={brands.cta.href} arrow class="mt-8 h-[3.25rem] w-fit gap-2.5 px-8 text-[0.9375rem]">
           {brands.cta.label}
         </PillLink>
       </div>
@@ -58,17 +58,17 @@ const { brands, closing } = ABOUT;
       class="absolute inset-0 -z-20 h-full w-full object-cover object-center"
     />
     <div class="absolute inset-0 -z-10 bg-black/70"></div>
-    <div data-reveal class="mx-auto max-w-[1200px] px-5 py-16 text-center md:px-10 lg:py-24">
-      <p class="mx-auto max-w-3xl font-display text-[clamp(30px,5vw,52px)] leading-[1.08] font-bold text-balance text-white">
+    <div data-reveal class="mx-auto max-w-page px-5 py-16 text-center md:px-10 lg:py-24">
+      <p class="mx-auto max-w-3xl font-display text-[clamp(1.875rem,5vw,3.25rem)] leading-[1.08] font-bold text-balance text-white">
         {closing.title}
       </p>
       <div class="mt-10 flex flex-wrap justify-center gap-4 font-inter">
-        <PillLink href={closing.primary.href} class="h-[52px] px-8 text-[15px]">
+        <PillLink href={closing.primary.href} class="h-[3.25rem] px-8 text-[0.9375rem]">
           {closing.primary.label}
         </PillLink>
         <a
           href={closing.secondary.href}
-          class="group inline-flex h-[52px] items-center gap-3 rounded-full border border-white/70 px-8 font-inter text-[15px] font-semibold tracking-[0.1px] text-white transition-colors hover:border-brand-moss hover:bg-brand-moss focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
+          class="group inline-flex h-[3.25rem] items-center gap-3 rounded-full border border-white/70 px-8 font-inter text-[0.9375rem] font-semibold tracking-[0.1px] text-white transition-colors hover:border-brand-moss hover:bg-brand-moss focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
         >
           {closing.secondary.label}
           <ArrowRightIcon class="h-4 w-4 transition-transform group-hover:translate-x-1" />

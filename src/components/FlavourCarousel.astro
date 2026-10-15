@@ -42,7 +42,10 @@ const clientData = JSON.stringify(
  * room: the design size on a roomy screen, the height the heading and claims
  * leave free, and a narrow phone with both arrows beside it. A phone on its
  * side has no height to give, so there the section grows past one screen
- * and the can takes most of a screen's height instead.
+ * and the can takes most of a screen's height instead. A short laptop
+ * window (`squat:`) trims the padding and heading and may grow past one
+ * screen rather than clip the claims; a large monitor caps the can at 46rem
+ * so it stays in proportion with the type.
  *
  * The arrows are 44px at the smallest: they are thumb targets.
  */
@@ -66,24 +69,33 @@ const ARROW_OVERLAY =
   id="products"
   aria-labelledby="products-heading"
   data-flavours={clientData}
-  class="carousel relative isolate grid h-svh min-h-[34rem] touch-pan-y grid-rows-[auto_4fr_auto] justify-center overflow-hidden bg-brand-ivory px-4 py-8 text-brand-ink [--can:min(80vmin,calc(100svh_-_20rem),calc(100vw_-_8.5rem))] sm:py-12 short:h-auto! short:min-h-svh! short:gap-y-3 short:py-6! short:[--can:min(72svh,20rem)] max-sm:portrait:h-auto max-sm:portrait:min-h-0 max-sm:portrait:gap-y-2 max-sm:portrait:[--stage-top:calc(84px+13vw)] max-sm:portrait:grid-cols-[100%] max-sm:portrait:justify-items-center max-sm:portrait:[--can:min(calc(100vw_+_2rem),calc(100svh_-_19rem))]"
+  class="carousel relative isolate grid h-svh min-h-[34rem] touch-pan-y grid-rows-[auto_4fr_auto] justify-center overflow-hidden bg-brand-ivory px-4 py-8 text-brand-ink [--can:min(80vmin,calc(100svh_-_20rem),calc(100vw_-_8.5rem),46rem)] sm:py-12 squat:h-auto! squat:min-h-svh! squat:py-6! squat:[--can:min(80vmin,calc(100svh_-_18rem),calc(100vw_-_8.5rem))] sm:portrait:h-auto! sm:portrait:min-h-0! sm:portrait:py-16! sm:portrait:[--stage-top:calc(4rem+4.25rem)] md:portrait:[--stage-top:calc(4rem+6rem)] lg:portrait:[--stage-top:calc(4rem+7.5rem)] short:h-auto! short:min-h-svh! short:gap-y-3 short:py-6! short:[--can:min(72svh,20rem)] max-sm:portrait:h-auto max-sm:portrait:min-h-0 max-sm:portrait:gap-y-2 max-sm:portrait:[--stage-top:calc(84px+13vw)] max-sm:portrait:grid-cols-[100%] max-sm:portrait:justify-items-center max-sm:portrait:[--can:min(calc(100vw_+_2rem),calc(100svh_-_19rem))]"
 >
   {/*
     Each flavour's backdrop is a pair of corner pieces. On a change the pair
     breaks apart to its own edges while the incoming one slides in from both
     sides. A piece keeps its size at every breakpoint; the smaller the screen,
     the further past the edge it sits. The wrapper is absolute so it stays
-    out of the section's grid rows. On a phone (portrait) a half-width piece
-    shows as a sliver, so there each piece is sized off the screen's width
-    instead, whole and uncropped (the box shrink-wraps the image at its own
-    ratio). Both cover the stage's lower 90%: the stage starts at
-    `--stage-top` (padding, eyebrow, the 13vw heading and its 24px gap) and is `--can`
-    tall. At that height they're wider than the room beside the can, so as
-    on desktop they run off the
-    screen's edges, and their inner edges tuck behind the can (the canvas
-    draws over the page). `-z-10` inside the section's own stacking context
+    out of the section's grid rows. On a portrait screen (phones, upright
+    tablets) a half-width piece shows as a sliver, or as a small strip
+    floating mid-height, so there each piece runs from the section's top to
+    the bottom of the flavour name instead, uncropped (the box shrink-wraps
+    the image at its own ratio). That is the stage's top (`--stage-top`:
+    padding, eyebrow, the 13vw heading and its 24px gap), the stage
+    (`--can`), and the 8px gap and 32px name under it; the claims below
+    stay clear. The art is cut off at its outer edges (the mango at the left
+    one's bottom, the leaf at the right one's top), so this height puts
+    those cuts at the top of the section and at the name, not mid-screen,
+    and each cut edge is masked out into the ground so it doesn't end on a
+    hard line. Upright tablets set their own `--stage-top` (their padding
+    and heading sizes) and drop the full-screen height, as phones do. The
+    pieces are
+    wider than the room beside the can, so they run off the screen's sides,
+    with their inner edges stopping at 36vw / 64vw, just inside the can's
+    sides, so the art's inner edge tucks a little behind the can (the canvas
+    draws over the page) without covering the label. `-z-10` inside the section's own stacking context
     (`isolate`) keeps the art under every other layer of the section (ring,
-    arrows and copy included) while still over its ground. On phones the
+    arrows and copy included) while still over its ground. In portrait the
     halo drops under it too (`-z-20`), so it doesn't wash out the fruit.
   */}
   {
@@ -93,7 +105,7 @@ const ARROW_OVERLAY =
           data-side="left"
           data-index={i}
           class:list={[
-            "flavor-piece pointer-events-none absolute inset-y-0 left-[-32%] w-1/2 select-none max-sm:portrait:top-[calc(var(--stage-top)+0.12*var(--can))] max-sm:portrait:bottom-auto max-sm:portrait:left-[-41vw] max-sm:portrait:h-[calc(0.9*var(--can))] max-sm:portrait:w-auto sm:left-[-24%] md:left-[-12%] lg:left-0",
+            "flavor-piece pointer-events-none absolute inset-y-0 left-[-32%] w-1/2 select-none portrait:bottom-auto portrait:h-[calc(var(--stage-top)+var(--can)+2.5rem)] portrait:left-auto portrait:right-[64vw] portrait:w-auto sm:landscape:left-[-24%] md:landscape:left-[-12%] lg:landscape:left-0",
             i > 0 && "opacity-0 noscript:hidden",
           ]}
         >
@@ -101,15 +113,15 @@ const ARROW_OVERLAY =
             src={background.left}
             alt=""
             widths={[320, 480, background.left.width]}
-            sizes="50vw"
-            class="absolute inset-0 h-full w-full object-contain object-left max-sm:portrait:static max-sm:portrait:h-full max-sm:portrait:w-auto max-sm:portrait:max-w-none"
+            sizes="(orientation: portrait) 100vw, 50vw"
+            class="absolute inset-0 h-full w-full object-contain object-left portrait:static portrait:h-full portrait:w-auto portrait:max-w-none portrait:mask-b-from-94%"
           />
         </div>
         <div
           data-side="right"
           data-index={i}
           class:list={[
-            "flavor-piece pointer-events-none absolute inset-y-0 right-[-32%] w-1/2 select-none max-sm:portrait:top-[calc(var(--stage-top)+0.12*var(--can))] max-sm:portrait:right-auto max-sm:portrait:bottom-auto max-sm:portrait:left-[66vw] max-sm:portrait:h-[calc(0.9*var(--can))] max-sm:portrait:w-auto sm:right-[-24%] md:right-[-12%] lg:right-0",
+            "flavor-piece pointer-events-none absolute inset-y-0 right-[-32%] w-1/2 select-none portrait:bottom-auto portrait:h-[calc(var(--stage-top)+var(--can)+2.5rem)] portrait:right-auto portrait:left-[64vw] portrait:w-auto sm:landscape:right-[-24%] md:landscape:right-[-12%] lg:landscape:right-0",
             i > 0 && "opacity-0 noscript:hidden",
           ]}
         >
@@ -117,8 +129,8 @@ const ARROW_OVERLAY =
             src={background.right}
             alt=""
             widths={[240, background.right.width]}
-            sizes="50vw"
-            class="absolute inset-0 h-full w-full object-contain object-right max-sm:portrait:static max-sm:portrait:h-full max-sm:portrait:w-auto max-sm:portrait:max-w-none"
+            sizes="(orientation: portrait) 100vw, 50vw"
+            class="absolute inset-0 h-full w-full object-contain object-right portrait:static portrait:h-full portrait:w-auto portrait:max-w-none portrait:mask-t-from-95%"
           />
         </div>
       </div>
@@ -135,7 +147,7 @@ const ARROW_OVERLAY =
       )
     }
     <span
-      class="mt-1 block font-display text-[length:min(11.5vw,3.25rem)] leading-none font-semibold max-sm:portrait:text-[length:13vw] tracking-tight sm:text-5xl md:text-7xl lg:text-8xl short:text-4xl!"
+      class="mt-1 block font-display text-[length:min(11.5vw,3.25rem)] leading-none font-semibold max-sm:portrait:text-[length:13vw] tracking-tight sm:text-5xl md:text-7xl lg:text-8xl squat:text-7xl! short:text-4xl!"
     >
       {displayWord}
     </span>
@@ -155,7 +167,7 @@ const ARROW_OVERLAY =
       {/* Warm halo, lifting the can off the ivory ground. */}
       <div
         aria-hidden="true"
-        class="pointer-events-none absolute top-[62%] left-1/2 aspect-square w-[115%] -translate-x-1/2 -translate-y-1/2 rounded-full max-sm:portrait:-z-20 bg-[radial-gradient(circle,#fdf6e6_0%,#faf2e4_45%,transparent_70%)]"
+        class="pointer-events-none absolute top-[62%] left-1/2 aspect-square w-[115%] -translate-x-1/2 -translate-y-1/2 rounded-full portrait:-z-20 bg-[radial-gradient(circle,#fdf6e6_0%,#faf2e4_45%,transparent_70%)]"
       >
       </div>
 
@@ -221,7 +233,7 @@ const ARROW_OVERLAY =
   >
     <ProductFacts
       extract={first.facts.extract}
-      class="relative mx-auto mt-4 w-full max-w-xl max-sm:portrait:contents"
+      class="relative mx-auto mt-4 w-full max-w-xl md:max-w-2xl max-sm:portrait:contents"
     />
 
     <PackSpecs

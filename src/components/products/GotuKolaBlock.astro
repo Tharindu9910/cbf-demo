@@ -21,12 +21,12 @@ const { href = url("/gotukola/") } = Astro.props;
   aria-labelledby="gotu-kola-block-heading"
   class="bg-brand-ivory pb-16 font-inter lg:pb-20"
 >
-  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+  <div class="mx-auto max-w-page px-5 md:px-10">
     <div
       data-reveal
-      class="grid items-center gap-6 rounded-[28px] bg-brand-sage p-4 ring-1 ring-brand-leaf/6 sm:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] sm:gap-10 sm:p-5 lg:gap-14"
+      class="grid items-center gap-6 rounded-[1.75rem] bg-brand-sage p-4 ring-1 ring-brand-leaf/6 sm:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] sm:gap-10 sm:p-5 lg:gap-14"
     >
-      <div class="overflow-hidden rounded-[20px] bg-white p-1.5 shadow-[0_18px_40px_-28px_rgb(13_43_18/0.5)]">
+      <div class="overflow-hidden rounded-[1.25rem] bg-white p-1.5 shadow-[0_18px_40px_-28px_rgb(13_43_18/0.5)]">
         <Image
           src={gotuKolaLeaves}
           alt="Overhead view of a dense bed of fresh, round gotu kola leaves with water droplets"
@@ -34,7 +34,7 @@ const { href = url("/gotukola/") } = Astro.props;
           sizes="(min-width: 1024px) 400px, (min-width: 640px) 36vw, 100vw"
           quality={80}
           loading="lazy"
-          class="aspect-[4/3] w-full rounded-[16px] object-cover"
+          class="aspect-[4/3] w-full rounded-[1rem] object-cover"
         />
       </div>
       <div class="px-3 pb-5 sm:px-0 sm:py-6 sm:pr-8">
@@ -43,17 +43,17 @@ const { href = url("/gotukola/") } = Astro.props;
         </p>
         <h2
           id="gotu-kola-block-heading"
-          class:list={[heading, "mt-3 text-ink-heading lg:text-[44px]"]}
+          class:list={[heading, "mt-3 text-ink-heading lg:text-[2.75rem]"]}
         >
           Nature&rsquo;s brain booster.
         </h2>
-        <p class="mt-4 max-w-md text-[16px] leading-[25px] text-ink-body">
+        <p class="mt-4 max-w-md text-[1rem] leading-[1.5625rem] text-ink-body">
           A centuries-old Ayurvedic herb, gotu kola has long been valued for
           focus and memory. Every can starts with Sri Lankan gotu kola extract.
         </p>
         <a
           href={href}
-          class="group mt-3.5 inline-flex items-center gap-2 rounded-sm py-2.5 text-[15px] lg:mt-6 lg:py-0 font-semibold text-brand-moss transition-colors hover:text-brand-moss-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss"
+          class="group mt-3.5 inline-flex items-center gap-2 rounded-sm py-2.5 text-[0.9375rem] lg:mt-6 lg:fine:py-0 font-semibold text-brand-moss transition-colors hover:text-brand-moss-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss"
         >
           Learn more
           <ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />

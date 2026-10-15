@@ -40,8 +40,8 @@ const link =
 ---
 
 <aside data-reveal aria-labelledby="details-heading" class="font-inter lg:pt-4">
-  <h2 id="details-heading" class="font-display text-[clamp(28px,4vw,34px)] leading-[1.1] font-bold text-ink-heading">{title}</h2>
-  <p class="mt-2 text-[16px] leading-[1.6] text-ink-body">{SITE.legalName}</p>
+  <h2 id="details-heading" class="font-display text-[clamp(1.75rem,4vw,2.125rem)] leading-[1.1] font-bold text-ink-heading">{title}</h2>
+  <p class="mt-2 text-[1rem] leading-[1.6] text-ink-body">{SITE.legalName}</p>
 
   <dl class="mt-8 grid gap-6">
     {
@@ -51,8 +51,8 @@ const link =
             <Icon class="size-5" stroke-width={1.8} aria-hidden="true" />
           </span>
           <div class="min-w-0 pt-0.5">
-            <dt class="text-[12px] leading-4 font-bold tracking-[2px] text-brand-fern uppercase">{label}</dt>
-            <dd class="mt-1 text-[16px] leading-6 text-ink-heading">
+            <dt class="text-[0.75rem] leading-4 font-bold tracking-[2px] text-brand-fern uppercase">{label}</dt>
+            <dd class="mt-1 text-[1rem] leading-6 text-ink-heading">
               {href ? (
                 <a href={href} class={link} {...(label === "WhatsApp" && { target: "_blank", rel: "noopener noreferrer" })}>
                   {value}
@@ -73,13 +73,13 @@ const link =
         href={mapHref}
         target="_blank"
         rel="noopener noreferrer"
-        class="group relative mt-10 flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-[24px] bg-brand-cream bg-[radial-gradient(rgb(13_43_18/0.14)_1px,transparent_1px)] bg-size-[18px_18px] ring-1 ring-brand-leaf/8 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
+        class="group relative mt-10 flex aspect-[16/10] w-full items-center md:max-lg:mx-auto md:max-lg:max-w-md justify-center overflow-hidden rounded-[1.5rem] bg-brand-cream bg-[radial-gradient(rgb(13_43_18/0.14)_1px,transparent_1px)] bg-size-[18px_18px] ring-1 ring-brand-leaf/8 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
       >
         <span class="flex flex-col items-center gap-3 text-center">
           <span class="grid size-14 place-items-center rounded-full bg-brand-moss text-white shadow-pill transition-transform group-hover:-translate-y-1 motion-reduce:transition-none">
             <MapPin class="size-7" stroke-width={1.8} aria-hidden="true" />
           </span>
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[14px] font-semibold text-brand-leaf shadow-[0_6px_16px_-8px_rgb(13_43_18/0.4)]">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[0.875rem] font-semibold text-brand-leaf shadow-[0_6px_16px_-8px_rgb(13_43_18/0.4)]">
             Open in Google Maps
             <ArrowUpRight class="size-4" stroke-width={2} aria-hidden="true" />
           </span>

@@ -104,6 +104,9 @@ export function wireMenu() {
     // the row starts in that layout instead of transitioning into it.
     bar.toggleAttribute("data-scrolled", header.hasAttribute("data-scrolled"));
     menu.showModal();
+    // Focus the panel, not the close button the browser picks, so a tap
+    // doesn't draw the toggle's focus ring; Tab still reaches it next.
+    menu.focus({ preventScroll: true });
     // The row's padding transition can still fire on that first frame; land it.
     bar.getAnimations({ subtree: true }).forEach((a) => a.finish());
     if (reduced.matches) {

@@ -29,9 +29,9 @@ const choices = await Promise.all(
 
 <a
   href={productHref(id)}
-  class="group relative isolate flex h-full flex-col overflow-hidden rounded-[24px] bg-white font-inter text-ink-heading shadow-card ring-1 ring-brand-leaf/6 transition-[translate,box-shadow] duration-500 ease-rise hover:-translate-y-1 hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss sm:grid sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+  class="group relative isolate flex h-full flex-col overflow-hidden rounded-[1.5rem] bg-white font-inter text-ink-heading shadow-card ring-1 ring-brand-leaf/6 transition-[translate,box-shadow] duration-500 ease-rise hover:-translate-y-1 hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss sm:grid sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
 >
-  <div class="relative aspect-[5/4] overflow-hidden bg-brand-ivory sm:aspect-auto sm:min-h-[300px]">
+  <div class="relative aspect-[5/4] overflow-hidden bg-brand-ivory sm:aspect-auto sm:min-h-[18.75rem]">
     <div
       aria-hidden="true"
       class:list={[
@@ -56,21 +56,21 @@ const choices = await Promise.all(
   </div>
 
   <div class="flex flex-1 flex-col p-6 lg:p-8">
-    <p class="text-[11px] leading-4 font-bold tracking-[2.2px] text-brand-fern uppercase">
+    <p class="text-[0.6875rem] leading-4 font-bold tracking-[0.1375rem] text-brand-fern uppercase">
       {categoryLabel(data.category)}
     </p>
-    <h3 class="mt-2 font-display text-[28px] leading-[1.1] font-bold tracking-[-0.3px] text-balance lg:text-[30px]">
+    <h3 class="mt-2 font-display text-[1.75rem] leading-[1.1] font-bold tracking-[-0.3px] text-balance lg:text-[1.875rem]">
       {data.name}
     </h3>
-    <p class="mt-2 max-w-xs text-[14px] leading-[1.6] text-ink-body">
+    <p class="mt-2 max-w-xs text-[0.875rem] leading-[1.6] text-ink-body">
       {data.summary}
     </p>
     {choices.length > 0 && (
       <>
-      <p class="mt-5 text-[13px] leading-5 font-semibold text-ink-heading">
+      <p class="mt-5 text-[0.8125rem] leading-5 font-semibold text-ink-heading">
         Any {data.mix?.cans} cans, mixed from:
       </p>
-      <ul class="mt-2 flex flex-col gap-2 text-[14px] leading-5 text-ink-body">
+      <ul class="mt-2 flex flex-col gap-2 text-[0.875rem] leading-5 text-ink-body">
         {choices.map((name) => (
           <li class="flex items-center gap-2.5">
             <Check
@@ -86,10 +86,10 @@ const choices = await Promise.all(
     )}
 
     <div class="mt-auto flex items-center justify-between gap-4 pt-7">
-      <span class="text-[13px] leading-none text-ink-body tabular-nums">
+      <span class="text-[0.8125rem] leading-none text-ink-body tabular-nums">
         {data.size}
       </span>
-      <span class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-brand-moss">
+      <span class="inline-flex items-center gap-1.5 text-[0.875rem] font-semibold text-brand-moss">
         View Details
         <ArrowRightIcon class="size-4 transition-transform duration-300 ease-rise group-hover:translate-x-1 motion-reduce:transition-none" />
       </span>

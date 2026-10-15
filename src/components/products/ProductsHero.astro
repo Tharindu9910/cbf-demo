@@ -58,31 +58,31 @@ const photo = listingPhoto("hero");
     class="absolute inset-x-0 top-0 -z-10 h-40 bg-linear-to-b from-brand-leaf/45 to-transparent"
   ></div>
 
-  <div class="mx-auto grid max-w-[1200px] items-end gap-10 px-5 pt-36 pb-16 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] md:px-10 md:pt-44 md:pb-0 lg:min-h-[560px]">
+  <div class="mx-auto grid max-w-page items-end gap-10 px-5 pt-36 pb-16 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] md:px-10 md:pt-44 md:pb-0 lg:min-h-[35rem]">
     <div class="md:pb-20 lg:pb-24">
-      <p class="text-[12px] leading-4 font-bold tracking-[2.6px] text-brand-fern uppercase">
+      <p class="text-[0.75rem] leading-4 font-bold tracking-[0.1625rem] text-brand-fern uppercase">
         {eyebrow}
       </p>
       <h1
         id="products-hero-heading"
-        class="mt-4 max-w-[11ch] font-display text-[clamp(44px,8vw,80px)] leading-[0.98] font-bold tracking-[-1px] text-balance text-ink-heading"
+        class="mt-4 max-w-[11ch] font-display text-[clamp(2.75rem,8vw,5rem)] leading-[0.98] font-bold tracking-[-1px] text-balance text-ink-heading"
       >
         {title}
       </h1>
-      <p class="mt-6 max-w-sm text-[17px] leading-[1.55] text-ink-body md:text-[18px]">
+      <p class="mt-6 max-w-sm text-[1.0625rem] leading-[1.55] text-ink-body md:text-[1.125rem]">
         {intro}
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a
           href={`#${BRANDS[0].id}`}
-          class="group inline-flex h-[52px] items-center gap-2.5 rounded-full px-7 text-[15px] font-semibold btn-glow focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
+          class="group inline-flex h-[3.25rem] items-center gap-2.5 rounded-full px-7 text-[0.9375rem] font-semibold btn-glow focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
         >
           {ctas.range}
           <ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
         </a>
         <a
           href={ctas.ingredients.href}
-          class="inline-flex h-[52px] items-center rounded-full border border-brand-leaf/30 bg-white/40 px-7 text-[15px] font-semibold text-brand-leaf backdrop-blur-sm transition-colors hover:border-brand-leaf hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
+          class="inline-flex h-[3.25rem] items-center rounded-full border border-brand-leaf/30 bg-white/40 px-7 text-[0.9375rem] font-semibold text-brand-leaf backdrop-blur-sm transition-colors hover:border-brand-leaf hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
         >
           {ctas.ingredients.label}
         </a>
@@ -97,7 +97,7 @@ const photo = listingPhoto("hero");
         quality={82}
         loading="eager"
         fetchpriority="high"
-        class="mx-auto hidden h-auto w-full max-w-[420px] translate-y-[6%] drop-shadow-[0_30px_40px_rgb(13_43_18/0.28)] select-none md:block"
+        class="mx-auto hidden h-auto w-full max-w-[26.25rem] translate-y-[6%] drop-shadow-[0_30px_40px_rgb(13_43_18/0.28)] select-none md:block"
       />
     )}
   </div>

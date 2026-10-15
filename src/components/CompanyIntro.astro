@@ -24,7 +24,7 @@ import { url } from "../config/url";
  * Reproduced from a 1316px-wide design. From `lg` up every length is the
  * design's px times `--u` (`lg:frame-1316`), which is 1px at 1316 wide and
  * shrinks with the section's width (text has floors so it stays legible).
- * Below `lg` it stacks: photo, then copy.
+ * Tablets (`md`) set the photo beside the copy; phones stack them.
  */
 ---
 
@@ -37,7 +37,7 @@ import { url } from "../config/url";
   ]}
 >
   <div
-    class="mx-auto max-lg:flex max-lg:max-w-[600px] max-lg:flex-col max-lg:gap-8 max-lg:px-5 max-lg:py-16 lg:grid lg:max-w-[1316px] lg:frame-1316 lg:grid-cols-[minmax(0,727fr)_minmax(0,559fr)] lg:items-center lg:pt-[calc(18*var(--u))] lg:pb-[calc(22*var(--u))] lg:pl-[calc(30*var(--u))]"
+    class="mx-auto max-md:flex max-md:max-w-[600px] max-md:flex-col max-lg:gap-8 max-lg:px-5 max-lg:py-16 md:max-lg:grid md:max-lg:max-w-[56rem] md:max-lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:max-lg:items-center md:max-lg:px-8 lg:grid lg:max-w-[calc(1316*var(--u-max))] lg:frame-1316 lg:grid-cols-[minmax(0,727fr)_minmax(0,559fr)] lg:items-center lg:pt-[calc(18*var(--u))] lg:pb-[calc(22*var(--u))] lg:pl-[calc(30*var(--u))]"
   >
     <Image
       src={bottlingLine}

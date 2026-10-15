@@ -23,6 +23,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const FLOAT_SPEED = 1.5;
 
+/** The squarest frame the landscape choreography is laid out for as ported: 16:10. */
+const LAPTOP_ASPECT = 1.6;
+
 /** Seconds for the shadows to fade in or out. */
 const SHADOW_FADE = 0.35;
 
@@ -283,9 +286,23 @@ export async function mountHeroScene(el: HTMLElement) {
     // Quantised so that dragging a window edge rebuilds the timelines a
     // handful of times rather than on every frame.
     const stageWidth = Math.round(view.viewport.width * 20) / 20;
-    const halfWidth = stageWidth > 0 ? stageWidth / 2 : REFERENCE_HALF_WIDTH;
     const isPortrait = view.viewport.width > 0 && view.viewport.width < view.viewport.height;
-    const key = `${isPortrait}:${halfWidth}`;
+    // Past 21:9 the choreography lays out in a 21:9 band in the middle, so
+    // an ultrawide doesn't spread the cans out to its far edges, away from
+    // the headline and the copy.
+    const halfWidth =
+      stageWidth > 0
+        ? Math.min(stageWidth / 2, (view.viewport.height * (21 / 9)) / 2)
+        : REFERENCE_HALF_WIDTH;
+    // The choreography is the laptop's. A can's size on screen follows the
+    // frame's height (the fov is fixed), so on a squarer screen (4:3 tablets,
+    // a narrow window) the cans are too big for its width: the framing pair
+    // runs into the headline and the settled group into the copy. Shrink
+    // them there, a little faster than the width shrinks; at 16:10 and wider
+    // this is 1 and nothing changes.
+    const aspect = view.viewport.width / (view.viewport.height || 1);
+    const narrow = Math.min(1, aspect / LAPTOP_ASPECT) ** 1.5;
+    const key = `${isPortrait}:${halfWidth}:${Math.round(narrow * 100)}`;
     if (key === builtFor) return;
     builtFor = key;
 
@@ -299,7 +316,12 @@ export async function mountHeroScene(el: HTMLElement) {
       return;
     }
 
-    const { fit, anchorX } = anchoredLayout(halfWidth);
+    const layout = anchoredLayout(halfWidth);
+    const fit = layout.fit * narrow;
+    const { anchorX } = layout;
+    // The framing pair's share of the half-width: the ported 0.61, eased
+    // outward as the screen gets squarer so the pair still clears the headline.
+    const flank = 0.61 + 0.2 * (1 - narrow);
 
     // Size is set here and position/rotation are GSAP's, so a resize can
     // re-size the cans without the two fighting over the same group.
@@ -322,14 +344,14 @@ export async function mountHeroScene(el: HTMLElement) {
       // already at the depth it keeps for the rest of the section. The front
       // can waits below the frame and the scroll lifts it in.
       gsap.set(left.position, {
-        x: atDepth(-0.61 * halfWidth, CLUSTER[0].z),
+        x: atDepth(-flank * halfWidth, CLUSTER[0].z),
         y: atDepth(0.1, CLUSTER[0].z),
         z: CLUSTER[0].z,
       });
       gsap.set(left.rotation, { y: 0.29, z: -0.3 });
 
       gsap.set(right.position, {
-        x: atDepth(0.61 * halfWidth, CLUSTER[2].z),
+        x: atDepth(flank * halfWidth, CLUSTER[2].z),
         y: 0,
         z: CLUSTER[2].z,
       });

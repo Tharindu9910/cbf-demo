@@ -18,11 +18,11 @@ const others = (await getRange()).filter((p) => p.id !== productId);
   aria-labelledby="related-heading"
   class="bg-brand-ivory pb-16 font-inter lg:pb-20"
 >
-  <div class="mx-auto max-w-[1200px] md:px-10">
+  <div class="mx-auto max-w-page md:px-10">
     <h2
       id="related-heading"
       data-reveal
-      class="px-5 font-display text-[clamp(28px,3.6vw,36px)] leading-[1.1] font-bold tracking-[-0.4px] text-ink-heading md:px-0"
+      class="px-5 font-display text-[clamp(1.75rem,3.6vw,2.25rem)] leading-[1.1] font-bold tracking-[-0.4px] text-ink-heading md:px-0"
     >
       You may also like
     </h2>
@@ -30,7 +30,7 @@ const others = (await getRange()).filter((p) => p.id !== productId);
       {others.map((product) => (
         <li
           data-reveal
-          class="flex-[0_0_min(78%,320px)] snap-start md:flex-auto"
+          class="flex-[0_0_min(78%,20rem)] snap-start md:flex-auto"
         >
           <FlavourCard product={product} />
         </li>

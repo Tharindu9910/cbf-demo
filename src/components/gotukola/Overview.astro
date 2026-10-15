@@ -12,37 +12,37 @@ const { eyebrow, title, body, dishes, dishesLabel, facts, factsCite, stats } = G
 ---
 
 <section id="overview" aria-labelledby="overview-heading" class="scroll-mt-8 bg-brand-ivory py-16 lg:py-20">
-  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+  <div class="mx-auto max-w-page px-5 md:px-10">
     <div class="grid gap-10 font-poppins lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:gap-14">
       <div data-reveal>
         <p class:list={[eyebrowClass, "text-brand-fern"]}>{eyebrow}</p>
         <h2 id="overview-heading" class:list={[headingClass, "text-ink-heading"]}>{title}</h2>
-        <p class="mt-5 text-[15px] leading-[1.65] text-ink-body lg:text-[16px]">{body}</p>
+        <p class="mt-5 text-[0.9375rem] leading-[1.65] text-ink-body lg:text-[1rem]">{body}</p>
 
-        <p class="mt-6 text-[12px] leading-4 font-semibold tracking-[2px] text-brand-fern uppercase">{dishesLabel}</p>
+        <p class="mt-6 text-[0.75rem] leading-4 font-semibold tracking-[2px] text-brand-fern uppercase">{dishesLabel}</p>
         <ul class="mt-3 flex flex-wrap gap-2">
           {
             dishes.map((d) => (
-              <li class="rounded-full bg-brand-sage px-4 py-1.5 text-[13px] leading-5 font-medium text-brand-pine">{d}</li>
+              <li class="rounded-full bg-brand-sage px-4 py-1.5 text-[0.8125rem] leading-5 font-medium text-brand-pine">{d}</li>
             ))
           }
         </ul>
       </div>
 
       <div data-reveal class="self-start">
-        <dl class="divide-y divide-brand-moss/15 rounded-[20px] bg-white/80 px-6 py-2 shadow-card">
+        <dl class="divide-y divide-brand-moss/15 rounded-[1.25rem] bg-white/80 px-6 py-2 shadow-card">
           {
             facts.map(({ label, value }) => (
               <div class="grid gap-1 py-3.5 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-4">
-                <dt class="text-[13px] leading-5 font-medium text-brand-fern">{label}</dt>
-                <dd class:list={["text-[14px] leading-5 font-medium text-ink-heading", label === "Botanical name" && "italic"]}>
+                <dt class="text-[0.8125rem] leading-5 font-medium text-brand-fern">{label}</dt>
+                <dd class:list={["text-[0.875rem] leading-5 font-medium text-ink-heading", label === "Botanical name" && "italic"]}>
                   {value}
                 </dd>
               </div>
             ))
           }
         </dl>
-        <p class="mt-2 text-[12px] text-ink-body/70">Source <Cite ids={factsCite} /></p>
+        <p class="mt-2 text-[0.75rem] text-ink-body/70">Source <Cite ids={factsCite} /></p>
       </div>
     </div>
 
@@ -50,11 +50,11 @@ const { eyebrow, title, body, dishes, dishesLabel, facts, factsCite, stats } = G
       {
         stats.map((s) => (
           <div class="flex flex-col border-t-2 border-brand-moss/30 pt-5">
-            <dt class="text-[13px] leading-5 text-ink-body">
+            <dt class="text-[0.8125rem] leading-5 text-ink-body">
               {s.label}
               <Cite ids={[s.cite]} class="text-brand-fern" />
             </dt>
-            <dd class="order-first mb-2 font-display text-[clamp(24px,3.2vw,34px)] leading-none font-bold text-ink-heading">
+            <dd class="order-first mb-2 font-display text-[clamp(1.5rem,3.2vw,2.125rem)] leading-none font-bold text-ink-heading">
               {s.value}
             </dd>
           </div>

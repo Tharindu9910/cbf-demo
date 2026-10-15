@@ -16,10 +16,10 @@ const faqs = items.filter((f) => f.a.trim());
 {
   faqs.length > 0 && (
     <section id="faq" aria-labelledby="faq-heading" class="scroll-mt-24 bg-brand-ivory py-20 font-inter lg:py-28">
-      <div class="mx-auto max-w-[860px] px-5 md:px-10">
+      <div class="mx-auto max-w-[53.75rem] px-5 md:px-10">
         <div class="text-center">
           <SectionHeading id="faq-heading" title={title} align="center" data-reveal />
-          <p data-reveal class="mx-auto mt-4 max-w-xl text-[17px] leading-[1.6] text-ink-body">
+          <p data-reveal class="mx-auto mt-4 max-w-xl text-[1.0625rem] leading-[1.6] text-ink-body">
             {intro}
           </p>
         </div>
@@ -27,9 +27,9 @@ const faqs = items.filter((f) => f.a.trim());
           {faqs.map((faq) => (
             <details
               name="contact-faq"
-              class="group rounded-[18px] bg-white ring-1 ring-brand-leaf/8 transition-shadow open:shadow-[0_18px_40px_-30px_rgb(30_50_20/0.45)]"
+              class="group rounded-[1.125rem] bg-white ring-1 ring-brand-leaf/8 transition-shadow open:shadow-[0_18px_40px_-30px_rgb(30_50_20/0.45)]"
             >
-              <summary class="flex min-h-[60px] cursor-pointer list-none items-center justify-between gap-6 rounded-[18px] px-5 py-4 text-[15px] leading-6 font-semibold text-ink-heading marker:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss md:px-6 [&::-webkit-details-marker]:hidden">
+              <summary class="flex min-h-[3.75rem] cursor-pointer list-none items-center justify-between gap-6 rounded-[1.125rem] px-5 py-4 text-[0.9375rem] leading-6 font-semibold text-ink-heading marker:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss md:px-6 [&::-webkit-details-marker]:hidden">
                 {faq.q}
                 <ChevronDown
                   class="size-5 shrink-0 text-brand-moss transition-transform duration-300 ease-rise group-open:rotate-180 motion-reduce:transition-none"
@@ -37,7 +37,7 @@ const faqs = items.filter((f) => f.a.trim());
                   aria-hidden="true"
                 />
               </summary>
-              <p class="max-w-3xl px-5 pb-5 text-[14px] leading-[1.7] text-ink-body md:px-6">{faq.a}</p>
+              <p class="max-w-3xl px-5 pb-5 text-[0.875rem] leading-[1.7] text-ink-body md:px-6">{faq.a}</p>
             </details>
           ))}
         </div>

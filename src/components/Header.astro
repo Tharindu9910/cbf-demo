@@ -39,7 +39,7 @@ const logoClass =
   class={`${rowWrapClass} fixed inset-x-0 top-0 z-[100] md:absolute md:px-10 md:py-8`}
 >
   <div
-    class={`${rowClass} mx-auto w-full max-w-[1600px] md:px-0 md:py-0 max-md:group-data-scrolled/header:border-white/15 max-md:group-data-scrolled/header:bg-menu-ground/70 max-md:group-data-scrolled/header:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-10px_rgba(0,0,0,0.5)] max-md:group-data-scrolled/header:backdrop-blur-xl max-md:group-data-scrolled/header:backdrop-saturate-150`}
+    class={`${rowClass} mx-auto w-full max-w-[100rem] md:px-0 md:py-0 max-md:group-data-scrolled/header:border-white/15 max-md:group-data-scrolled/header:bg-menu-ground/70 max-md:group-data-scrolled/header:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_30px_-10px_rgba(0,0,0,0.5)] max-md:group-data-scrolled/header:backdrop-blur-xl max-md:group-data-scrolled/header:backdrop-saturate-150`}
   >
     <a
       href={url("/")}
@@ -62,8 +62,8 @@ const logoClass =
       </span>
     </a>
 
-    <nav aria-label="Primary" class="flex items-center gap-3 sm:gap-4 md:gap-8">
-      <ul class="hidden items-center gap-8 md:flex">
+    <nav aria-label="Primary" class="flex items-center gap-3 sm:gap-4 md:gap-5 lg:gap-8">
+      <ul class="hidden items-center gap-5 md:flex lg:gap-8">
         {NAV_LINKS.map((link) => (
           <li class="site-nav-item">
             <a
@@ -109,9 +109,17 @@ const logoClass =
 <dialog
   id="site-menu"
   aria-label="Menu"
-  class="m-0 h-dvh max-h-none w-full max-w-none bg-menu-ground bg-[radial-gradient(70%_32%_at_100%_0%,color-mix(in_srgb,var(--color-menu-glow)_75%,transparent),transparent),radial-gradient(55%_30%_at_100%_75%,color-mix(in_srgb,var(--color-menu-glow)_60%,transparent),transparent),radial-gradient(75%_28%_at_0%_100%,color-mix(in_srgb,var(--color-menu-glow-warm)_75%,transparent),transparent),linear-gradient(180deg,var(--color-menu-ground-top)_0%,var(--color-menu-ground-deep)_55%,var(--color-menu-ground)_100%)] text-white backdrop:bg-transparent md:hidden"
+  tabindex="-1"
+  class="m-0 h-dvh max-h-none w-full max-w-none bg-menu-ground bg-[radial-gradient(70%_32%_at_100%_0%,color-mix(in_srgb,var(--color-menu-glow)_75%,transparent),transparent),radial-gradient(55%_30%_at_100%_75%,color-mix(in_srgb,var(--color-menu-glow)_60%,transparent),transparent),radial-gradient(75%_28%_at_0%_100%,color-mix(in_srgb,var(--color-menu-glow-warm)_75%,transparent),transparent),linear-gradient(180deg,var(--color-menu-ground-top)_0%,var(--color-menu-ground-deep)_55%,var(--color-menu-ground)_100%)] text-white outline-hidden backdrop:bg-transparent md:hidden"
 >
-  <div class="flex min-h-full flex-col pb-16">
+  {/*
+    Sized to the footer's scale (links at its 17px headings, the CTA at the
+    site's 15px buttons) so the whole menu fits a short phone; on shorter
+    screens still it scrolls. One gutter for everything below the top row.
+    header.ts focuses the panel itself (`tabindex="-1"`) rather than the close
+    button, so opening by tap doesn't ring the toggle.
+  */}
+  <div class="flex min-h-full flex-col pb-8">
     {/* Fixed at the unscrolled row's height, so the list never moves. */}
     <div data-menu-bar class={`${rowWrapClass} h-24`}>
       <div class={rowClass}>
@@ -136,50 +144,54 @@ const logoClass =
       </div>
     </div>
 
-    <p
-      data-menu-reveal
-      class="mx-4 mt-[46px] font-mono text-[11px] tracking-[0.2em] text-white/40 uppercase sm:mx-6"
-    >
-      Pure nature. Better tomorrow.
-    </p>
-    <span
-      data-menu-reveal
-      class="mx-4 mt-4 block h-0.5 w-8 origin-left bg-brand-green sm:mx-6"
-      aria-hidden="true"
-    ></span>
+    <div class="flex flex-1 flex-col px-4 sm:px-6">
+      <p
+        data-menu-reveal
+        class="mt-6 font-mono text-[11px] tracking-[0.2em] text-white/40 uppercase"
+      >
+        Pure nature. Better tomorrow.
+      </p>
+     {/* <span
+        data-menu-reveal
+        class="mt-3 block h-0.5 w-8 bg-brand-green"
+        aria-hidden="true"
+      ></span>*/}
 
-    <ul class="mx-4 mt-4 flex flex-col sm:mx-6">
-      {[...NAV_LINKS, { label: "Contact", href: CONTACT_HREF }].map((link) => (
-        <li data-menu-reveal class="border-b border-white/15">
-          <a
-            href={link.href}
-            aria-current={isCurrent(link.href) ? "page" : undefined}
-            class="group/link relative flex h-[74px] items-center justify-between font-outfit text-[32px] font-bold tracking-tight transition-colors hover:text-brand-green aria-[current=page]:text-brand-green data-picked:text-brand-green"
-          >
-            <span class="transition-[translate] duration-500 ease-out group-data-picked/link:translate-x-2">
-              {link.label}
-            </span>
-            <span class="transition-[translate] duration-500 ease-out group-data-picked/link:translate-x-2">
-              <ArrowRightIcon class="size-[18px] opacity-80" />
-            </span>
-            {/* Wipes along the divider when the link is picked. */}
-            <span
-              class="absolute inset-x-0 -bottom-px h-px origin-left scale-x-0 bg-brand-green transition-[scale] duration-500 ease-out group-data-picked/link:scale-x-100"
-              aria-hidden="true"
-            ></span>
-          </a>
-        </li>
-      ))}
-    </ul>
+      <ul class="mt-3 mb-8 flex flex-col">
+        {[...NAV_LINKS, { label: "Contact", href: CONTACT_HREF }].map(
+          (link) => (
+            <li data-menu-reveal class="border-b border-white/15">
+              <a
+                href={link.href}
+                aria-current={isCurrent(link.href) ? "page" : undefined}
+                class="group/link relative flex h-14 items-center justify-between font-outfit text-[17px] leading-6 font-semibold tracking-[0.2px] transition-colors hover:text-brand-green aria-[current=page]:text-brand-green data-picked:text-brand-green"
+              >
+                <span class="transition-[translate] duration-500 ease-out group-data-picked/link:translate-x-2">
+                  {link.label}
+                </span>
+                <span class="transition-[translate] duration-500 ease-out group-data-picked/link:translate-x-2">
+                  <ArrowRightIcon class="size-4 opacity-70" />
+                </span>
+                {/* Wipes along the divider when the link is picked. */}
+                <span
+                  class="absolute inset-x-0 -bottom-px h-px origin-left scale-x-0 bg-brand-green transition-[scale] duration-500 ease-out group-data-picked/link:scale-x-100"
+                  aria-hidden="true"
+                ></span>
+              </a>
+            </li>
+          ),
+        )}
+      </ul>
 
-    <a
-      href={CONTACT_HREF}
-      data-menu-reveal
-      class="mx-7 mt-auto inline-flex sm:mx-9 h-14 items-center justify-center gap-3 rounded-full font-outfit text-[17px] font-semibold btn-glow"
-    >
-      Get in touch
-      <ArrowRightIcon class="size-[18px]" />
-    </a>
+      <a
+        href={CONTACT_HREF}
+        data-menu-reveal
+        class="mt-auto inline-flex h-[52px] items-center justify-center gap-2.5 rounded-full font-outfit text-[15px] font-semibold btn-glow"
+      >
+        Get in touch
+        <ArrowRightIcon class="size-4" />
+      </a>
+    </div>
   </div>
 </dialog>
 

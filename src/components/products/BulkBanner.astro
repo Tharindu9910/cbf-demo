@@ -21,11 +21,11 @@ const photo = listingPhoto("bulk");
 ---
 
 <section aria-labelledby="bulk-heading" class="bg-brand-ivory pb-20 lg:pb-28">
-  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+  <div class="mx-auto max-w-page px-5 md:px-10">
     {RETAILERS.length > 0 && (
       <div
         data-reveal
-        class="mb-6 rounded-[24px] bg-white p-6 ring-1 sm:p-8 ring-brand-leaf/6 md:p-10"
+        class="mb-6 rounded-[1.5rem] bg-white p-6 ring-1 sm:p-8 ring-brand-leaf/6 md:p-10"
       >
         <p class:list={[eyebrowClass, "text-brand-fern uppercase"]}>
           Where to buy
@@ -42,7 +42,7 @@ const photo = listingPhoto("bulk");
 
     <div
       data-reveal
-      class="relative isolate overflow-hidden rounded-[28px] bg-brand-leaf font-inter text-white md:min-h-[320px]"
+      class="relative isolate overflow-hidden rounded-[1.75rem] bg-brand-leaf font-inter text-white md:min-h-[20rem]"
     >
       {photo ? (
         <>
@@ -57,7 +57,7 @@ const photo = listingPhoto("bulk");
           />
           <div
             aria-hidden="true"
-            class="absolute inset-0 -z-10 bg-linear-to-t from-brand-leaf/90 via-brand-leaf/75 to-brand-leaf/40 md:bg-linear-to-r md:from-brand-leaf/70 md:via-brand-leaf/30 md:via-45% md:to-transparent"
+            class="absolute inset-0 -z-10 bg-linear-to-t from-brand-leaf/90 via-brand-leaf/75 to-brand-leaf/40 lg:bg-linear-to-r lg:from-brand-leaf/70 lg:via-brand-leaf/30 lg:via-45% lg:to-transparent"
           ></div>
         </>
       ) : (
@@ -73,11 +73,11 @@ const photo = listingPhoto("bulk");
         </p>
         <h2
           id="bulk-heading"
-          class:list={[heading, "mt-3 max-w-[14ch] text-balance lg:text-[44px]"]}
+          class:list={[heading, "mt-3 max-w-[14ch] text-balance lg:text-[2.75rem]"]}
         >
           {title}
         </h2>
-        <p class="mt-4 max-w-sm text-[16px] leading-[25px] text-white/85">
+        <p class="mt-4 max-w-sm text-[1rem] leading-[1.5625rem] text-white/85">
           {body}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
@@ -85,13 +85,13 @@ const photo = listingPhoto("bulk");
             href={inquiryHref({ intent: "bulk" })}
             data-inquiry="bulk"
             arrow
-            class="min-h-[52px] gap-2.5 px-6 py-3 text-center text-[15px] sm:px-7"
+            class="min-h-[3.25rem] gap-2.5 px-6 py-3 text-center text-[0.9375rem] sm:px-7"
           >
             {enquire}
           </PillLink>
           <a
             href={inquiryHref({ intent: "store" })}
-            class="inline-flex min-h-[52px] items-center rounded-full border border-white/60 px-6 py-3 text-[15px] sm:px-7 font-semibold text-white transition-colors hover:bg-white hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
+            class="inline-flex min-h-[3.25rem] items-center rounded-full border border-white/60 px-6 py-3 text-[0.9375rem] sm:px-7 font-semibold text-white transition-colors hover:bg-white hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
           >
             {retailer}
           </a>

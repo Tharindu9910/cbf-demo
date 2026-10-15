@@ -98,7 +98,7 @@ const EXTRA_SLOT = {
     "lg:grow-360 lg:basis-[calc(324*var(--u))] lg:min-h-[calc(316*var(--u))]",
 };
 
-/** Below `lg` photos pair up; with an odd count the first one spans the row. */
+/** Below `lg` photos pair up; with an odd count the first one spans two columns (on tablets, beside a video of the same shape). */
 const photos = reactions.filter((r) => r.kind === "photo");
 const widePhoto = photos.length % 2 === 1 ? photos[0] : undefined;
 
@@ -159,7 +159,7 @@ const initials = (name: string) =>
   {/* Soft green shapes in three corners, as in the mockup. */}
 
 
-  <div class="mx-auto max-w-[680px] px-5 py-16 lg:frame-1536 lg:max-w-[1536px] lg:px-[calc(60*var(--u))] lg:pt-[calc(58*var(--u))] lg:pb-[calc(50*var(--u))]">
+  <div class="mx-auto max-w-[680px] px-5 py-16 md:max-w-[56rem] md:px-8 lg:frame-1536 lg:max-w-[calc(1536*var(--u-max))] lg:px-[calc(60*var(--u))] lg:pt-[calc(58*var(--u))] lg:pb-[calc(50*var(--u))]">
     <header class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-[calc(40*var(--u))]">
       <div class="lg:pl-[calc(16*var(--u))]">
         <p class:list={[eyebrow, "text-brand-fern", phoneEyebrow]}>REAL PEOPLE, REAL SIPS</p>
@@ -198,7 +198,7 @@ const initials = (name: string) =>
       </div>*/}
     </header>
 
-    <ul class="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-[calc(25*var(--u))] lg:flex lg:flex-wrap lg:gap-[calc(16*var(--u))]">
+    <ul class="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-flow-dense md:grid-cols-4 lg:mt-[calc(25*var(--u))] lg:flex lg:flex-wrap lg:gap-[calc(16*var(--u))]">
       {reactions.map((item, i) => {
         const slot = SLOTS[i] ?? EXTRA_SLOT;
         const flavourChip = CHIP[item.flavour.id] ?? {
@@ -206,7 +206,9 @@ const initials = (name: string) =>
           class: "bg-flavour-matcha",
         };
         const wide = item === widePhoto;
-        const sizes = `(min-width: 1536px) ${slot.width}px, (min-width: 1024px) ${(slot.width / 15.36).toFixed(1)}vw, ${
+        const sizes = `(min-width: 1536px) ${slot.width}px, (min-width: 1024px) ${(slot.width / 15.36).toFixed(1)}vw, (min-width: 768px) ${
+          item.kind === "photo" && !wide ? "25vw" : "50vw"
+        }, ${
           item.kind === "photo" && !wide
             ? "min(50vw, 330px)"
             : "min(100vw, 680px)"
@@ -222,8 +224,8 @@ const initials = (name: string) =>
               item.kind === "video" && "col-span-2 max-lg:aspect-[3/2]",
               item.kind === "photo" &&
                 (wide
-                  ? "col-span-2 max-lg:aspect-[5/4]"
-                  : "max-lg:aspect-[4/5]"),
+                  ? "col-span-2 max-md:aspect-[5/4] md:max-lg:aspect-[3/2]"
+                  : "max-md:aspect-[4/5] md:max-lg:aspect-[3/4]"),
               item.kind === "comment" && "col-span-2",
               entrance,
             ]}

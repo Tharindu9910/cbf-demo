@@ -16,7 +16,7 @@ const ready = Boolean(founder.name && founder.title && founder.quote);
 {
   ready && (
     <section aria-labelledby="people-heading" class="bg-brand-ivory py-20 lg:py-28">
-      <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+      <div class="mx-auto max-w-page px-5 md:px-10">
         <SectionHeading id="people-heading" eyebrow={eyebrow} title={title} data-reveal />
 
         <figure
@@ -33,14 +33,14 @@ const ready = Boolean(founder.name && founder.title && founder.quote);
               sizes="(min-width: 768px) 400px, 100vw"
               quality={80}
               loading="lazy"
-              class="aspect-[4/5] w-full max-w-[420px] rounded-[28px] object-cover"
+              class="aspect-[4/5] w-full max-w-[26.25rem] rounded-[1.75rem] object-cover"
             />
           )}
           <div>
-            <blockquote class="font-display text-[clamp(22px,3vw,30px)] leading-[1.35] font-semibold text-ink-heading italic">
+            <blockquote class="font-display text-[clamp(1.375rem,3vw,1.875rem)] leading-[1.35] font-semibold text-ink-heading italic">
               &ldquo;{founder.quote}&rdquo;
             </blockquote>
-            <figcaption class="mt-6 text-[15px] text-ink-body">
+            <figcaption class="mt-6 text-[0.9375rem] text-ink-body">
               <strong class="text-ink-heading">{founder.name}</strong>, {founder.title}
             </figcaption>
           </div>
@@ -54,7 +54,7 @@ const ready = Boolean(founder.name && founder.title && founder.quote);
             sizes="(min-width: 1280px) 1120px, 100vw"
             quality={78}
             loading="lazy"
-            data-reveal class="mt-14 aspect-[21/9] w-full rounded-[28px] object-cover"
+            data-reveal class="mt-14 aspect-[21/9] w-full rounded-[1.75rem] object-cover"
           />
         )}
       </div>

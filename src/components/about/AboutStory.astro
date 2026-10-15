@@ -21,11 +21,11 @@ const shownStats = stats.filter((s) => s.value);
 
 <section id="our-story" aria-labelledby="story-heading" class="scroll-mt-24 bg-brand-ivory py-20 lg:py-28">
   <div
-    class="mx-auto grid max-w-[1200px] items-center gap-12 px-5 md:px-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,10fr)] lg:gap-16"
+    class="mx-auto grid max-w-page items-center gap-12 px-5 md:px-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,10fr)] lg:gap-16"
   >
     <div
       data-reveal
-      class="mx-auto grid w-full max-w-[560px] grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-center gap-3 select-none sm:gap-4 lg:max-w-none"
+      class="mx-auto grid w-full max-w-[35rem] grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-center gap-3 select-none sm:gap-4 lg:max-w-none"
     >
       <Image
         src={images.farm.src}
@@ -34,7 +34,7 @@ const shownStats = stats.filter((s) => s.value);
         sizes="(min-width: 1024px) min(24vw, 280px), min(44vw, 250px)"
         quality={82}
         loading="lazy"
-        class="aspect-[3/4] w-full rounded-2xl sm:rounded-[22px] object-cover object-[62%_35%]"
+        class="aspect-[3/4] w-full rounded-2xl sm:rounded-[1.375rem] object-cover object-[62%_35%]"
       />
       <div class="grid gap-3 sm:gap-4">
         <Image
@@ -44,7 +44,7 @@ const shownStats = stats.filter((s) => s.value);
           sizes="(min-width: 1024px) min(28vw, 340px), min(52vw, 300px)"
           quality={82}
           loading="lazy"
-          class="aspect-[4/3] w-full rounded-2xl sm:rounded-[22px] object-cover"
+          class="aspect-[4/3] w-full rounded-2xl sm:rounded-[1.375rem] object-cover"
         />
         <Image
           src={images.lab.src}
@@ -53,23 +53,23 @@ const shownStats = stats.filter((s) => s.value);
           sizes="(min-width: 1024px) min(28vw, 340px), min(52vw, 300px)"
           quality={82}
           loading="lazy"
-          class="aspect-[4/3] w-full rounded-2xl sm:rounded-[22px] object-cover object-[50%_55%]"
+          class="aspect-[4/3] w-full rounded-2xl sm:rounded-[1.375rem] object-cover object-[50%_55%]"
         />
       </div>
     </div>
 
-    <div data-reveal class="max-w-[560px] font-inter">
-      <p class="text-[12px] leading-4 font-bold tracking-[2.6px] uppercase text-brand-fern">{eyebrow}</p>
+    <div data-reveal class="max-w-[35rem] font-inter max-lg:mx-auto">
+      <p class="text-[0.75rem] leading-4 font-bold tracking-[0.1625rem] uppercase text-brand-fern">{eyebrow}</p>
       <h2
         id="story-heading"
-        class:list={[heading, "mt-3 text-ink-heading lg:text-[44px]"]}
+        class:list={[heading, "mt-3 text-ink-heading lg:text-[2.75rem]"]}
       >
         {titleLines.map((line) => <span class="block">{line}</span>)}
       </h2>
-      <div class="mt-5 space-y-5 text-[16px] leading-[25px] text-ink-body">
+      <div class="mt-5 space-y-5 text-[1rem] leading-[1.5625rem] text-ink-body">
         {paragraphs.map((p) => <p>{p}</p>)}
       </div>
-      <p class="mt-6 border-l-[3px] border-brand-pine py-0.5 pl-6 text-[16px] leading-[25px] font-semibold text-ink-heading">
+      <p class="mt-6 border-l-[3px] border-brand-pine py-0.5 pl-6 text-[1rem] leading-[1.5625rem] font-semibold text-ink-heading">
         {ambition.map((part) => (part.accent ? <span class="text-brand-fern">{part.text}</span> : part.text))}
       </p>
     </div>
@@ -77,11 +77,11 @@ const shownStats = stats.filter((s) => s.value);
 
   {
     shownStats.length >= 2 && (
-      <dl data-reveal class="mx-auto mt-16 grid max-w-[1200px] grid-cols-2 gap-px overflow-hidden px-5 md:px-10 lg:mt-20 lg:grid-cols-4">
+      <dl data-reveal class="mx-auto mt-16 grid max-w-page grid-cols-2 gap-px overflow-hidden px-5 md:px-10 lg:mt-20 lg:grid-cols-4">
         {shownStats.map((s) => (
           <div class="flex flex-col border-t-2 border-brand-moss/30 pt-5 pr-4 pb-2">
-            <dt class="font-inter text-[13px] leading-5 text-ink-body">{s.label}</dt>
-            <dd class="order-first mb-2 font-display text-[clamp(28px,4vw,38px)] leading-none font-bold text-ink-heading">
+            <dt class="font-inter text-[0.8125rem] leading-5 text-ink-body">{s.label}</dt>
+            <dd class="order-first mb-2 font-display text-[clamp(1.75rem,4vw,2.375rem)] leading-none font-bold text-ink-heading">
               {s.value}
             </dd>
           </div>

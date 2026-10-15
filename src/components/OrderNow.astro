@@ -35,7 +35,7 @@ import { url } from "../config/url";
   aria-labelledby="order-heading"
   class:list={[
     phoneFont,
-    "@container relative overflow-hidden bg-brand-ivory font-inter text-ink-body-deep max-lg:flex max-lg:flex-col lg:aspect-[1432/580] lg:max-h-[760px] lg:min-h-[440px] lg:frame-1432",
+    "@container relative overflow-hidden bg-brand-ivory font-inter text-ink-body-deep max-lg:flex max-lg:flex-col lg:aspect-[1432/580] lg:w-full lg:max-h-[calc(760*var(--u-max))] lg:min-h-[calc(440*var(--u-max))] lg:frame-1432",
   ]}
 >
   {/* Below lg the sky fades up into the copy's cream, so the two read as one. */}
@@ -51,18 +51,21 @@ import { url } from "../config/url";
   {
     /*
       The legibility wash: the page's cream, near-opaque behind the copy and
-      gone by 52% — the box's left edge sits at ~39%, and its white face takes
-      the last of the fade without looking veiled.
+      gone by 52% of the design frame — the box's left edge sits at ~39%, and
+      its white face takes the last of the fade without looking veiled. The
+      stops are measured from the copy column's left edge (`--wash`), not the
+      section's, so on a wide screen the wash stays under the copy instead of
+      clearing before it.
     */
   }
   <div
-    class="max-lg:hidden lg:absolute lg:inset-0 lg:bg-[linear-gradient(90deg,rgb(248_246_236/0.94)_0%,rgb(248_246_236/0.86)_20%,rgb(248_246_236/0.55)_34%,rgb(248_246_236/0.18)_44%,rgb(248_246_236/0)_52%),linear-gradient(180deg,rgb(248_246_236/0.35),rgb(248_246_236/0)_18%)]"
+    class="max-lg:hidden lg:absolute lg:inset-0 lg:[--wash:max(0px,calc(50%_-_716*var(--u-max)))] lg:bg-[linear-gradient(90deg,rgb(248_246_236/0.94)_0%,rgb(248_246_236/0.94)_var(--wash),rgb(248_246_236/0.86)_calc(var(--wash)_+_286*var(--u)),rgb(248_246_236/0.55)_calc(var(--wash)_+_487*var(--u)),rgb(248_246_236/0.18)_calc(var(--wash)_+_630*var(--u)),rgb(248_246_236/0)_calc(var(--wash)_+_745*var(--u))),linear-gradient(180deg,rgb(248_246_236/0.35),rgb(248_246_236/0)_18%)]"
     aria-hidden="true"
   >
   </div>
 
   <div
-    class="mx-auto w-full max-lg:-order-1 max-lg:max-w-[600px] max-lg:px-5 max-lg:pt-16 max-lg:pb-8 lg:relative lg:flex lg:h-full lg:max-w-[1432px] lg:items-center lg:p-[calc(40*var(--u))] lg:pl-[calc(81*var(--u))]"
+    class="mx-auto w-full max-lg:-order-1 max-md:max-w-[600px] md:max-lg:max-w-[45rem] max-lg:px-5 md:max-lg:px-8 max-lg:pt-16 max-lg:pb-8 lg:relative lg:flex lg:h-full lg:max-w-[calc(1432*var(--u-max))] lg:items-center lg:p-[calc(40*var(--u))] lg:pl-[calc(81*var(--u))]"
   >
     <div class="lg:max-w-[max(340px,calc(400*var(--u)))]">
       <p

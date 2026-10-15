@@ -15,7 +15,7 @@ const titleLines = title.split(/(?<=\.)\s+/);
 
 <section
   aria-labelledby="gotukola-hero-heading"
-  class="relative isolate flex min-h-[max(520px,62svh)] short:min-h-svh! overflow-hidden bg-brand-leaf text-white"
+  class="relative isolate flex min-h-[min(max(32.5rem,62svh),56rem)] short:min-h-svh! overflow-hidden bg-brand-leaf text-white"
 >
   <Image
     src={heroPhoto}
@@ -34,25 +34,25 @@ const titleLines = title.split(/(?<=\.)\s+/);
   >
   </div>
 
-  <div class="relative flex w-full flex-col justify-end px-5 pt-32 pb-12 md:px-10 md:pb-12 lg:pr-10 lg:pl-[11vw]">
-    <p class="font-poppins text-[11px] leading-4 font-medium tracking-[4px] text-brand-green uppercase md:text-[12px]">
+  <div class="relative flex w-full flex-col justify-end px-5 pt-32 pb-12 md:px-10 md:pb-12 lg:pr-10 lg:pl-[clamp(2.5rem,11vw,12.5rem)]">
+    <p class="font-poppins text-[0.6875rem] leading-4 font-medium tracking-[0.25rem] text-brand-green uppercase md:text-[0.75rem]">
       {eyebrow}
     </p>
     <h1
       id="gotukola-hero-heading"
-      class="mt-4 max-w-[14ch] font-display text-[clamp(40px,5vw,76px)] leading-[1.02] font-bold tracking-[-0.5px] drop-shadow-[0_2px_24px_rgb(0_0_0/0.3)]"
+      class="mt-4 max-w-[14ch] font-display text-[clamp(2.5rem,5vw,4.75rem)] leading-[1.02] font-bold tracking-[-0.5px] drop-shadow-[0_2px_24px_rgb(0_0_0/0.3)]"
     >
       {titleLines.map((line) => <span class="block">{line}</span>)}
     </h1>
-    <p class="mt-5 max-w-[34em] font-poppins text-[15px] leading-[1.6] text-white/90 md:text-[clamp(16px,1.2vw,19px)]">
+    <p class="mt-5 max-w-[34em] font-poppins text-[0.9375rem] leading-[1.6] text-white/90 md:text-[clamp(1rem,1.2vw,1.1875rem)]">
       {intro}
     </p>
-    <dl class="mt-8 grid max-w-[920px] grid-cols-2 gap-x-6 gap-y-5 border-t border-white/20 pt-6 font-poppins md:grid-cols-4">
+    <dl class="mt-8 grid max-w-[57.5rem] grid-cols-2 gap-x-6 gap-y-5 border-t border-white/20 pt-6 font-poppins md:grid-cols-4">
       {
         names.map(({ lang, name }) => (
           <div class="flex flex-col">
-            <dt class="text-[10px] leading-4 font-medium tracking-[2.5px] text-white/60 uppercase">{lang}</dt>
-            <dd class:list={["mt-1 text-[15px] leading-snug font-medium md:text-[16px]", lang === "Botanical" && "italic"]}>
+            <dt class="text-[0.625rem] leading-4 font-medium tracking-[0.1562rem] text-white/60 uppercase">{lang}</dt>
+            <dd class:list={["mt-1 text-[0.9375rem] leading-snug font-medium md:text-[1rem]", lang === "Botanical" && "italic"]}>
               {name}
             </dd>
           </div>

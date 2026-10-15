@@ -21,6 +21,9 @@ import {
 const FOV = 30;
 const CAMERA_Z = 5;
 
+/** The most pixels the canvas's drawing buffer may hold: about one 4K screen at 1x. */
+const MAX_BUFFER_PIXELS = 3840 * 2160;
+
 /** World height of the frame at z 0 — what R3F reports as `viewport.height`. */
 const FRAME_HEIGHT = 2 * Math.tan(((FOV / 2) * Math.PI) / 180) * CAMERA_Z;
 
@@ -46,9 +49,9 @@ let running = false;
 let size = { width: 0, height: 0 };
 
 /**
- * Phones and tablets. They draw the cans smaller, on hotter, battery-bound
- * GPUs, so they skip MSAA (DPR already smooths the edges) and get a lower
- * pixel-ratio cap.
+ * Phones and tablets. Their screens are 2-3x, so the canvas is capped at 2x
+ * there rather than desktop's 1.5x: below that the printed labels visibly
+ * soften and the rims step.
  */
 export const COARSE_POINTER = matchMedia("(pointer: coarse)").matches;
 
@@ -76,14 +79,16 @@ export function createStage(host: HTMLElement) {
   if (renderer) return renderer;
 
   renderer = new WebGLRenderer({
-    antialias: !COARSE_POINTER,
+    // MSAA everywhere: phone GPUs are tile-based and resolve it on-chip, so
+    // it costs little, and without it the can rims crawl as they spin.
+    antialias: true,
     alpha: true,
     powerPreference: "high-performance",
   });
-  // R3F's `dpr={[1, 1.5]}`; 1.25 on touch screens, whose 2-3x displays would
-  // otherwise fill a whole-screen canvas at desktop cost.
-  const maxDpr = COARSE_POINTER ? 1.25 : 1.5;
-  renderer.setPixelRatio(Math.min(Math.max(window.devicePixelRatio, 1), maxDpr));
+  // R3F's `dpr={[1, 1.5]}`; 2 on touch screens, whose 2-3x displays show
+  // anything less as blur. Not 3: only the scissored views are drawn, but a
+  // 3x whole-screen buffer is still more memory than iOS likes to give.
+  const maxDpr = COARSE_POINTER ? 2 : 1.5;
   renderer.outputColorSpace = SRGBColorSpace;
   // R3F defaults to ACES Filmic, which desaturates as it rolls off and left the
   // printed labels looking washed out. Khronos PBR Neutral holds the colour.
@@ -112,6 +117,11 @@ export function createStage(host: HTMLElement) {
 
   const measure = () => {
     size = { width: host.clientWidth, height: host.clientHeight };
+    // The canvas covers the whole window, so on a large monitor even 1.5x is
+    // a huge buffer (5760x3240 on 4K). Hold it to about a 4K screen's worth
+    // of pixels; laptops and phones are far under that and keep their DPR.
+    const budget = Math.sqrt(MAX_BUFFER_PIXELS / Math.max(1, size.width * size.height));
+    renderer!.setPixelRatio(Math.max(1, Math.min(window.devicePixelRatio, maxDpr, budget)));
     renderer!.setSize(size.width, size.height, false);
   };
   measure();

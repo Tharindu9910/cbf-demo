@@ -39,7 +39,7 @@ const brand = BRANDS[0];
 // );
 
 const pill =
-  "inline-flex h-11 items-center rounded-full px-5 text-[13px] lg:h-10 font-semibold ring-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss bg-white text-ink-heading ring-brand-leaf/12 hover:ring-brand-leaf/40 aria-pressed:bg-brand-moss aria-pressed:text-white aria-pressed:ring-brand-moss";
+  "inline-flex h-11 items-center rounded-full px-5 text-[0.8125rem] lg:fine:h-10 font-semibold ring-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss bg-white text-ink-heading ring-brand-leaf/12 hover:ring-brand-leaf/40 aria-pressed:bg-brand-moss aria-pressed:text-white aria-pressed:ring-brand-moss";
 ---
 
 <Base
@@ -62,14 +62,14 @@ const pill =
       aria-hidden="true"
       class="absolute inset-x-0 top-0 -z-10 h-40 bg-linear-to-b from-brand-leaf/45 to-transparent"
     ></div>
-    <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+    <div class="mx-auto max-w-page px-5 md:px-10">
       <header
         data-reveal
         class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
       >
         <h1
           id="collection-heading"
-          class="font-display text-[clamp(32px,4.6vw,46px)] leading-[1.05] font-bold tracking-[-0.5px] text-balance text-ink-heading"
+          class="font-display text-[clamp(2rem,4.6vw,2.875rem)] leading-[1.05] font-bold tracking-[-0.5px] text-balance text-ink-heading"
         >
           {collection.title}
         </h1>
@@ -140,7 +140,7 @@ const pill =
             <p
               data-filter-count
               aria-live="polite"
-              class="text-[12px] text-ink-body/60"
+              class="text-[0.75rem] text-ink-body/60"
             >
               Showing {listed.length} products
             </p>
@@ -149,7 +149,7 @@ const pill =
         </div>
 
         <ul
-          class="mt-8 grid gap-5 md:grid-cols-3 lg:mt-10 lg:gap-6"
+          class="mt-8 grid gap-5 sm:grid-cols-2 sm:max-lg:[&>li:last-child:nth-child(odd)]:col-span-2 sm:max-lg:[&>li:last-child:nth-child(odd)]:w-[calc(50%_-_0.625rem)] sm:max-lg:[&>li:last-child:nth-child(odd)]:justify-self-center lg:mt-10 lg:grid-cols-3 lg:gap-6"
           aria-label={`${brand.name} products`}
         >
           {flavours.map((product) => (

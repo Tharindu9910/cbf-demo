@@ -20,7 +20,7 @@ const tint = tintOf(id);
 const nutrition = data.nutrition ?? NUTRITION;
 const isPack = data.kind === "pack";
 
-const heading = "text-[15px] leading-6 font-semibold text-ink-heading";
+const heading = "text-[0.9375rem] leading-6 font-semibold text-ink-heading";
 const cell = "py-2.5";
 ---
 
@@ -28,7 +28,7 @@ const cell = "py-2.5";
   aria-labelledby="details-heading"
   class="bg-brand-ivory pt-6 pb-16 font-inter lg:pb-20"
 >
-  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+  <div class="mx-auto max-w-page px-5 md:px-10">
     <h2 id="details-heading" class="sr-only">
       Product details
     </h2>
@@ -38,14 +38,14 @@ const cell = "py-2.5";
         <div>
           <h3 class="sr-only">Description</h3>
           {data.story.map((paragraph) => (
-            <p class="mb-4 text-[16px] leading-[25px] text-pretty text-ink-body last:mb-0">
+            <p class="mb-4 text-[1rem] leading-[1.5625rem] text-pretty text-ink-body last:mb-0">
               {paragraph}
             </p>
           ))}
           {data.finish && (
             <p
               class:list={[
-                "mt-5 font-display text-[17px] leading-snug italic",
+                "mt-5 font-display text-[1.0625rem] leading-snug italic",
                 tint.onLight,
               ]}
             >
@@ -57,7 +57,7 @@ const cell = "py-2.5";
         {data.ingredients && (
           <div>
             <h3 class={heading}>Ingredients</h3>
-            <p class="mt-2 text-[14px] leading-[1.7] text-ink-body">
+            <p class="mt-2 text-[0.875rem] leading-[1.7] text-ink-body">
               {data.ingredients}
             </p>
           </div>
@@ -67,7 +67,7 @@ const cell = "py-2.5";
           <h3 class={heading}>Free from</h3>
           <ul class="mt-3 flex flex-wrap gap-2">
             {FREE_FROM.map((item) => (
-              <li class="inline-flex items-center gap-1.5 rounded-full border border-brand-leaf/15 px-3 py-1 text-[13px] text-ink-body">
+              <li class="inline-flex items-center gap-1.5 rounded-full border border-brand-leaf/15 px-3 py-1 text-[0.8125rem] text-ink-body">
                 <Check class="size-3.5 text-brand-moss" aria-hidden="true" />
                 {item}
               </li>
@@ -77,15 +77,15 @@ const cell = "py-2.5";
 
         <div>
           <h3 class={heading}>Storage &amp; care</h3>
-          <p class="mt-2 text-[14px] font-semibold text-ink-heading">
+          <p class="mt-2 text-[0.875rem] font-semibold text-ink-heading">
             {data.facts.shelfLife} shelf life
           </p>
-          <ul class="mt-2 flex list-disc flex-col gap-1.5 pl-5 text-[14px] leading-[1.6] text-ink-body marker:text-brand-leaf/40">
+          <ul class="mt-2 flex list-disc flex-col gap-1.5 pl-5 text-[0.875rem] leading-[1.6] text-ink-body marker:text-brand-leaf/40">
             {STORAGE.map((line) => (
               <li>{line}</li>
             ))}
           </ul>
-          <p class="mt-5 flex gap-2.5 rounded-xl bg-brand-leaf/6 px-4 py-3 text-[13px] leading-[1.6] text-ink-body">
+          <p class="mt-5 flex gap-2.5 rounded-xl bg-brand-leaf/6 px-4 py-3 text-[0.8125rem] leading-[1.6] text-ink-body">
             <Info class="mt-0.5 size-4 shrink-0 text-brand-moss" aria-hidden="true" />
             {ADVISORY}
           </p>
@@ -94,14 +94,14 @@ const cell = "py-2.5";
 
       <div data-reveal class="lg:pl-14">
         <h3 class={heading}>Nutrition</h3>
-        <p class="mt-1 text-[13px] text-ink-body/70">
+        <p class="mt-1 text-[0.8125rem] text-ink-body/70">
           {isPack
             ? "Per 250 ml can, for each flavour in the pack."
             : "Serving size 250 ml · 1 serving per can."}
         </p>
-        <table class="mt-4 w-full border-collapse text-[14px] tabular-nums">
+        <table class="mt-4 w-full border-collapse text-[0.875rem] tabular-nums">
           <thead>
-            <tr class="border-b border-brand-leaf/15 text-[12px] font-semibold text-ink-heading">
+            <tr class="border-b border-brand-leaf/15 text-[0.75rem] font-semibold text-ink-heading">
               <th scope="col" class="py-2 text-left font-semibold">
                 <span class="sr-only">Nutrient</span>
               </th>

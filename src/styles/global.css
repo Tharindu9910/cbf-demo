@@ -51,6 +51,10 @@
   --color-brand-gold: #e9b949; /* accent arc / highlights, review stars */
   --color-brand-ink: #1c1a17; /* display headings */
   --color-brand-sage: #eaf0dc; /* products listing: the promises panel, the hero's ground without its photo */
+  --color-page: #fdf7e7; /* the body's ground, under every section */
+
+  /* The inner pages' content column (`max-w-page`). In rem, so it grows with the large-monitor scale. */
+  --container-page: 75rem;
 
   --color-hero-runway: #f8f6ec; /* the runway ground under its photo: brand-ivory, as the photo is graded to */
 
@@ -201,6 +205,29 @@
  */
 @custom-variant short (@media (orientation: landscape) and (max-height: 500px));
 
+/*
+ * Tablets: between the phone layouts (below `sm`) and the desktop ones (`lg`).
+ * `tablet-p` is the same width band held upright.
+ */
+@custom-variant tablet (@media (min-width: 640px) and (max-width: 1023.98px));
+@custom-variant tablet-p (@media (min-width: 640px) and (max-width: 1023.98px) and (orientation: portrait));
+
+/*
+ * Desktop proper: `lg` wide *and* landscape. A bare `lg:` also catches an
+ * iPad Pro held upright (1024x1366), which wants the tablet layout.
+ */
+@custom-variant desk (@media (min-width: 1024px) and (orientation: landscape));
+
+/*
+ * A short laptop window: 1366x768-class screens leave about 650px of page
+ * under the browser chrome. 680px keeps 1440x900 and 1280x800 out of it, so
+ * the usual laptop layout is untouched.
+ */
+@custom-variant squat (@media (min-width: 1024px) and (max-height: 680px) and (orientation: landscape));
+
+/* A mouse or trackpad: small hit targets are fine here, not on touch. */
+@custom-variant fine (@media (pointer: fine));
+
 /* ---- 3. Utilities ---- */
 
 /*
@@ -215,9 +242,14 @@
  * with it below that. Text pairs it with a floor, `max(11px,calc(12*var(--u)))`,
  * so it stays legible. A frame that must also fit the viewport's height sets
  * `--u` itself (see GotuKola).
+ *
+ * On a large monitor `--u` may pass 1px, up to `--u-max` (see Base below), so
+ * a frame grows with the screen instead of sitting at mockup size in a sea of
+ * ground. A frame's own max-width is written `calc(<width>*var(--u-max))` to
+ * grow with it.
  */
 @utility frame-* {
-  --u: min(1px, calc(100cqw / --value(integer)));
+  --u: min(var(--u-max, 1px), calc(100cqw / --value(integer)));
 }
 
 /*
@@ -290,6 +322,29 @@
 /* ---- 4. Base ---- */
 
 @layer base {
+  /*
+   * Large monitors. Up to 1920px wide the site is its mockup size; past that
+   * it grows with the screen, on one curve, to 1.5x at 2880px and up:
+   *
+   *   - the root font size, so every rem-based utility (type, spacing,
+   *     `max-w-page`…) scales; breakpoints are rem in media queries, which
+   *     always read 16px, so they don't move;
+   *   - `--u-max`, the most the design-frame unit may reach (`frame-*`).
+   *
+   * `--u` itself defaults to `--u-max`, so a class written in `--u` outside
+   * any frame (the `eyebrow` recipe on the products pages) still resolves.
+   */
+  :root {
+    --u-max: 1px;
+    --u: var(--u-max);
+  }
+  @media (min-width: 1920px) {
+    :root {
+      --u-max: clamp(1px, calc(100vw / 1920), 1.5px);
+      font-size: clamp(16px, calc(100vw / 120), 24px);
+    }
+  }
+
   /* Tailwind v4 dropped v3's pointer cursor on buttons; the design had it. */
   button:not(:disabled),
   [role="button"]:not(:disabled) {

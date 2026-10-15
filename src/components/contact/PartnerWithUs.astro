@@ -31,14 +31,14 @@ const points = [
 ---
 
 <section id="partner" aria-labelledby="partner-heading" class="scroll-mt-24 bg-brand-moss py-20 text-white lg:py-28">
-  <div class="mx-auto grid max-w-[1200px] gap-12 px-5 font-inter md:px-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center lg:gap-20">
+  <div class="mx-auto grid max-w-page gap-12 px-5 font-inter md:px-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center lg:gap-20">
     <div data-reveal>
       <SectionHeading id="partner-heading" eyebrow={eyebrow} title={title} tone="light" />
-      <p class="mt-6 max-w-xl text-[17px] leading-[1.6] text-white/85">{body}</p>
+      <p class="mt-6 max-w-xl text-[1.0625rem] leading-[1.6] text-white/85">{body}</p>
       <a
         href={inquiryHref({ intent: "distribution" })}
         data-intent="distribution"
-        class="group mt-10 inline-flex h-[52px] items-center gap-3 rounded-full bg-white px-8 text-[15px] font-semibold text-brand-leaf transition-colors hover:bg-brand-cream focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
+        class="group mt-10 inline-flex h-[3.25rem] items-center gap-3 rounded-full bg-white px-8 text-[0.9375rem] font-semibold text-brand-leaf transition-colors hover:bg-brand-cream focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
       >
         {cta}
         <ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
@@ -48,12 +48,12 @@ const points = [
     <ul data-reveal class="grid gap-4">
       {
         points.map(({ icon: Icon, title, body }) => (
-          <li class="flex items-start gap-4 rounded-[20px] border border-white/15 bg-white/[0.06] p-6">
+          <li class="flex items-start gap-4 rounded-[1.25rem] border border-white/15 bg-white/[0.06] p-6">
             <span class="grid size-11 shrink-0 place-items-center rounded-full bg-white/10 text-brand-green">
               <Icon class="size-5" stroke-width={1.8} aria-hidden="true" />
             </span>
-            <p class="pt-0.5 text-[15px] leading-[1.55] text-white/80">
-              <strong class="block text-[17px] leading-6 font-semibold text-white">{title}</strong>
+            <p class="pt-0.5 text-[0.9375rem] leading-[1.55] text-white/80">
+              <strong class="block text-[1.0625rem] leading-6 font-semibold text-white">{title}</strong>
               {body}
             </p>
           </li>

@@ -110,9 +110,10 @@ const HERO_FEATURES = [
         grows past one screen rather than overflow on a short window.
       */}
       <div
-        class="grid min-h-svh justify-items-center portrait:content-center portrait:pt-24 portrait:pb-12 sm:portrait:pt-28 landscape:h-screen landscape:place-items-center lg:landscape:h-auto lg:landscape:min-h-screen lg:landscape:pt-32 lg:landscape:pb-8 short:h-auto! short:pt-24! short:pb-10!"
+        class="grid min-h-svh grid-cols-[minmax(0,1fr)] justify-items-center portrait:content-center portrait:pt-24 portrait:pb-12 sm:portrait:pt-28 landscape:h-screen landscape:place-items-center lg:landscape:h-auto lg:landscape:min-h-screen lg:landscape:pt-32 lg:landscape:pb-8 short:h-auto! short:pt-24! short:pb-10!"
       >
-        <div class="grid w-full auto-rows-min place-items-center text-center">
+        {/* `minmax(0,1fr)`: a wide line can't stretch the column off centre. */}
+        <div class="grid w-full grid-cols-[minmax(0,1fr)] auto-rows-min place-items-center text-center">
           {/*
             Portrait: the 3D cans stood in this slot, above the headline. Hidden
             for now, so the first phone screen is the copy alone. Without the
@@ -136,7 +137,7 @@ const HERO_FEATURES = [
           */}
           <h1
             id="hero-heading"
-            class="hero-header relative font-aonic text-[length:min(4.5rem,calc((100vw_-_2rem)/5.5))] leading-[.82] font-black text-white uppercase drop-shadow-[0_8px_34px_rgba(0,0,0,0.45)] sm:text-[4.5rem] md:text-[6.5rem] lg:text-[length:min(8.75rem,7.2vw)] short:text-[2.75rem]!"
+            class="hero-header relative font-aonic text-[length:min(4.5rem,calc((100vw_-_2rem)/6))] leading-[.82] font-black text-white uppercase drop-shadow-[0_8px_34px_rgba(0,0,0,0.45)] sm:text-[4.5rem] md:text-[6.5rem] lg:landscape:text-[length:min(7.2vw,14vh)] short:text-[2.75rem]!"
           >
             <span class="hero-header-word block">Ceylon</span>
             <span class="hero-header-word block">Future</span>
@@ -161,20 +162,23 @@ const HERO_FEATURES = [
             Lanka for a better future.
           </p>
 
-          {/* Below 400px the pills stack full-width: two thumb-sized targets. */}
+          {/*
+            Phones keep the pills compact and side by side, so the headline
+            stays the loudest thing on the first screen; full size from `sm`.
+          */}
           <div
-            class="hero-ctas mt-7 flex w-full max-w-sm flex-col gap-3 min-[400px]:w-auto min-[400px]:max-w-none min-[400px]:flex-row min-[400px]:flex-wrap min-[400px]:items-center min-[400px]:justify-center min-[400px]:gap-4 md:mt-8 lg:landscape:mt-7 short:mt-5!"
+            class="hero-ctas mt-7 flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:mt-8 lg:landscape:mt-7 short:mt-5!"
           >
             <a
               href={url("/products/")}
-              class="hero-cta inline-flex h-[52px] items-center justify-center gap-2.5 rounded-full px-8 font-inter text-[15px] font-semibold tracking-[0.1px] btn-glow focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white lg:h-[54px]"
+              class="hero-cta inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 font-inter text-sm font-semibold sm:h-[3.25rem] sm:gap-2.5 sm:px-8 sm:text-[0.9375rem] tracking-[0.1px] btn-glow focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white lg:h-[3.375rem]"
             >
               Shop Products
-              <ArrowRightIcon class="h-4 w-4" />
+              <ArrowRightIcon class="size-3.5 sm:size-4" />
             </a>
             <a
               href={url("/about/")}
-              class="hero-cta inline-flex h-[52px] items-center justify-center rounded-full border border-white/60 bg-white/10 px-8 font-inter text-[15px] font-semibold tracking-[0.1px] text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-ink-heading focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white lg:h-[54px]"
+              class="hero-cta inline-flex h-11 items-center justify-center rounded-full border border-white/60 bg-white/10 px-5 font-inter text-sm font-semibold sm:h-[3.25rem] sm:px-8 sm:text-[0.9375rem] tracking-[0.1px] text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-ink-heading focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white lg:h-[3.375rem]"
             >
               Our Story
             </a>
@@ -216,7 +220,7 @@ const HERO_FEATURES = [
       */}
       <div
         id="scroll"
-        class="text-side relative z-[80] grid min-h-svh w-full content-start gap-4 pt-20 portrait:gap-6 portrait:pb-16 max-sm:portrait:flex max-sm:portrait:flex-col max-sm:portrait:gap-[2svh] max-sm:portrait:pt-[4svh] max-sm:portrait:pb-10 landscape:min-h-screen landscape:content-normal landscape:items-center landscape:py-24 md:landscape:grid-cols-2 md:landscape:py-28"
+        class="text-side relative z-[80] grid min-h-svh w-full content-start gap-4 pt-20 portrait:gap-6 portrait:pb-16 max-sm:portrait:flex max-sm:portrait:flex-col max-sm:portrait:gap-[2svh] max-sm:portrait:pt-[4svh] max-sm:portrait:pb-16 landscape:min-h-screen landscape:content-normal landscape:items-center landscape:py-24 md:landscape:grid-cols-2 md:landscape:py-28 squat:py-12!"
       >
         {/*
           The runway owns its ground. It breaks out of the centred column to
@@ -245,10 +249,11 @@ const HERO_FEATURES = [
           Portrait: where the cans come to rest, under the copy. The runway's
           `portrait:pb-16` keeps floor under it: the sticky scene lets go at
           the runway's bottom, and without it the cans' shadows fall off the
-          canvas. Phones: the runway is one screen tall, and the slot
-          grows into whatever the copy leaves.
+          canvas. Phones: the slot grows into whatever the copy leaves, but
+          never under half a screen, so the cans stay a readable size on a
+          short phone (the runway then runs a little past one screen).
         */}
-        <div data-can-slot="end" aria-hidden="true" class="hidden h-[38svh] w-full portrait:block max-sm:portrait:h-auto max-sm:portrait:min-h-36 max-sm:portrait:flex-1"></div>
+        <div data-can-slot="end" aria-hidden="true" class="hidden h-[38svh] w-full portrait:block tablet-p:h-[42svh] max-sm:portrait:h-auto max-sm:portrait:min-h-[50svh] max-sm:portrait:flex-1"></div>
       </div>
     </div>
   </div>

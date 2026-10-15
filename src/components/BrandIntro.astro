@@ -46,7 +46,7 @@ const FLAVOURS = [
 ];
 ---
 
-<div id={id} class="@container w-full max-w-[740px] scroll-mt-24">
+<div id={id} class="@container w-full max-w-[calc(740*var(--u-max))] scroll-mt-24 portrait:mx-auto">
   <div class:list={["frame-740 font-outfit text-ink-body", className]}>
     {/*<p
       class="relative ml-[calc(9*var(--u))] inline-flex h-[max(28px,calc(35*var(--u)))] items-center rounded-full border-[1.5px] border-intro-pill px-[calc(26*var(--u))] text-[length:max(10px,calc(14*var(--u)))] font-semibold tracking-[0.3em] text-intro-eyebrow uppercase"

@@ -11,7 +11,7 @@ import FlaskConicalOff from "@lucide/astro/icons/flask-conical-off";
  * and the rules drop out.
  */
 
-const icon = "size-[22px] lg:size-[27px]";
+const icon = "size-[1.375rem] lg:size-[1.6875rem]";
 
 const CLAIMS = [
   { icon: FlaskConicalOff, title: ["No Preservatives"], note: ["Pure and clean."] },
@@ -24,11 +24,11 @@ const CLAIMS = [
 
 {/* The green hairline across the top (`before:`), inset like the design's. */}
 <div
-  class="relative mx-auto max-w-[1322px] px-5 pb-16 font-inter max-lg:font-outfit before:block before:h-px before:bg-brand-moss before:opacity-85 lg:max-w-[1402px] lg:px-10 lg:pb-3"
+  class="relative mx-auto max-w-[82.625rem] px-5 pb-16 font-inter max-lg:font-outfit before:block before:h-px before:bg-brand-moss before:opacity-85 lg:max-w-[87.625rem] lg:px-10 lg:pb-3"
 >
   {/* Five across from lg, in the design's 1361px row. */}
   <ul
-    class="mx-auto flex flex-wrap justify-center gap-y-8 pt-10 lg:-mx-[19.5px] lg:max-w-[1361px] lg:flex-nowrap lg:pt-[49px]"
+    class="mx-auto flex flex-wrap justify-center gap-y-8 pt-10 lg:-mx-[1.2188rem] lg:max-w-[85.0625rem] lg:flex-nowrap lg:pt-[3.0625rem]"
   >
     {
       CLAIMS.map(({ icon: Icon, title, note }, i) => (
@@ -37,11 +37,11 @@ const CLAIMS = [
             "relative flex flex-[0_0_50%] flex-col items-center px-2 text-center sm:basis-[33.333%] lg:min-w-0 lg:flex-1",
             // The short rule between claims, from lg.
             i > 0 &&
-              "lg:before:absolute lg:before:top-[56px] lg:before:left-0 lg:before:h-[85px] lg:before:w-px lg:before:bg-brand-moss",
+              "lg:before:absolute lg:before:top-[3.5rem] lg:before:left-0 lg:before:h-[5.3125rem] lg:before:w-px lg:before:bg-brand-moss",
           ]}
         >
           <span
-            class="grid size-14 place-items-center rounded-full border border-claims-ring text-claims-icon lg:size-[84px]"
+            class="grid size-14 place-items-center rounded-full border border-claims-ring text-claims-icon lg:size-[5.25rem]"
             aria-hidden="true"
           >
             {Icon === "leaf" ? (
@@ -62,10 +62,10 @@ const CLAIMS = [
               <Icon class={icon} stroke-width={2} />
             )}
           </span>
-          <h3 class="mt-3 text-[15px] leading-[20px] font-bold text-claims-title lg:mt-[17px] lg:text-[length:clamp(15px,1.23vw,18px)] lg:leading-[1.333]">
+          <h3 class="mt-3 text-[0.9375rem] leading-[1.25rem] font-bold text-claims-title lg:mt-[1.0625rem] lg:text-[length:clamp(0.9375rem,1.23vw,1.125rem)] lg:leading-[1.333]">
             {title.map((line, i) => (i ? [<br />, line] : line))}
           </h3>
-          <p class="mt-1 text-[13px] leading-[18px] text-claims-note lg:mt-[3px] lg:text-[length:clamp(13px,1vw,14.5px)] lg:leading-[1.38]">
+          <p class="mt-1 text-[0.8125rem] leading-[1.125rem] text-claims-note lg:mt-[0.1875rem] lg:text-[length:clamp(0.8125rem,1vw,0.9062rem)] lg:leading-[1.38]">
             {note.map((line, i) => (i ? [<br />, line] : line))}
           </p>
         </li>

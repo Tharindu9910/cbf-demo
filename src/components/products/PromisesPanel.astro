@@ -24,7 +24,7 @@ const ICONS = {
 const promises = BENEFITS.filter((b) => b.confirmed).slice(0, 4);
 ---
 
-<div class="relative isolate flex h-full overflow-hidden rounded-[24px] bg-brand-sage p-7 font-inter ring-1 ring-brand-leaf/6 lg:p-9">
+<div class="relative isolate flex h-full overflow-hidden rounded-[1.5rem] bg-brand-sage p-7 font-inter ring-1 ring-brand-leaf/6 lg:p-9">
   <Image
     src={leavesRight}
     alt=""
@@ -37,7 +37,7 @@ const promises = BENEFITS.filter((b) => b.confirmed).slice(0, 4);
     {promises.map(({ icon, title }) => {
       const Icon = ICONS[icon];
       return (
-        <li class="flex items-center gap-4 text-[15px] leading-5 font-medium text-ink-heading">
+        <li class="flex items-center gap-4 text-[0.9375rem] leading-5 font-medium text-ink-heading">
           <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white/70 text-brand-moss ring-1 ring-brand-leaf/8">
             <Icon class="size-5" stroke-width={1.75} aria-hidden="true" />
           </span>

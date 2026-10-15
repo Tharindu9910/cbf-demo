@@ -18,7 +18,7 @@ const link =
 {
   (FAQ_HREF || socials.length > 0) && (
     <section aria-label="More ways to reach us" class="border-t border-brand-leaf/8 bg-brand-ivory py-12 font-inter">
-      <div class="mx-auto flex max-w-[1200px] flex-col gap-6 px-5 text-[16px] leading-6 text-ink-body md:flex-row md:items-center md:justify-between md:px-10">
+      <div class="mx-auto flex max-w-page flex-col gap-6 px-5 text-[1rem] leading-6 text-ink-body md:flex-row md:items-center md:justify-between md:px-10">
         {FAQ_HREF && (
           <p>
             {faq}{" "}
@@ -30,7 +30,7 @@ const link =
         )}
         {socials.length > 0 && (
           <p class="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <span class="text-[12px] leading-4 font-bold tracking-[2.2px] text-brand-fern uppercase">{follow}</span>
+            <span class="text-[0.75rem] leading-4 font-bold tracking-[0.1375rem] text-brand-fern uppercase">{follow}</span>
             {socials.map((s) => (
               <a href={s.href} target="_blank" rel="noopener noreferrer" class={link}>
                 {s.label}

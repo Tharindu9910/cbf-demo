@@ -18,18 +18,18 @@ const titleLines = title.split(/(?<=\.)\s+/);
 ---
 
 <section aria-labelledby="how-heading" class="bg-brand-ivory py-20 lg:py-24">
-  <div class="mx-auto max-w-[1200px] px-5 md:px-10">
+  <div class="mx-auto max-w-page px-5 md:px-10">
     <div data-reveal class="font-inter">
-      <p class="text-[12px] leading-4 font-bold tracking-[2.6px] uppercase text-brand-fern">{eyebrow}</p>
+      <p class="text-[0.75rem] leading-4 font-bold tracking-[0.1625rem] uppercase text-brand-fern">{eyebrow}</p>
       <h2
         id="how-heading"
-        class:list={[heading, "mt-3 text-ink-heading lg:text-[44px]"]}
+        class:list={[heading, "mt-3 text-ink-heading lg:text-[2.75rem]"]}
       >
         {titleLines.map((line) => <span class="block">{line}</span>)}
       </h2>
     </div>
 
-    <ol class="mt-10 grid gap-x-8 gap-y-12 font-inter sm:grid-cols-2 lg:mt-12 lg:grid-cols-4 lg:gap-x-16">
+    <ol class="mt-10 grid gap-x-8 gap-y-12 font-inter sm:grid-cols-2 lg:mt-12 lg:grid-cols-4 xl:gap-x-16">
       {
         steps.map((step, i) => {
           const Icon = ICONS[step.icon as IconName];
@@ -46,11 +46,11 @@ const titleLines = title.split(/(?<=\.)\s+/);
                     sizes="(min-width: 1024px) 240px, (min-width: 640px) 45vw, 100vw"
                     quality={80}
                     loading="lazy"
-                    class="aspect-[10/7] w-full rounded-[14px] object-cover shadow-[0_12px_28px_-18px_rgb(13_43_18/0.45)]"
+                    class="aspect-[10/7] w-full rounded-[0.875rem] object-cover shadow-[0_12px_28px_-18px_rgb(13_43_18/0.45)]"
                   />
                 ) : (
                   <div
-                    class="grid aspect-[10/7] w-full place-items-center rounded-[14px] bg-brand-leaf text-brand-green"
+                    class="grid aspect-[10/7] w-full place-items-center rounded-[0.875rem] bg-brand-leaf text-brand-green"
                     aria-hidden="true"
                   >
                     <Icon class="size-12" stroke-width={1.4} />
@@ -59,15 +59,15 @@ const titleLines = title.split(/(?<=\.)\s+/);
                 {!last && (
                   <ArrowRight
                     aria-hidden="true"
-                    class="absolute top-1/2 -right-8 hidden size-6 translate-x-1/2 -translate-y-1/2 text-brand-pine lg:block"
+                    class="absolute top-1/2 -right-4 hidden size-6 xl:-right-8 translate-x-1/2 -translate-y-1/2 text-brand-pine lg:block"
                     stroke-width={1.75}
                   />
                 )}
               </div>
               <div class="mt-5 grid grid-cols-[auto_1fr] items-baseline gap-x-4">
-                <span class="text-[19px] leading-6 font-semibold text-brand-fern">{number}</span>
-                <h3 class="text-[17px] leading-6 font-semibold text-ink-heading">{step.title}</h3>
-                <p class="col-start-2 mt-3 max-w-[20ch] text-[14px] leading-[1.6] text-ink-body">{step.body}</p>
+                <span class="text-[1.1875rem] leading-6 font-semibold text-brand-fern">{number}</span>
+                <h3 class="text-[1.0625rem] leading-6 font-semibold text-ink-heading">{step.title}</h3>
+                <p class="col-start-2 mt-3 max-w-[20ch] text-[0.875rem] leading-[1.6] text-ink-body">{step.body}</p>
               </div>
             </li>
           );

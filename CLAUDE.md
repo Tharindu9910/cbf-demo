@@ -26,7 +26,7 @@ The hero cans run on every screen, in one of two choreographies picked from the 
 - **Landscape:** the ported desktop choreography. Its numbers are untouched.
 - **Portrait:** the group stands in `[data-can-slot="top"]` above the headline. It is drawn shifted with the page (`view.offsetY`) until that slot leaves the screen. It then rises into `[data-can-slot="end"]` under the runway copy, landing as the sticky box lets go. `cans-trio.png` holds the top slot until the first 3D frame sets `data-hero-3d` on `.hero`.
 
-The render loop runs only while a `[data-view]` box is on screen (IntersectionObserver in `stage.ts`). Touch screens get a lower DPR cap and no MSAA.
+The render loop runs only while a `[data-view]` box is on screen (IntersectionObserver in `stage.ts`). Touch screens get a higher DPR cap (2 vs 1.5), and MSAA is on everywhere.
 
 Mobile conventions: `short:` is a custom variant (landscape and at most 500px tall) for phones on their side. Desktop at `lg` and up stays pixel-identical, so phone-only sizes are written base-first with the original value restored at `lg:`. Phones get the header menu `<dialog>`.
 
