@@ -26,20 +26,20 @@ interface Props {
 const { icon: Icon, headline, note, plus, swaps, mirrored, mobileIcon: MobileIcon } = Astro.props;
 ---
 
-<li class:list={["flex items-center gap-2.5 max-sm:portrait:flex-col max-sm:portrait:gap-2 max-sm:portrait:text-center", mirrored && "flex-row-reverse text-right"]}>
+<li class:list={["flex items-center gap-2.5 max-md:portrait:flex-col max-md:portrait:gap-2 max-md:portrait:text-center", mirrored && "flex-row-reverse text-right"]}>
   <span
     aria-hidden="true"
-    class="grid size-11 shrink-0 place-items-center rounded-full border-2 border-brand-gold/70 bg-brand-gold/10 text-brand-ink max-sm:portrait:size-12 max-sm:portrait:border-brand-gold max-sm:portrait:bg-transparent"
+    class="grid size-11 shrink-0 place-items-center rounded-full border-2 border-brand-gold/70 bg-brand-gold/10 text-brand-ink max-md:portrait:size-12 max-md:portrait:border-brand-gold max-md:portrait:bg-transparent"
   >
-    <Icon class:list={["size-5 max-sm:portrait:size-6", MobileIcon && "max-sm:portrait:hidden"]} stroke-width={2} />
-    {MobileIcon && <MobileIcon class="hidden size-6 max-sm:portrait:block" stroke-width={2} />}
+    <Icon class:list={["size-5 max-md:portrait:size-6", MobileIcon && "max-md:portrait:hidden"]} stroke-width={2} />
+    {MobileIcon && <MobileIcon class="hidden size-6 max-md:portrait:block" stroke-width={2} />}
   </span>
   <span class="min-w-0 leading-tight">
-    <span class="block text-sm font-semibold max-sm:portrait:text-[13px] max-sm:portrait:whitespace-nowrap">
-      {headline}{plus && <sup class="text-[0.6em] max-sm:portrait:hidden">+</sup>}
+    <span class="block text-sm font-semibold max-md:portrait:text-[13px] max-md:portrait:whitespace-nowrap">
+      {headline}{plus && <sup class="text-[0.6em] max-md:portrait:hidden">+</sup>}
     </span>
     <span
-      class:list={["block text-[0.7rem] text-neutral-500 max-sm:portrait:mt-0.5 max-sm:portrait:text-[10.5px] max-sm:portrait:whitespace-nowrap", swaps && "flavor-swap"]}
+      class:list={["block text-[0.7rem] text-neutral-500 max-md:portrait:mt-0.5 max-md:portrait:text-[10.5px] max-md:portrait:whitespace-nowrap", swaps && "flavor-swap"]}
       data-flavor-extract={swaps ? "" : undefined}
     >
       {note}

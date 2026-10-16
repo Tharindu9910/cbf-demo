@@ -10,7 +10,8 @@ import { eyebrow, heading } from "../../styles/section";
 /**
  * A pack the buyer fills: one tile per flavour they can choose from, with its
  * can in front of its fruit and a link to its own page. The buyer gives their
- * mix with the order. Renders nothing for a product without `mix`.
+ * mix with the order. Renders nothing for a product without `mix`. On phones
+ * the tiles are a swipeable row.
  */
 interface Props {
   product: Product;
@@ -44,17 +45,16 @@ const cans = data.mix?.cans ?? 0;
             Mix it your way
           </h2>
         </div>
-        <p class="max-w-sm text-[0.9375rem] leading-[1.6] text-ink-body/75 md:text-right">
-          Any {cans} cans, in any mix of these {items.length} flavours. Build
-          your mix under &ldquo;Pack options&rdquo; above.
+        <p class="max-w-sm text-[1rem] leading-[1.6] text-ink-body md:text-right">
+          Any {cans} cans, any mix.
         </p>
       </div>
 
-      <ul class="mt-10 grid gap-5 md:grid-cols-3 lg:mt-12 lg:gap-6">
+      <ul class="-mx-5 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 scrollbar-none md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:mt-12 lg:gap-6">
         {items.map((entry) => {
           const tint = tintOf(entry.id);
           return (
-            <li data-reveal>
+            <li data-reveal class="w-[72%] shrink-0 snap-center md:w-auto">
               <a
                 href={productHref(entry.id)}
                 class="group relative flex h-full flex-col overflow-hidden rounded-[1.5rem] bg-white shadow-card ring-1 ring-brand-leaf/6 transition-[translate] duration-500 ease-rise hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss motion-reduce:transition-none"
@@ -62,7 +62,7 @@ const cans = data.mix?.cans ?? 0;
                 <div class="relative aspect-[4/3] overflow-hidden bg-brand-ivory">
                   <CanScene product={entry} />
                 </div>
-                <p class="mt-5 flex items-center px-6 gap-2 text-[1rem] font-semibold text-ink-heading">
+                <p class="mt-5 flex items-center px-6 gap-2 text-[1.0625rem] leading-6 font-semibold text-ink-heading">
                   <span
                     aria-hidden="true"
                     class:list={["size-2 rounded-full", tint.dot]}
@@ -70,7 +70,7 @@ const cans = data.mix?.cans ?? 0;
                   {entry.data.name}
                   <ArrowRightIcon class="ml-auto size-4 text-brand-moss transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
                 </p>
-                <p class="mt-1 px-6 pb-6 text-[0.875rem] text-ink-body/70">
+                <p class="mt-1 px-6 pb-6 text-[0.875rem] leading-[1.6] text-ink-body">
                   {entry.data.tags.join(" · ")}
                 </p>
               </a>

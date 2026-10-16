@@ -242,15 +242,22 @@ function initIntentLinks(intent: HTMLSelectElement, switched: (topic: string | n
 
 function initSubmit(form: HTMLFormElement) {
   const button = form.querySelector<HTMLButtonElement>("[data-submit]")!;
+  const label = button.querySelector<HTMLElement>("[data-submit-label]")!;
+  const spinner = button.querySelector<HTMLElement>("[data-submit-spinner]")!;
   const error = form.querySelector<HTMLElement>("[data-form-error]")!;
   const success = document.querySelector<HTMLElement>("[data-form-success]")!;
-  const label = button.textContent;
+  const idle = label.textContent;
+
+  const sending = (on: boolean) => {
+    button.disabled = on;
+    spinner.hidden = !on;
+    label.textContent = on ? "Sending…" : idle;
+  };
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     error.hidden = true;
-    button.disabled = true;
-    button.textContent = "Sending…";
+    sending(true);
 
     try {
       const response = await fetch(form.action, {
@@ -266,8 +273,7 @@ function initSubmit(form: HTMLFormElement) {
       success.focus();
     } catch {
       error.hidden = false;
-      button.disabled = false;
-      button.textContent = label;
+      sending(false);
     }
   });
 }

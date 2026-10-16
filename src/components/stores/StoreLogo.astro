@@ -5,22 +5,27 @@ import type { Retailer } from "../../config/products";
 
 /**
  * A stockist's logo, or its initials in a circle until a logo file is added.
- * `size` matches the slot: `sm` for the inline "Available at" rows, `md` for
- * logo rows, `lg` for the Contact page's cards. `tone="dark"` is for dark
- * grounds (the product page's info panel): the logo turns white.
+ * `size` matches the slot: `sm` for the inline "Available at" rows, `row` for
+ * the product page's colour "Available at" row under Find in Store, `md` for
+ * logo rows, `lg` for larger logo slots. `badge` is the Contact page's cards:
+ * every logo in the same white circle, a tile logo (`logoFill`) filling it.
+ * `tone="dark"` is for dark grounds (the product page's info panel): the logo
+ * turns white.
  */
 interface Props {
   retailer: Retailer;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "row" | "md" | "lg" | "badge";
   tone?: "light" | "dark";
 }
 
 const { retailer, size = "md", tone = "light" } = Astro.props;
 
-const HEIGHT = { sm: 20, md: 40, lg: 56 } as const;
+const HEIGHT = { sm: 20, row: 28, md: 40, lg: 56 } as const;
+/** The badge circle's diameter in px (`size-28`). */
+const BADGE = 112;
 
 /** Words that say what a place is, not which one: "ABC Supermarket" is "ABC", not "AS". */
-const GENERIC = /^(supermarkets?|campus)$/i;
+const GENERIC = /^(supermarkets?|campus|online)$/i;
 
 const words = retailer.name.split(/\s+/).filter((word) => /^[A-Za-z0-9]/.test(word) && !GENERIC.test(word));
 const initials = /^[A-Z0-9]{2,4}$/.test(words[0] ?? "")
@@ -32,16 +37,40 @@ const initials = /^[A-Z0-9]{2,4}$/.test(words[0] ?? "")
 ---
 
 {
-  retailer.logo ? (
+  size === "badge" ? (
+    <span
+      class:list={[
+        "flex size-28 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white ring-1 ring-brand-leaf/10",
+        // Inside the circle: a wide mark gets most of the width, anything squarer
+        // stays within the inscribed square so its corners aren't clipped.
+        retailer.logo && !retailer.logoFill && (retailer.logo.width / retailer.logo.height >= 2 ? "p-2" : "p-4"),
+      ]}
+    >
+      {retailer.logo ? (
+        <Image
+          src={retailer.logo}
+          alt={retailer.name}
+          width={BADGE}
+          densities={[1, 2]}
+          loading="lazy"
+          class:list={["size-full", retailer.logoFill ? "object-cover" : "object-contain"]}
+        />
+      ) : (
+        <span role="img" aria-label={retailer.name} class="font-inter text-[1.5rem] font-bold tracking-[0.5px] text-brand-moss">
+          {initials}
+        </span>
+      )}
+    </span>
+  ) : retailer.logo ? (
     <Image
       src={retailer.logo}
       alt={retailer.name}
-      height={HEIGHT[size]}
+      height={HEIGHT[size as keyof typeof HEIGHT]}
       densities={[1, 2]}
       loading="lazy"
       class:list={[
         "w-auto max-w-[180px] object-contain",
-        { "h-5": size === "sm", "h-10": size === "md", "h-14": size === "lg" },
+        { "h-5": size === "sm", "h-7": size === "row", "h-10": size === "md", "h-14": size === "lg" },
         tone === "dark" && "brightness-0 invert",
       ]}
     />
@@ -51,7 +80,7 @@ const initials = /^[A-Z0-9]{2,4}$/.test(words[0] ?? "")
       aria-label={retailer.name}
       class:list={[
         "grid shrink-0 place-items-center rounded-full font-inter font-bold tracking-[0.5px]",
-        { "size-6 text-[9px]": size === "sm", "size-10 text-[13px]": size === "md", "size-14 text-[17px]": size === "lg" },
+        { "size-6 text-[9px]": size === "sm", "size-7 text-[10px]": size === "row", "size-10 text-[13px]": size === "md", "size-14 text-[17px]": size === "lg" },
         tone === "dark" ? "bg-white/15 text-white" : "bg-brand-cream text-brand-moss ring-1 ring-brand-moss/20",
       ]}
     >

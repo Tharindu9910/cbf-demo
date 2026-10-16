@@ -85,6 +85,7 @@ async function productNode({ id, data }: CollectionEntry<"flavours">) {
     manufacturer: { "@id": orgId },
     category: "Food, Beverages & Tobacco > Beverages",
     countryOfOrigin: { "@type": "Country", name: "Sri Lanka" },
+    slogan: data.tagline,
     size: data.facts.volume,
     additionalProperty: [
       { "@type": "PropertyValue", name: "Net content", value: data.facts.volume },
@@ -92,6 +93,7 @@ async function productNode({ id, data }: CollectionEntry<"flavours">) {
       { "@type": "PropertyValue", name: "Key ingredient", value: data.facts.extract },
       { "@type": "PropertyValue", name: "Artificial colours", value: "None" },
       { "@type": "PropertyValue", name: "Preservatives", value: "None" },
+      { "@type": "PropertyValue", name: "Sugar", value: "Low sugar" },
     ],
   };
 }
@@ -107,10 +109,19 @@ const graph = compact({
       "@type": "Organization",
       "@id": orgId,
       name: SITE.name,
+      legalName: SITE.legalName,
+      alternateName: SITE.alternateName,
+      description: SITE.about,
+      slogan: SITE.tagline,
       url: abs("/"),
+      email: SITE.contact.email,
+      telephone: SITE.contact.telephone,
+      founder: { "@type": "Person", ...SITE.founder },
+      knowsAbout: ["Gotukola", "Centella asiatica", "Functional beverages", "Herbal infusions", "Fruit juices"],
       logo: { "@type": "ImageObject", url: abs("/icon-512.png"), width: 512, height: 512 },
       sameAs: [...SITE.sameAs],
-      brand: { "@id": brandId },
+      // A list, so the company's next brands join Thynkers Lyquid here.
+      brand: [{ "@id": brandId }],
       address: { "@type": "PostalAddress", ...SITE.address },
       contactPoint: hasContact
         ? {
@@ -127,6 +138,8 @@ const graph = compact({
       "@id": websiteId,
       url: abs("/"),
       name: SITE.name,
+      alternateName: SITE.alternateName,
+      description: SITE.description,
       inLanguage: SITE.lang,
       publisher: { "@id": orgId },
     },
@@ -145,7 +158,8 @@ const graph = compact({
       "@type": "Brand",
       "@id": brandId,
       name: SITE.brand,
-      slogan: "Fuel the Thought",
+      description: SITE.brandDescription,
+      slogan: SITE.brandSlogan,
     },
     products && !current
       ? {

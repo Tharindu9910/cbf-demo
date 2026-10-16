@@ -1,0 +1,53 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+import { ICONS, type IconName } from "./icons";
+import { ABOUT } from "../../config/about";
+
+/**
+ * "Our Purpose": what the company does, why it exists and how it wins, from
+ * the company profile. Three cards, three across from `lg`, stacked below,
+ * in the Values cards' style. A column without points is skipped, and the
+ * section with it if none have any.
+ */
+const { eyebrow, title, columns } = ABOUT.purpose;
+const shown = columns.filter((c) => c.points.length > 0);
+---
+
+{
+  shown.length > 0 && (
+    <section aria-labelledby="purpose-heading" class="bg-gotukola-band py-20 lg:py-24">
+      <div class="mx-auto max-w-page px-5 md:px-10">
+        <SectionHeading id="purpose-heading" eyebrow={eyebrow} title={title} align="center" data-reveal class="max-w-3xl" />
+
+        <ul class="mt-10 grid gap-5 font-inter lg:mt-12 lg:grid-cols-3">
+          {shown.map((column) => {
+            const Icon = ICONS[column.icon as IconName];
+            return (
+              <li
+                data-reveal
+                class="rounded-[1.25rem] bg-white/85 px-6 py-8 shadow-[0_10px_30px_-20px_rgb(30_50_20/0.35)] sm:px-8"
+              >
+                <div class="flex items-center gap-4">
+                  <span
+                    class="grid size-14 shrink-0 place-items-center rounded-full bg-gk-card-muted text-brand-pine"
+                    aria-hidden="true"
+                  >
+                    <Icon class="size-7" stroke-width={1.75} />
+                  </span>
+                  <h3 class="text-[1.1875rem] leading-6 font-semibold text-ink-heading">{column.title}</h3>
+                </div>
+                <ul class="mt-6 space-y-3 text-[0.9375rem] leading-[1.6] text-ink-body">
+                  {column.points.map((point) => (
+                    <li class="relative pl-5 before:absolute before:top-[0.6em] before:left-0 before:size-1.5 before:rounded-full before:bg-brand-moss">
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  )
+}

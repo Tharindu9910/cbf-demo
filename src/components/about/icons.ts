@@ -1,4 +1,7 @@
+import Atom from "@lucide/astro/icons/atom";
+import Citrus from "@lucide/astro/icons/citrus";
 import Clover from "@lucide/astro/icons/clover";
+import Droplets from "@lucide/astro/icons/droplets";
 import Factory from "@lucide/astro/icons/factory";
 import Globe from "@lucide/astro/icons/globe";
 import HandCoins from "@lucide/astro/icons/hand-coins";
@@ -13,7 +16,10 @@ import Sprout from "@lucide/astro/icons/sprout";
 
 /** The lucide icons `config/about.ts` refers to by name. */
 export const ICONS = {
+  atom: Atom,
+  citrus: Citrus,
   clover: Clover,
+  droplets: Droplets,
   factory: Factory,
   globe: Globe,
   "hand-coins": HandCoins,

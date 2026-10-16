@@ -11,8 +11,9 @@ import { inquiryHref } from "../../config/site";
 /**
  * "Where to Buy", the full version and the landing spot of every "Find a
  * Store" link (the other pages show logos only). Two groups from `RETAILERS`
- * (config/products.ts): supermarket cards (logo, name, note, locator link)
- * and location cards (logo, name, type, address, where inside, directions).
+ * (config/products.ts), both as the same centred cards: the logo in a round
+ * badge, the name under it, then a supermarket's note and locator link or a
+ * location's type, address, where inside and directions.
  * A group with no entries is left out, a field with no value hides its line,
  * and the subtext names only what is listed.
  */
@@ -30,9 +31,12 @@ const subtext =
         : intro.none;
 
 const groupTitle = "text-[0.75rem] leading-4 font-bold tracking-[0.1625rem] text-brand-fern uppercase";
-const card = "flex h-full flex-col rounded-[1.5rem] bg-brand-ivory p-6 text-left ring-1 ring-brand-leaf/6";
+/** Same columns for both groups, so every card is the same width. */
+const grid = "mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5";
+const card = "flex h-full flex-col items-center rounded-[1.5rem] bg-brand-ivory px-4 py-7 text-center ring-1 ring-brand-leaf/6";
+const name = "mt-5 text-[1rem] leading-[1.35] font-semibold text-ink-heading";
 const action =
-  "group mt-auto inline-flex items-center gap-1.5 self-start rounded-sm pt-5 text-[0.875rem] font-semibold text-brand-moss transition-colors hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss";
+  "group mt-auto inline-flex items-center gap-1.5 rounded-sm pt-4 text-[0.875rem] font-semibold text-brand-moss transition-colors hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss";
 const external = { target: "_blank", rel: "noopener noreferrer" };
 ---
 
@@ -47,15 +51,13 @@ const external = { target: "_blank", rel: "noopener noreferrer" };
       supermarkets.length > 0 && (
         <div data-reveal class="mt-14">
           <h3 class={groupTitle}>{supermarketsTitle}</h3>
-          <ul class="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <ul class={grid}>
             {supermarkets.map((store) => (
               <li>
                 <article class={card}>
-                  <div class="flex h-14 items-center">
-                    <StoreLogo retailer={store} size="lg" />
-                  </div>
-                  <h4 class="mt-5 text-[1.125rem] leading-6 font-semibold text-ink-heading">{store.name}</h4>
-                  {store.note && <p class="mt-1.5 text-[0.9375rem] leading-[1.55] text-ink-body">{store.note}</p>}
+                  <StoreLogo retailer={store} size="badge" />
+                  <h4 class={name}>{store.name}</h4>
+                  {store.note && <p class="mt-1.5 text-[0.875rem] leading-[1.5] text-ink-body">{store.note}</p>}
                   {store.link && (
                     <a href={store.link} {...external} class={action}>
                       {branchLink}
@@ -75,43 +77,39 @@ const external = { target: "_blank", rel: "noopener noreferrer" };
       others.length > 0 && (
         <div data-reveal class="mt-14">
           <h3 class={groupTitle}>{othersTitle}</h3>
-          <ul class="mt-5 grid gap-4 lg:grid-cols-2">
+          <ul class={grid}>
             {others.map((place) => (
               <li>
-                <article class:list={[card, "sm:flex-row sm:gap-6"]}>
-                  <div class="shrink-0">
-                    <StoreLogo retailer={place} size="lg" />
-                  </div>
-                  <div class="flex flex-1 flex-col max-sm:mt-5">
-                    <h4 class="text-[1.125rem] leading-6 font-semibold text-ink-heading">{place.name}</h4>
-                    {place.type && <p class="mt-1 text-[0.875rem] leading-5 text-ink-body/75">{place.type}</p>}
-                    {(place.address || place.whereInside) && (
-                      <dl class="mt-4 grid gap-2 text-[0.9375rem] leading-[1.5] text-ink-body">
-                        {place.address && (
-                          <div class="flex gap-2">
-                            <dt>
-                              <MapPin class="mt-0.5 size-4 text-brand-moss" stroke-width={1.8} aria-hidden="true" />
-                              <span class="sr-only">Address</span>
-                            </dt>
-                            <dd>{place.address}</dd>
-                          </div>
-                        )}
-                        {place.whereInside && (
-                          <div>
-                            <dt class="inline font-semibold text-ink-heading">Find it: </dt>
-                            <dd class="inline">{place.whereInside}</dd>
-                          </div>
-                        )}
-                      </dl>
-                    )}
-                    {place.link && (
-                      <a href={place.link} {...external} class={action}>
-                        {directions}
-                        <ArrowUpRight class="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none" stroke-width={2} aria-hidden="true" />
-                        <span class="sr-only">to {place.name} (opens in a new tab)</span>
-                      </a>
-                    )}
-                  </div>
+                <article class={card}>
+                  <StoreLogo retailer={place} size="badge" />
+                  <h4 class={name}>{place.name}</h4>
+                  {place.type && <p class="mt-1 text-[0.875rem] leading-5 text-ink-body/75">{place.type}</p>}
+                  {(place.address || place.whereInside) && (
+                    <dl class="mt-3 grid gap-1.5 text-[0.875rem] leading-[1.5] text-ink-body">
+                      {place.address && (
+                        <div class="flex justify-center gap-1.5">
+                          <dt>
+                            <MapPin class="mt-0.5 size-4 text-brand-moss" stroke-width={1.8} aria-hidden="true" />
+                            <span class="sr-only">Address</span>
+                          </dt>
+                          <dd>{place.address}</dd>
+                        </div>
+                      )}
+                      {place.whereInside && (
+                        <div>
+                          <dt class="inline font-semibold text-ink-heading">Find it: </dt>
+                          <dd class="inline">{place.whereInside}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  )}
+                  {place.link && (
+                    <a href={place.link} {...external} class={action}>
+                      {directions}
+                      <ArrowUpRight class="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none" stroke-width={2} aria-hidden="true" />
+                      <span class="sr-only">to {place.name} (opens in a new tab)</span>
+                    </a>
+                  )}
                 </article>
               </li>
             ))}
@@ -126,9 +124,8 @@ const external = { target: "_blank", rel: "noopener noreferrer" };
         href={inquiryHref({ intent: "general", topic: "stockist" })}
         data-intent="general"
         class="rounded-sm font-semibold text-brand-moss underline decoration-brand-moss/40 underline-offset-4 transition-colors hover:decoration-brand-moss focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
-      >
-        {promptLink}
-      </a>.
+      >{promptLink}</a
+      >.
     </p>
   </div>
 </section>

@@ -21,9 +21,9 @@ export const EVIDENCE_LABELS: Record<Evidence, string> = {
 
 export const GOTUKOLA = {
   seo: {
-    title: "Gotukola (Centella asiatica): Sri Lanka's Green Leaf, Explained | Ceylon Future Beverages",
+    title: "What Is Gotukola (Centella asiatica)? | CFB Sri Lanka",
     description:
-      "What gotukola is, how Sri Lankans eat it, what's inside the leaf and what research up to 2026 really says about its benefits and safety.",
+      "What Gotukola (gotu kola) is, how Sri Lankans eat it, what's inside the leaf and what research up to 2026 really says about its benefits and safety.",
     image: "/og/about.jpg",
     imageAlt: "Ceylon Future Beverages: Nature. Reimagined.",
   },

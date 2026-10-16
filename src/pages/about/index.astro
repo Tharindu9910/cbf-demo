@@ -2,13 +2,16 @@
 import Base from "../../layouts/Base.astro";
 import AboutHero from "../../components/about/AboutHero.astro";
 import AboutStory from "../../components/about/AboutStory.astro";
+import BrandArchitecture from "../../components/about/BrandArchitecture.astro";
 import BrandsCta from "../../components/about/BrandsCta.astro";
 import HowWeWork from "../../components/about/HowWeWork.astro";
+import Leadership from "../../components/about/Leadership.astro";
 import OurPeople from "../../components/about/OurPeople.astro";
 import Quality from "../../components/about/Quality.astro";
 import Values from "../../components/about/Values.astro";
 import VideoFeature from "../../components/about/VideoFeature.astro";
 import VisionMission from "../../components/about/VisionMission.astro";
+import WhyWeExist from "../../components/about/WhyWeExist.astro";
 import { ABOUT } from "../../config/about";
 
 /**
@@ -31,11 +34,14 @@ const { seo } = ABOUT;
   <AboutHero />
   <AboutStory />
   <VisionMission />
+  <WhyWeExist />
   <VideoFeature />
   <Values />
   <HowWeWork />
   <Quality />
   <OurPeople />
+  <Leadership />
+  <BrandArchitecture />
   <BrandsCta />
 </Base>
 

@@ -90,7 +90,7 @@ export const CONTACT = {
   seo: {
     title: "Contact Us | Ceylon Future Beverages",
     description:
-      "Find Thynkers Lyquid near you, place a bulk order or partner with Ceylon Future Beverages as a distributor or export partner. Get in touch with our team.",
+      "Find our drinks near you, order in bulk, or partner with Ceylon Future Beverages as a distributor, retailer or export partner. Based in Alawwa, Sri Lanka.",
   },
 
   hero: {
@@ -158,9 +158,9 @@ export const CONTACT = {
     title: "Find Thynkers Lyquid Near You",
     /** The subtext follows what `RETAILERS` (config/products.ts) lists, so it never claims stockists it can't name. */
     intro: {
-      both: "Available at leading supermarkets and selected locations across Sri Lanka.",
+      both: "Available at leading supermarkets across Sri Lanka, and online.",
       supermarkets: "Available at leading supermarkets across Sri Lanka.",
-      others: "Available at selected locations across Sri Lanka.",
+      others: "Available online across Sri Lanka.",
       none: "Ask us where to find Thynkers Lyquid in your area.",
     },
     supermarkets: "Supermarkets",
@@ -189,59 +189,61 @@ export const CONTACT = {
   },
 
   /**
-   * The page's questions, answered only from what the site already states
-   * (labels, product pages, the form). A question without an answer is left
-   * out, and the section with it if none have one. TODO: caffeine, delivery
-   * areas and times, and the reply time wait on the business.
+   * The site's FAQ (the header's "FAQs" link lands here). Every answer is
+   * checked against the company profile (docs/company-profile.md); the two
+   * facts it doesn't cover come from the can's label (`ADVISORY` in
+   * config/products.ts) and the site's own ordering (Mixed Pack, the form).
+   * A question without an answer is left out, and the section with it if
+   * none have one. TODO: caffeine, delivery areas and times wait on the business.
    */
   faq: {
     eyebrow: "FAQs",
     title: "Frequently asked questions",
-    intro: "Quick answers about finding, ordering and enjoying Thynkers Lyquid.",
+    intro: "Quick answers about Ceylon Future Beverages, Thynkers Lyquid, and how to buy or partner with us.",
     items: [
       {
+        q: "Who is Ceylon Future Beverages?",
+        a: "Ceylon Future Beverages (Pvt) Limited is an innovation-driven beverage company based in Alawwa, Sri Lanka. We turn Sri Lanka’s indigenous botanicals and fruits into high-value beverages for global markets, combining Ceylon’s botanical heritage with modern food science. Thynkers Lyquid is our first brand.",
+      },
+      {
+        q: "What brands do you make?",
+        a: "Our portfolio is built on four lines: CFB Botanicals™ (herbal and indigenous-ingredient beverages, such as gotu kola, tea and cinnamon), CFB Juicery™ (clean-label fruit juices and blends), CFB Functional™ (science-backed functional beverages) and CFB CocoNut™ (next-generation coconut hydration, including king coconut). Thynkers Lyquid, a CFB Botanicals™ drink, is available now.",
+      },
+      {
+        q: "What is gotu kola, and why do you use it?",
+        a: "Gotu kola (Centella asiatica) is a traditional Sri Lankan leafy green, long linked with memory and concentration. It contains naturally occurring compounds, such as asiaticoside, madecassoside and asiatic acid, that researchers are studying for brain health and antioxidant activity. We use it because it’s uniquely Sri Lankan, and we turn it into a modern, convenient drink for consumers here and around the world.",
+      },
+      {
+        q: "What Thynkers Lyquid flavours are available?",
+        a: "Three: Matcha Original, Mango & Passion and Pineapple. Each comes in a 250 ml can with our signature gotu kola infusion, crafted for clear thinking and mindful energy, and keeps for 12 months.",
+      },
+      {
+        q: "What’s in a can of Thynkers Lyquid?",
+        a: "Every can is made with natural gotu kola extract, with no preservatives and no artificial colours. A 250 ml can has 75 kcal, 17.75 g of sugars and no fat or salt. The full ingredients and nutrition table are on each product’s page.",
+      },
+      {
+        q: "Are your products independently tested?",
+        a: "Yes. Our products are tested by Bureau Veritas, an independent laboratory accredited to ISO/IEC 17025, to verify safety, quality, nutritional composition and shelf stability.",
+      },
+      {
+        q: "Where are your drinks made?",
+        a: "In Sri Lanka, through a contract manufacturing partnership with a professionally managed beverage production facility. We can currently produce up to 10,000 cans a day, and that capacity scales with demand at home and abroad.",
+      },
+      {
         q: "Where can I buy Thynkers Lyquid?",
-        a: "Thynkers Lyquid is available at leading supermarkets and selected locations across Sri Lanka. See “Find Thynkers Lyquid Near You” above for where to find it. If it isn’t stocked near you, tell us your town and the shops you’d like to buy it from, and we’ll pass it on to our team.",
+        a: "In Sri Lanka at LAUGFS, SPAR, Sampath, Atukorala and Kasagala Green Super supermarkets, and online through Celeste Online. If it isn’t stocked near you, tell us your town and the shops you’d like to buy it from.",
       },
       {
-        q: "Can I order online?",
-        a: "Not yet. The site has no checkout, so orders are placed through an enquiry. Choose a Mixed Pack or a bulk order, send us the form above, and our team will get back to you to arrange it.",
-      },
-      {
-        q: "What is a Mixed Pack?",
-        a: "A Mixed Pack is six 250 ml cans, mixed any way you like from Matcha Original, Mango & Passion and Pineapple: two of each, all one flavour, or whatever suits you. Build your mix on any flavour’s page and it’s sent with your enquiry.",
-      },
-      {
-        q: "How do I place a bulk order?",
-        a: "Choose “Bulk Orders” in the form above, tell us how many cans of each flavour you need, who it’s for (an office, café, gym, shop or event), where to deliver and when you need it. For six cans or fewer, a Mixed Pack is the simpler way to order.",
+        q: "Can I order directly from you?",
+        a: "Yes, through an enquiry. For a small order, build a Mixed Pack of any six cans on any flavour’s page. For an office, café, gym, shop or event, choose “Bulk Orders” in the form above and tell us how many cans of each flavour you need, where to deliver and when. Our team will get back to you to arrange it.",
       },
       {
         q: "Can I become a distributor or export partner?",
-        a: "Yes. We’re expanding across Sri Lanka and into international markets, and we’re looking for distributors, retailers and export partners. Choose “Distribution / Export” in the form and tell us where you sell today, the monthly volume you expect and the markets you cover.",
+        a: "Yes. We’re looking for distributors, retailers and export partners in Sri Lanka and abroad. Cans ship in cartons of 12: 3,960 cans to a pallet, or 39,600 cans in a 20 ft container. Choose “Distribution / Export” in the form and tell us where you sell today, the volume you expect and the markets you cover.",
       },
       {
-        q: "What flavours are available?",
-        a: "There are three: Matcha Original, Mango & Passion and Pineapple. Every can is 250 ml and carries our signature gotu kola infusion, made in Sri Lanka for clear thinking and mindful energy.",
-      },
-      {
-        q: "What is it made from?",
-        a: "Each can is made with Sri Lankan gotu kola extract, with no added preservatives, no artificial colours and no artificial flavours. The full ingredients and nutrition information are on each product’s page.",
-      },
-      {
-        q: "Is it suitable for children?",
-        a: "Thynkers Lyquid is not recommended for children under 12 years, or for pregnant and breastfeeding women.",
-      },
-      {
-        q: "How should I store it?",
-        a: "Keep the cans in a cool, dry place away from direct sunlight; they keep for 12 months. It’s best served chilled. Once opened, refrigerate it and drink within 2 days. A little sediment is normal for a drink made with natural ingredients.",
-      },
-      {
-        q: "I’m a journalist. Who do I contact?",
-        a: "Choose “Media” as the inquiry type in the form above and tell us your outlet, what the story is about and your deadline, or email us directly.",
-      },
-      {
-        q: "I have feedback about Thynkers Lyquid. Where do I send it?",
-        a: "We’d love to hear it. Choose “Feedback” in the form above, or use “General Questions” for anything else, and our team will read it.",
+        q: "Is Thynkers Lyquid suitable for children?",
+        a: "It is not recommended for children under 12 years, or for pregnant and breastfeeding women.",
       },
     ] as { q: string; a: string }[],
   },
@@ -249,6 +251,5 @@ export const CONTACT = {
   more: {
     faq: "Have a quick question? You may find the answer in our",
     faqLink: "FAQs",
-    follow: "Follow us",
   },
 };

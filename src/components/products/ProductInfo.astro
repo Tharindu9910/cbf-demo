@@ -1,6 +1,7 @@
 ---
 import { getEntry } from "astro:content";
 import Candy from "@lucide/astro/icons/candy";
+import ChevronDown from "@lucide/astro/icons/chevron-down";
 import FlaskConical from "@lucide/astro/icons/flask-conical";
 import MapPin from "@lucide/astro/icons/map-pin";
 import Minus from "@lucide/astro/icons/minus";
@@ -14,13 +15,13 @@ import StoreLogo from "../stores/StoreLogo.astro";
 import { BENEFITS, RETAILERS } from "../../config/products";
 import { inquiryHref } from "../../config/site";
 import { getRange, productHref, type Product } from "./range";
-import { getReviews, STAR_PATH } from "./reviews";
 import { tintOf } from "./tint";
 
 /**
- * The info panel beside the gallery: brand, name (the page's <h1>), tagline,
- * rating, summary, then the choices (flavour, pack, quantity), the two ways
- * to get it, the key facts, the range's promises and where it's stocked.
+ * The info panel beside the gallery: brand (with Share), name (the page's
+ * <h1>), tagline and summary, then the choices (flavour, pack), quantity
+ * beside Order Now, Find in Store with the stockists' logos under it, the key
+ * facts and the range's promises. The rating returns with reviews.
  *
  * There are no prices or basket: "Find in Store" and "Order Now" go to
  * the contact page. The flavour pills are links to the other flavours' pages
@@ -30,8 +31,10 @@ import { tintOf } from "./tint";
  * carry the first pack and no quantity.
  *
  * The Mixed Pack is a pack option on every flavour page too. Choosing it
- * opens "Build your pack": a stepper per flavour, up to the pack's can count.
+ * shows "Build your pack", folded to a one-line summary of the mix (open on
+ * the pack's own page): a stepper per flavour, up to the pack's can count.
  * The mix rides on the order once it adds up; until then Order Now waits.
+ * Packs that can't be ordered (single cans) aren't offered as choices.
  */
 interface Props {
   product: Product;
@@ -61,10 +64,16 @@ const startsMixed = isPack || (ownOrderable.length === 0 && !!mixOption);
 const orderPack = startsMixed && !isPack ? mixOption! : (ownOrderable[0] ?? firstPack);
 const startMix = mixFlavours.map((f, i) => ({ flavour: f.id, count: mixStart[i] }));
 const notOrderable = data.packs.some((pack) => pack.orderable === false);
+/** A short name per flavour for the mix's one-line summary: "Mango & Passion" is "Mango". */
+const shortName = (name: string) => name.split(/\s+/)[0];
+const mixSummary = mixFlavours
+  .map((f, i) => [shortName(f.data.name), mixStart[i]] as const)
+  .filter(([, n]) => n > 0)
+  .map(([name, n]) => `${n} ${name}`)
+  .join(" · ");
 const otherPacks = range.filter(
   (p) => p.data.kind === "pack" && p.id !== id && p.id !== mixPack?.id,
 );
-const { reviews, average } = await getReviews(id);
 
 const ICONS = {
   sprout: Sprout,
@@ -75,21 +84,41 @@ const ICONS = {
 } as const;
 const promises = BENEFITS.filter((b) => b.confirmed).slice(0, 4);
 
-const label = "text-[0.8125rem] leading-5 font-semibold text-ink-heading";
+const label = "text-[0.875rem] leading-5 font-semibold text-ink-heading";
 const pill =
-  "inline-flex h-11 items-center rounded-full px-5 text-[0.875rem] font-medium ring-1 lg:fine:h-10 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss";
+  "inline-flex h-11 items-center rounded-full px-5 text-[0.8125rem] font-semibold ring-1 lg:fine:h-10 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss";
 const pillIdle =
   "bg-white text-ink-heading ring-brand-leaf/14 hover:ring-brand-leaf/45";
 const pillOn = "bg-brand-moss text-white ring-brand-moss";
 const stepper =
   "grid size-11 place-items-center rounded-full text-ink-heading lg:fine:size-9 ring-1 ring-brand-leaf/14 transition-colors hover:bg-brand-moss hover:text-white hover:ring-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss";
+const qtyStep =
+  "grid size-11 shrink-0 place-items-center rounded-full text-ink-heading transition-colors hover:bg-brand-moss hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss";
 ---
 
-<div class="font-inter text-ink-heading lg:pt-2">
-  <p class="text-[0.75rem] leading-4 font-bold tracking-[0.1625rem] text-brand-fern uppercase">
-    {data.brand}
-  </p>
-  <h1 class="mt-3 font-display text-[clamp(2.5rem,5.6vw,3.75rem)] leading-[1] font-bold tracking-[-0.8px] text-balance">
+<div class="max-w-xl font-inter text-ink-heading lg:pt-2">
+  <div class="flex items-center justify-between gap-3">
+    <p class="text-[0.75rem] leading-4 font-bold tracking-[0.1625rem] text-brand-fern uppercase">
+      {data.brand}
+    </p>
+    <div class="-my-2 -mr-2 flex items-center gap-1">
+      <span
+        data-share-status
+        role="status"
+        class="text-[0.8125rem] leading-5 text-brand-moss"
+      ></span>
+      <button
+        type="button"
+        data-share
+        data-share-title={`${data.brand} ${data.name}`}
+        aria-label="Share"
+        class="grid size-11 place-items-center rounded-full text-ink-body transition-colors hover:bg-brand-leaf/8 hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss lg:fine:size-9"
+      >
+        <Share2 class="size-[1.125rem]" stroke-width={1.8} aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+  <h1 class="mt-2 font-display text-[clamp(2.5rem,5.6vw,3.75rem)] leading-[1] font-bold tracking-[-0.5px] text-balance lg:mt-3">
     {data.name}
   </h1>
   <p
@@ -101,45 +130,16 @@ const stepper =
     {data.tagline}
   </p>
 
-  {reviews.length > 0 && (
-    <a
-      href="#reviews-heading"
-      class="mt-3 inline-flex items-center gap-2 rounded-sm text-[0.8125rem] text-ink-body/75 transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss"
-    >
-      <span
-        class="flex gap-0.5"
-        role="img"
-        aria-label={`${average.toFixed(1)} out of 5 stars`}
-      >
-        {Array.from({ length: 5 }, (_, i) => (
-          <svg
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            class:list={[
-              "size-4",
-              i < Math.round(average)
-                ? "fill-brand-gold"
-                : "fill-brand-leaf/12",
-            ]}
-          >
-            <path d={STAR_PATH} />
-          </svg>
-        ))}
-      </span>
-    {/* {reviews.length} {reviews.length === 1 ? "review" : "reviews"}*/}
-    </a>
-  )}
-
-  <p class="mt-5 max-w-md text-[1rem] leading-[1.65] text-ink-body">
+  <p class="mt-4 text-[1rem] leading-[1.5625rem] text-ink-body">
     {data.summary}
   </p>
 
   {!isPack && (
     <div class="mt-7">
       <p class={label}>Flavour</p>
-      <ul class="mt-3 flex flex-wrap gap-2">
+      <ul class="-mx-5 mt-3 flex gap-2 overflow-x-auto px-5 scrollbar-none sm:mx-0 sm:flex-wrap sm:px-0">
         {flavours.map((f) => (
-          <li>
+          <li class="shrink-0">
             <a
               href={productHref(f.id)}
               aria-current={f.id === id ? "page" : undefined}
@@ -154,22 +154,21 @@ const stepper =
   )}
 
   <fieldset data-pack-select class="mt-6">
-    <legend class={label}>Pack options</legend>
+    <legend class={label}>Pack</legend>
     <div class="mt-3 flex flex-wrap gap-2">
-      {data.packs.map((pack, i) => (
+      {ownOrderable.map((pack) => (
         <label
           class:list={[
             pill,
             pillIdle,
-            "relative cursor-pointer has-checked:bg-brand-moss has-checked:text-white has-checked:ring-brand-moss has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-brand-moss has-disabled:cursor-not-allowed has-disabled:opacity-45 has-disabled:hover:ring-brand-leaf/14",
+            "relative cursor-pointer has-checked:bg-brand-moss has-checked:text-white has-checked:ring-brand-moss has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-brand-moss",
           ]}
         >
           <input
             type="radio"
             name="pack"
             value={pack.id}
-            checked={!startsMixed ? pack === orderPack : isPack && i === 0}
-            disabled={pack.orderable === false}
+            checked={pack === orderPack}
             data-detail={pack.detail ?? ""}
             class="sr-only"
           />
@@ -209,11 +208,6 @@ const stepper =
         </a>
       ))}
     </div>
-    {notOrderable && (
-      <p class="mt-2.5 text-[0.75rem] leading-5 text-ink-body/65">
-        Single cans are sold in stores. Orders come in packs of 6.
-      </p>
-    )}
   </fieldset>
 
   {mix && mixFlavours.length > 0 && (
@@ -222,141 +216,176 @@ const stepper =
       data-cans={mix.cans}
       data-product={id}
       hidden={!startsMixed}
-      class="mt-4 max-w-md rounded-[1.25rem] bg-white p-5 ring-1 ring-brand-leaf/10"
+      class="mt-4 rounded-[1.25rem] bg-white ring-1 ring-brand-leaf/10"
     >
-      <div class="flex items-baseline justify-between gap-3">
-        <p class={label}>Build your pack</p>
-        <p
-          data-mix-status
-          role="status"
-          tabindex="-1"
-          class="text-[0.8125rem] font-medium text-ink-body/75 tabular-nums"
-        >
-          {mix.cans} of {mix.cans} cans
-        </p>
-      </div>
-      <ul class="mt-3 flex flex-col divide-y divide-brand-leaf/8">
-        {mixFlavours.map((f, i) => (
-          <li data-mix-row data-flavour={f.id} class="flex items-center gap-3 py-2.5">
+      <details data-mix-details open={isPack} class="group">
+        <summary class="flex cursor-pointer list-none items-center gap-3 rounded-[1.25rem] px-5 py-4 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-moss [&::-webkit-details-marker]:hidden">
+          <span class="min-w-0 flex-1">
+            <span class:list={[label, "block"]}>Build your pack</span>
             <span
-              aria-hidden="true"
-              class:list={["size-2 shrink-0 rounded-full", tintOf(f.id).dot]}
-            />
-            <span class="text-[0.875rem] text-ink-heading">{f.data.name}</span>
-            <div class="ml-auto flex items-center gap-2">
-              <button
-                type="button"
-                data-mix-step="-1"
-                aria-label={`One fewer ${f.data.name}`}
-                class:list={[stepper, "size-11 lg:fine:size-8 disabled:pointer-events-none disabled:opacity-35"]}
+              data-mix-summary
+              class="mt-0.5 block text-[0.8125rem] leading-5 text-ink-body tabular-nums group-open:hidden"
+            >
+              {mixSummary}
+            </span>
+          </span>
+          <span class="text-[0.8125rem] font-semibold text-brand-moss group-open:hidden">
+            Change
+          </span>
+          <ChevronDown
+            class="size-4 shrink-0 text-brand-moss transition-transform group-open:rotate-180 motion-reduce:transition-none"
+            stroke-width={2}
+            aria-hidden="true"
+          />
+        </summary>
+        <div class="px-5 pb-5">
+          <p
+            data-mix-status
+            role="status"
+            tabindex="-1"
+            class="text-[0.8125rem] leading-5 font-medium text-ink-body tabular-nums"
+          >
+            {mix.cans} of {mix.cans} cans
+          </p>
+          <ul class="mt-1 flex flex-col divide-y divide-brand-leaf/8">
+            {mixFlavours.map((f, i) => (
+              <li
+                data-mix-row
+                data-flavour={f.id}
+                data-name={shortName(f.data.name)}
+                class="flex items-center gap-3 py-2"
               >
-                <Minus class="size-3.5" stroke-width={2} aria-hidden="true" />
-              </button>
-              <output
-                data-mix-count
-                aria-label={`${f.data.name} cans`}
-                class="w-6 text-center text-[0.9375rem] font-semibold tabular-nums"
-              >
-                {mixStart[i]}
-              </output>
-              <button
-                type="button"
-                data-mix-step="1"
-                aria-label={`One more ${f.data.name}`}
-                class:list={[stepper, "size-11 lg:fine:size-8 disabled:pointer-events-none disabled:opacity-35"]}
-              >
-                <Plus class="size-3.5" stroke-width={2} aria-hidden="true" />
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-      <p class="mt-2 text-[0.75rem] leading-5 text-ink-body/65">
-        Any {mix.cans} cans, in any mix. Your mix is sent with your enquiry.
-      </p>
+                <span
+                  aria-hidden="true"
+                  class:list={["size-2 shrink-0 rounded-full", tintOf(f.id).dot]}
+                />
+                <span class="text-[0.875rem] font-medium text-ink-heading">{f.data.name}</span>
+                <div class="ml-auto flex items-center gap-2">
+                  <button
+                    type="button"
+                    data-mix-step="-1"
+                    aria-label={`One fewer ${f.data.name}`}
+                    class:list={[stepper, "size-11 lg:fine:size-8 disabled:pointer-events-none disabled:opacity-35"]}
+                  >
+                    <Minus class="size-3.5" stroke-width={2} aria-hidden="true" />
+                  </button>
+                  <output
+                    data-mix-count
+                    aria-label={`${f.data.name} cans`}
+                    class="w-6 text-center text-[0.9375rem] font-semibold tabular-nums"
+                  >
+                    {mixStart[i]}
+                  </output>
+                  <button
+                    type="button"
+                    data-mix-step="1"
+                    aria-label={`One more ${f.data.name}`}
+                    class:list={[stepper, "size-11 lg:fine:size-8 disabled:pointer-events-none disabled:opacity-35"]}
+                  >
+                    <Plus class="size-3.5" stroke-width={2} aria-hidden="true" />
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-2 text-[0.8125rem] leading-5 text-ink-body">
+            Any {mix.cans} cans, in any mix. Your mix is sent with your enquiry.
+          </p>
+        </div>
+      </details>
     </div>
   )}
 
-  <div class="mt-6 flex items-center gap-4">
-    <label for="product-quantity" class={label}>
-      Quantity
-    </label>
-    <div data-quantity class="flex items-center gap-2">
-      <button
-        type="button"
-        data-quantity-step="-1"
-        aria-label="One fewer"
-        class={stepper}
+  <div data-buy-anchor class="mt-7">
+    <div class="flex items-center gap-3">
+      <label for="product-quantity" class="sr-only">Quantity</label>
+      <div
+        data-quantity
+        class="flex h-[3.25rem] shrink-0 items-center rounded-full bg-white px-1 ring-1 ring-brand-leaf/14"
       >
-        <Minus class="size-4" stroke-width={2} aria-hidden="true" />
-      </button>
-      <input
-        id="product-quantity"
-        type="number"
-        inputmode="numeric"
-        min="1"
-        max="99999"
-        step="1"
-        value="1"
-        class="h-11 w-14 rounded-full bg-white text-center text-[1rem] font-semibold tabular-nums lg:fine:h-9 lg:text-[0.9375rem] ring-1 ring-brand-leaf/14 [appearance:textfield] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-      />
-      <button
-        type="button"
-        data-quantity-step="1"
-        aria-label="One more"
-        class={stepper}
+        <button
+          type="button"
+          data-quantity-step="-1"
+          aria-label="One fewer"
+          class={qtyStep}
+        >
+          <Minus class="size-4" stroke-width={2} aria-hidden="true" />
+        </button>
+        <input
+          id="product-quantity"
+          type="number"
+          inputmode="numeric"
+          min="1"
+          max="99999"
+          step="1"
+          value="1"
+          class="h-11 w-10 bg-transparent text-center text-[1rem] font-semibold tabular-nums [appearance:textfield] focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-brand-moss [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        />
+        <button
+          type="button"
+          data-quantity-step="1"
+          aria-label="One more"
+          class={qtyStep}
+        >
+          <Plus class="size-4" stroke-width={2} aria-hidden="true" />
+        </button>
+      </div>
+      <PillLink
+        href={inquiryHref({
+          intent: startsMixed ? "mixed" : "bulk",
+          product: startsMixed ? mixPack?.id : id,
+          pack: orderPack.id,
+          mix: startsMixed ? startMix : undefined,
+        })}
+        data-inquiry="order"
+        class="h-[3.25rem] min-w-0 flex-1 px-6 text-[0.9375rem] aria-disabled:cursor-not-allowed aria-disabled:opacity-45"
       >
-        <Plus class="size-4" stroke-width={2} aria-hidden="true" />
-      </button>
+        Order Now
+      </PillLink>
     </div>
-  </div>
-
-  <div class="mt-7 grid gap-3 sm:grid-cols-2">
-    <PillLink
+    <a
       href={inquiryHref({ intent: "store", product: id })}
-      class="h-[3.25rem] px-8 text-[0.9375rem]"
+      class="mt-3 flex h-12 w-full items-center justify-center rounded-full bg-white px-8 text-[0.9375rem] font-semibold text-brand-moss ring-1 ring-brand-moss/40 transition-colors hover:bg-brand-moss hover:text-white hover:ring-brand-moss focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
     >
       Find in Store
-    </PillLink>
-    <a
-      href={inquiryHref({
-        intent: startsMixed ? "mixed" : "bulk",
-        product: startsMixed ? mixPack?.id : id,
-        pack: orderPack.id,
-        mix: startsMixed ? startMix : undefined,
-      })}
-      data-inquiry="order"
-      class="inline-flex h-[3.25rem] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 aria-disabled:hover:bg-white aria-disabled:hover:text-brand-moss items-center justify-center rounded-full bg-white px-8 text-[0.9375rem] font-semibold text-brand-moss ring-1 ring-brand-moss/40 transition-colors hover:bg-brand-moss hover:text-white hover:ring-brand-moss focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
-    >
-      Order Now
     </a>
+    {RETAILERS.length > 0 && (
+      <a
+        href={inquiryHref({ intent: "store", product: id })}
+        class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2.5 rounded-md text-[0.8125rem] font-semibold text-ink-body transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss"
+      >
+        <span class="basis-full sm:basis-auto">Available at</span>
+        {RETAILERS.map((r) => (
+          <StoreLogo retailer={r} size="row" />
+        ))}
+      </a>
+    )}
   </div>
 
-  <p class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.875rem] text-ink-body tabular-nums">
+  <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8125rem] leading-5 text-ink-body tabular-nums">
     <span data-pack-detail>{orderPack.detail ?? data.size}</span>
-    <span aria-hidden="true" class="text-ink-body/35">
-      &middot;
-    </span>
+    <span aria-hidden="true" class="text-ink-body/35">&middot;</span>
     <span>Sparkling</span>
-    <span aria-hidden="true" class="text-ink-body/35">
-      &middot;
-    </span>
+    <span aria-hidden="true" class="text-ink-body/35">&middot;</span>
     <span>
       {data.facts.shelfLife.replace(/^(\d+)\s+Months?$/i, "$1-month")} shelf
       life
     </span>
+    {notOrderable && (
+      <span class="basis-full">Single cans are in stores; orders come in packs of 6.</span>
+    )}
   </p>
 
   <ul
-    class="mt-6 grid grid-cols-2 gap-y-5 border-y border-brand-leaf/10 py-5 sm:grid-cols-4 sm:divide-x sm:divide-brand-leaf/10"
+    class="mt-7 grid grid-cols-4 gap-1 border-t border-brand-leaf/10 pt-5"
     aria-label="In every can"
   >
     {promises.map(({ icon, title }) => {
       const Icon = ICONS[icon];
       return (
-        <li class="flex flex-col items-center gap-2 px-2 text-center text-[0.75rem] leading-4 text-ink-body">
+        <li class="flex flex-col items-center gap-1.5 text-center text-[0.75rem] leading-4 text-balance text-ink-body">
           <Icon
-            class="size-6 text-brand-moss"
+            class="size-5 text-brand-moss"
             stroke-width={1.6}
             aria-hidden="true"
           />
@@ -365,36 +394,4 @@ const stepper =
       );
     })}
   </ul>
-
-  <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
-    {RETAILERS.length > 0 && (
-      <a
-        href={inquiryHref({ intent: "store", product: id })}
-        class="-my-2.5 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md py-2.5 text-[0.8125rem] font-semibold text-ink-heading lg:fine:my-0 lg:fine:py-0 transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-moss"
-      >
-        Available at
-        {RETAILERS.map((r) => (
-          <span class="opacity-80">
-            <StoreLogo retailer={r} size="sm" />
-          </span>
-        ))}
-      </a>
-    )}
-    <div class="flex items-center gap-3">
-      <span
-        data-share-status
-        role="status"
-        class="text-[0.8125rem] text-brand-moss"
-      ></span>
-      <button
-        type="button"
-        data-share
-        data-share-title={`${data.brand} ${data.name}`}
-        class="inline-flex h-11 items-center gap-2 rounded-full px-3 text-[0.875rem] lg:fine:h-9 lg:fine:px-1 font-medium text-ink-body transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss"
-      >
-        <Share2 class="size-4" stroke-width={1.8} aria-hidden="true" />
-        Share
-      </button>
-    </div>
-  </div>
 </div>

@@ -15,6 +15,9 @@ function deferred<T>() {
 /** The hero's cans are placed: the hero copy may make its entrance. */
 export const heroReady = deferred<void>();
 
+/** The hero headline has landed: the 3D may load without delaying it. */
+export const heroEntered = deferred<void>();
+
 export type CarouselStage = {
   /** The group the flavour-change spin animates. */
   spinTarget: Group;

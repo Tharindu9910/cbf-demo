@@ -1,15 +1,18 @@
 ---
 import Check from "@lucide/astro/icons/check";
+import ChevronDown from "@lucide/astro/icons/chevron-down";
 import Info from "@lucide/astro/icons/info";
 import { ADVISORY, FREE_FROM, NUTRITION, STORAGE } from "../../config/products";
 import type { Product } from "./range";
 import { tintOf } from "./tint";
 
 /**
- * The detail behind the label, in two columns: what's in the can (description,
- * ingredients, free-from, storage and the label's advisory) beside the
- * nutrition table. On a phone they stack in that order. Ingredients are left
- * out while a flavour has none supplied, never shown empty.
+ * The detail behind the label, on the hero's two-column grid: the heading and
+ * the flavour's sign-off on the left, and in the info panel's column the folding
+ * rows: about the drink (open), ingredients with what it's free from, the
+ * nutrition table, and storage with the label's advisory. Phones stack them. The shelf life is already in the info
+ * panel's facts line, so it isn't repeated. Ingredients are left out while a
+ * flavour has none supplied, never shown empty.
  */
 interface Props {
   product: Product;
@@ -20,127 +23,141 @@ const tint = tintOf(id);
 const nutrition = data.nutrition ?? NUTRITION;
 const isPack = data.kind === "pack";
 
-const heading = "text-[0.9375rem] leading-6 font-semibold text-ink-heading";
 const cell = "py-2.5";
+const freeFrom = FREE_FROM.map((item) => item.toLowerCase());
+const freeFromLine = `Free from ${freeFrom.slice(0, -1).join(", ")} and ${freeFrom.at(-1)}.`;
+
+const row = "group border-b border-brand-leaf/12";
+const summary =
+  "flex cursor-pointer list-none items-center justify-between gap-4 rounded-md py-5 text-[1.0625rem] leading-6 font-semibold text-ink-heading focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss [&::-webkit-details-marker]:hidden";
+const chevron =
+  "size-5 shrink-0 text-brand-moss transition-transform group-open:rotate-180 motion-reduce:transition-none";
+const text = "text-[0.9375rem] leading-[1.6] text-ink-body";
 ---
 
 <section
   aria-labelledby="details-heading"
-  class="bg-brand-ivory pt-6 pb-16 font-inter lg:pb-20"
+  class="bg-brand-ivory pt-4 pb-16 font-inter lg:pt-8 lg:pb-20"
 >
   <div class="mx-auto max-w-page px-5 md:px-10">
-    <h2 id="details-heading" class="sr-only">
-      Product details
-    </h2>
-
-    <div class="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-0 lg:divide-x lg:divide-brand-leaf/10">
-      <div data-reveal class="flex flex-col gap-10 lg:pr-14">
-        <div>
-          <h3 class="sr-only">Description</h3>
-          {data.story.map((paragraph) => (
-            <p class="mb-4 text-[1rem] leading-[1.5625rem] text-pretty text-ink-body last:mb-0">
-              {paragraph}
-            </p>
-          ))}
-          {data.finish && (
-            <p
-              class:list={[
-                "mt-5 font-display text-[1.0625rem] leading-snug italic",
-                tint.onLight,
-              ]}
-            >
-              {data.finish}
-            </p>
-          )}
-        </div>
-
-        {data.ingredients && (
-          <div>
-            <h3 class={heading}>Ingredients</h3>
-            <p class="mt-2 text-[0.875rem] leading-[1.7] text-ink-body">
-              {data.ingredients}
-            </p>
-          </div>
+    <div
+      data-reveal
+      class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-14"
+    >
+      <div class="lg:sticky lg:top-8 lg:pt-5">
+        <h2
+          id="details-heading"
+          class="font-display text-[1.75rem] leading-tight font-bold tracking-[-0.5px] text-ink-heading lg:text-[2.75rem] lg:leading-[1.05]"
+        >
+          Product details
+        </h2>
+        {data.finish && (
+          <p
+            class:list={[
+              "mt-2 font-display text-[1.0625rem] leading-snug italic lg:mt-4 lg:max-w-sm lg:text-[1.3125rem]",
+              tint.onLight,
+            ]}
+          >
+            {data.finish}
+          </p>
         )}
-
-        <div>
-          <h3 class={heading}>Free from</h3>
-          <ul class="mt-3 flex flex-wrap gap-2">
-            {FREE_FROM.map((item) => (
-              <li class="inline-flex items-center gap-1.5 rounded-full border border-brand-leaf/15 px-3 py-1 text-[0.8125rem] text-ink-body">
-                <Check class="size-3.5 text-brand-moss" aria-hidden="true" />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h3 class={heading}>Storage &amp; care</h3>
-          <p class="mt-2 text-[0.875rem] font-semibold text-ink-heading">
-            {data.facts.shelfLife} shelf life
-          </p>
-          <ul class="mt-2 flex list-disc flex-col gap-1.5 pl-5 text-[0.875rem] leading-[1.6] text-ink-body marker:text-brand-leaf/40">
-            {STORAGE.map((line) => (
-              <li>{line}</li>
-            ))}
-          </ul>
-          <p class="mt-5 flex gap-2.5 rounded-xl bg-brand-leaf/6 px-4 py-3 text-[0.8125rem] leading-[1.6] text-ink-body">
-            <Info class="mt-0.5 size-4 shrink-0 text-brand-moss" aria-hidden="true" />
-            {ADVISORY}
-          </p>
-        </div>
       </div>
 
-      <div data-reveal class="lg:pl-14">
-        <h3 class={heading}>Nutrition</h3>
-        <p class="mt-1 text-[0.8125rem] text-ink-body/70">
-          {isPack
-            ? "Per 250 ml can, for each flavour in the pack."
-            : "Serving size 250 ml · 1 serving per can."}
-        </p>
-        <table class="mt-4 w-full border-collapse text-[0.875rem] tabular-nums">
-          <thead>
-            <tr class="border-b border-brand-leaf/15 text-[0.75rem] font-semibold text-ink-heading">
-              <th scope="col" class="py-2 text-left font-semibold">
-                <span class="sr-only">Nutrient</span>
-              </th>
-              <th scope="col" class="w-[30%] py-2 text-right">
-                Per 100 ml
-              </th>
-              <th scope="col" class="w-[28%] py-2 text-right">
-                Per can
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {nutrition.map((row) => (
-              <tr class="border-b border-brand-leaf/8 last:border-b-0">
-                <th
-                  scope="row"
-                  class:list={[
-                    cell,
-                    "text-left font-normal",
-                    row.sub ? "pl-4 text-ink-body/70" : "text-ink-heading",
-                  ]}
-                >
-                  {row.name}
-                </th>
-                <td class:list={[cell, "text-right text-ink-body"]}>
-                  {row.per100}
-                </td>
-                <td
-                  class:list={[
-                    cell,
-                    "text-right font-semibold text-ink-heading",
-                  ]}
-                >
-                  {row.perServing}
-                </td>
-              </tr>
+      <div class="max-w-xl border-t border-brand-leaf/12">
+        <details open class={row}>
+          <summary class={summary}>
+            About this drink
+            <ChevronDown class={chevron} stroke-width={1.8} aria-hidden="true" />
+          </summary>
+          <div class="pb-6">
+            {data.story.map((paragraph) => (
+              <p class:list={[text, "mb-3 text-pretty last:mb-0"]}>{paragraph}</p>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </details>
+
+        <details class={row}>
+          <summary class={summary}>
+            {data.ingredients ? "Ingredients" : "Free from"}
+            <ChevronDown class={chevron} stroke-width={1.8} aria-hidden="true" />
+          </summary>
+          <div class="pb-6">
+            {data.ingredients && <p class={text}>{data.ingredients}</p>}
+            <p class:list={[text, data.ingredients && "mt-3", "flex gap-2"]}>
+              <Check class="mt-1 size-4 shrink-0 text-brand-moss" aria-hidden="true" />
+              {freeFromLine}
+            </p>
+          </div>
+        </details>
+
+        <details class={row}>
+          <summary class={summary}>
+            Nutrition
+            <ChevronDown class={chevron} stroke-width={1.8} aria-hidden="true" />
+          </summary>
+          <div class="pb-6">
+            <p class="text-[0.8125rem] leading-5 text-ink-body">
+              {isPack
+                ? "Per 250 ml can, for each flavour in the pack."
+                : "Serving size 250 ml · 1 serving per can."}
+            </p>
+            <table class="mt-3 w-full border-collapse text-[0.875rem] tabular-nums">
+              <thead>
+                <tr class="border-b border-brand-leaf/15 text-[0.8125rem] font-semibold text-ink-heading">
+                  <th scope="col" class="py-2 text-left font-semibold">
+                    <span class="sr-only">Nutrient</span>
+                  </th>
+                  <th scope="col" class="w-[30%] py-2 text-right">
+                    Per 100 ml
+                  </th>
+                  <th scope="col" class="w-[28%] py-2 text-right">
+                    Per can
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {nutrition.map((n) => (
+                  <tr class="border-b border-brand-leaf/8 last:border-b-0">
+                    <th
+                      scope="row"
+                      class:list={[
+                        cell,
+                        "text-left font-normal",
+                        n.sub ? "pl-4 text-ink-body" : "text-ink-heading",
+                      ]}
+                    >
+                      {n.name}
+                    </th>
+                    <td class:list={[cell, "text-right text-ink-body"]}>
+                      {n.per100}
+                    </td>
+                    <td class:list={[cell, "text-right font-semibold text-ink-heading"]}>
+                      {n.perServing}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class={row}>
+          <summary class={summary}>
+            Storage &amp; care
+            <ChevronDown class={chevron} stroke-width={1.8} aria-hidden="true" />
+          </summary>
+          <div class="pb-6">
+            <ul class:list={[text, "flex list-disc flex-col gap-1.5 pl-5 marker:text-brand-leaf/40"]}>
+              {STORAGE.map((line) => (
+                <li>{line}</li>
+              ))}
+            </ul>
+            <p class="mt-4 flex gap-2.5 rounded-xl bg-brand-leaf/6 px-4 py-3 text-[0.875rem] leading-[1.6] text-ink-body">
+              <Info class="mt-0.5 size-4 shrink-0 text-brand-moss" aria-hidden="true" />
+              {ADVISORY}
+            </p>
+          </div>
+        </details>
       </div>
     </div>
   </div>

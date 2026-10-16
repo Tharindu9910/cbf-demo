@@ -31,19 +31,24 @@ const art = data.can ?? data.gallery[0].src;
 const solo = !data.can;
 const loading = eager ? "eager" : "lazy";
 
+// The art is sized by height (`h-[…] w-auto`), so each `sizes` is the width it
+// renders at, measured: a card's can is ~70px wide at every breakpoint. A
+// pack's lead cut-out (`solo`) is wider than the fruit, so it has its own.
 const SIZES = {
-  thumb: { fruit: [160], fruitSizes: "80px", can: [96], canSizes: "40px" },
+  thumb: { fruit: [160], fruitSizes: "80px", soloSizes: "80px", can: [96], canSizes: "40px" },
   card: {
     fruit: [240, 360, 480],
-    fruitSizes: "(min-width: 1024px) 240px, (min-width: 768px) 24vw, 60vw",
+    fruitSizes: "(min-width: 1024px) 180px, (min-width: 768px) 22vw, 45vw",
+    soloSizes: "(min-width: 1024px) 240px, (min-width: 768px) 24vw, 60vw",
     can: [140, 220, 320],
-    canSizes: "(min-width: 1024px) 120px, (min-width: 768px) 12vw, 30vw",
+    canSizes: "72px",
   },
   hero: {
     fruit: [360, 560, 800],
-    fruitSizes: "(min-width: 1024px) 360px, 60vw",
-    can: [240, 360, 520],
-    canSizes: "(min-width: 1024px) 220px, 40vw",
+    fruitSizes: "(min-width: 1024px) 260px, 50vw",
+    soloSizes: "(min-width: 1024px) 300px, 62vw",
+    can: [120, 240, 360, 520],
+    canSizes: "(min-width: 1024px) 110px, (min-width: 768px) 18vw, 23vw",
   },
 } as const;
 const s = SIZES[size];
@@ -59,6 +64,7 @@ const s = SIZES[size];
 
 {!solo && data.background && (
   <>
+    {/* On a product page the left fruit is the largest paint (its LCP), so it shares the can's priority. */}
     <Image
       src={data.background.left}
       alt=""
@@ -66,6 +72,7 @@ const s = SIZES[size];
       sizes={s.fruitSizes}
       quality={80}
       loading={loading}
+      fetchpriority={eager && size === "hero" ? "high" : undefined}
       class="absolute bottom-0 left-0 h-[88%] w-auto max-w-[55%] object-contain object-left-bottom origin-bottom-left transition-[translate,scale] duration-700 ease-rise select-none group-hover:-translate-x-1 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:scale-100"
     />
     <Image
@@ -90,7 +97,7 @@ const s = SIZES[size];
   src={art}
   alt={alt}
   widths={solo ? [...s.fruit] : [...s.can]}
-  sizes={solo ? s.fruitSizes : s.canSizes}
+  sizes={solo ? s.soloSizes : s.canSizes}
   quality={85}
   loading={loading}
   fetchpriority={eager && size === "hero" ? "high" : undefined}

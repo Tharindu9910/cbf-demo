@@ -10,7 +10,9 @@ import SparkIcon from "./icons/SparkIcon.astro";
  * flavours, the brand statement and the "View All Products" pill — the hero
  * runway's copy.
  *
- * Reproduced from a 740px-wide mockup: everything is sized in `--u` (see
+ * Reproduced from a 740px-wide mockup (capped at 600px wide, so ~0.8x, except
+ * on landscape screens from `md`, where the column is already half the screen,
+ * so tablets in portrait don't get a poster-sized heading): everything is sized in `--u` (see
  * `frame-*` in global.css), with floors on the text so it stays legible on a
  * phone. Playfair for the heading, Outfit for the rest.
  */
@@ -46,7 +48,7 @@ const FLAVOURS = [
 ];
 ---
 
-<div id={id} class="@container w-full max-w-[calc(740*var(--u-max))] scroll-mt-24 portrait:mx-auto">
+<div id={id} class="@container w-full max-w-[calc(600*var(--u-max))] scroll-mt-24 portrait:mx-auto md:landscape:max-w-[calc(740*var(--u-max))]">
   <div class:list={["frame-740 font-outfit text-ink-body", className]}>
     {/*<p
       class="relative ml-[calc(9*var(--u))] inline-flex h-[max(28px,calc(35*var(--u)))] items-center rounded-full border-[1.5px] border-intro-pill px-[calc(26*var(--u))] text-[length:max(10px,calc(14*var(--u)))] font-semibold tracking-[0.3em] text-intro-eyebrow uppercase"

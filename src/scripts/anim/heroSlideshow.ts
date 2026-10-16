@@ -34,6 +34,14 @@ export function runHeroSlideshow() {
   // A still frame for readers who ask for less motion.
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+  // The later slides start `hidden` so they don't download against the first
+  // paint (see Hero.astro). Show them, and so start their lazy loads, halfway
+  // to the first hand-over: after the headline has painted, with time to spare.
+  setTimeout(
+    () => slides.forEach((slide) => slide.classList.remove("hidden")),
+    (SLIDE_HOLD / 2) * 1000,
+  );
+
   const tl = gsap.timeline({ repeat: -1 });
   const step = SLIDE_HOLD + SLIDE_FADE;
 

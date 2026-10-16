@@ -1,0 +1,133 @@
+---
+import ArrowDown from "@lucide/astro/icons/arrow-down";
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+
+import BrandCard from "./BrandCard.astro";
+import SectionHeading from "./SectionHeading.astro";
+import { ICONS, type IconName } from "./icons";
+import { ABOUT } from "../../config/about";
+import { BRANDS } from "../../config/products";
+import { url } from "../../config/url";
+
+/**
+ * "Our Brands": the company's four beverage lines, then a large card for each
+ * brand on sale.
+ *
+ * Line cards sit four across from `lg`, two on tablets, one on phones. Each
+ * ends with its brands, as links down to their cards. A line with none says
+ * "Coming soon"; one with brands gets a green ring. Past `maxListed` names,
+ * the rest collapse into "+N more", which opens the products listing.
+ *
+ * Brand cards follow in line order, then `BRANDS` order. A brand joins its
+ * line through `family` in `BRANDS` (config/products.ts), so adding one there
+ * adds it here; its photo and copy come from `ABOUT.brandCards`. The first is
+ * the full-width card; the rest share the same card at half width, two
+ * across from `md`.
+ */
+const { eyebrow, title, brandsLabel, comingSoon, maxListed, lines } = ABOUT.brandLines;
+
+const byLine = lines.map((line) => ({
+  ...line,
+  brands: BRANDS.filter((brand) => brand.family === line.id),
+}));
+const cards = byLine.flatMap((line) =>
+  line.brands.map((brand) => {
+    const extra = ABOUT.brandCards[brand.id] ?? {};
+    return {
+      id: brand.id,
+      name: brand.name,
+      lineName: line.name,
+      body: extra.body ?? brand.body,
+      cta: extra.cta ?? `Explore ${brand.name}`,
+      image: extra.image,
+      href: url(`/products/#${brand.id}`),
+    };
+  }),
+);
+const [lead, ...rest] = cards;
+
+const brandLink =
+  "inline-flex items-center gap-1.5 rounded-[2px] transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss";
+---
+
+{
+  lines.length > 0 && (
+    <section aria-labelledby="brand-lines-heading" class="bg-gotukola-band py-20 lg:py-28">
+      <div class="mx-auto max-w-page px-5 md:px-10">
+        <SectionHeading id="brand-lines-heading" eyebrow={eyebrow} title={title} align="center" data-reveal />
+
+        <ul class="mt-10 grid gap-5 font-inter sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
+          {byLine.map((line) => {
+            const Icon = ICONS[line.icon as IconName];
+            const listed = line.brands.slice(0, maxListed);
+            const more = line.brands.length - listed.length;
+            return (
+              <li
+                data-reveal
+                class:list={[
+                  "flex flex-col rounded-[1.25rem] bg-white/85 px-6 pt-8 pb-6 shadow-[0_10px_30px_-20px_rgb(30_50_20/0.35)]",
+                  line.brands.length > 0 && "ring-2 ring-brand-moss/60",
+                ]}
+              >
+                <span
+                  class="grid size-14 shrink-0 place-items-center rounded-full bg-gk-card-muted text-brand-pine"
+                  aria-hidden="true"
+                >
+                  <Icon class="size-7" stroke-width={1.75} />
+                </span>
+                <h3 class="mt-6 font-display text-[1.5rem] leading-tight font-bold text-ink-heading">{line.name}</h3>
+                <p class="mt-3 text-[0.9375rem] leading-[1.5] font-semibold text-brand-fern">{line.focus}</p>
+                <p class="mt-2 mb-6 text-[0.875rem] leading-[1.6] text-ink-body italic">{line.examples}</p>
+
+                <div class="mt-auto border-t border-brand-moss/20 pt-4">
+                  {line.brands.length > 0 ? (
+                    <>
+                      <p class="text-[0.6875rem] leading-4 font-bold tracking-[0.15rem] uppercase text-ink-body">
+                        {brandsLabel}
+                      </p>
+                      <ul class="mt-2 space-y-1.5 text-[0.9375rem] font-semibold text-ink-heading">
+                        {listed.map((brand) => (
+                          <li>
+                            <a href={`#brand-${brand.id}`} class={brandLink}>
+                              {brand.name}
+                              <ArrowDown aria-hidden="true" class="size-4 text-brand-fern" stroke-width={2} />
+                            </a>
+                          </li>
+                        ))}
+                        {more > 0 && (
+                          <li>
+                            <a href={url("/products/")} class={brandLink}>
+                              +{more} more
+                              <ArrowRight aria-hidden="true" class="size-4 text-brand-fern" stroke-width={2} />
+                            </a>
+                          </li>
+                        )}
+                      </ul>
+                    </>
+                  ) : (
+                    <p class="inline-flex h-7 items-center rounded-full bg-gk-card-muted px-3 text-[0.75rem] font-semibold text-brand-pine">
+                      {comingSoon}
+                    </p>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+
+        {lead && (
+          <div class="mt-12 lg:mt-16">
+            <BrandCard {...lead} />
+          </div>
+        )}
+        {rest.length > 0 && (
+          <div class="mt-6 grid gap-6 md:grid-cols-2">
+            {rest.map((card) => (
+              <BrandCard {...card} size="half" />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}

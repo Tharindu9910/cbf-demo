@@ -1,0 +1,41 @@
+---
+import PillLink from "../ui/PillLink.astro";
+import { inquiryHref } from "../../config/site";
+import type { Product } from "./range";
+import { tintOf } from "./tint";
+
+/**
+ * Phones only: a slim bar along the bottom with the product and Order Now,
+ * slid in by `initStickyBuy` (`scripts/products/productPage.ts`) once the
+ * info panel's buttons have scrolled away. The link starts as a plain bulk
+ * enquiry; the script copies the panel's Order Now onto it, and from then on
+ * the pack, mix and quantity reach both (`a[data-inquiry="order"]`).
+ */
+interface Props {
+  product: Product;
+}
+
+const { id, data } = Astro.props.product;
+const tint = tintOf(id);
+---
+
+<div
+  data-sticky-buy
+  aria-hidden="true"
+  inert
+  class="fixed inset-x-0 bottom-0 z-40 translate-y-full border-t border-brand-leaf/10 bg-brand-ivory/90 px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] font-inter shadow-[0_-12px_30px_-20px_rgb(13_43_18/0.35)] backdrop-blur-md transition-transform duration-300 ease-rise motion-reduce:transition-none lg:hidden"
+>
+  <div class="mx-auto flex max-w-md items-center gap-4">
+    <p class="flex min-w-0 flex-1 items-center gap-2 text-[0.9375rem] leading-5 font-semibold text-ink-heading">
+      <span aria-hidden="true" class:list={["size-2 shrink-0 rounded-full", tint.dot]}></span>
+      <span class="truncate">{data.name}</span>
+    </p>
+    <PillLink
+      href={inquiryHref({ intent: "bulk", product: id })}
+      data-inquiry="order"
+      class="h-12 shrink-0 px-7 text-[0.9375rem] aria-disabled:cursor-not-allowed aria-disabled:opacity-45"
+    >
+      Order Now
+    </PillLink>
+  </div>
+</div>

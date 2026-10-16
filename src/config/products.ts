@@ -10,6 +10,13 @@
 import type { ImageMetadata } from "astro";
 import { url } from "./url";
 
+import atukoralaLogo from "../assets/images/stores/atukorala.png";
+import celesteLogo from "../assets/images/stores/celeste.png";
+import kasagalaLogo from "../assets/images/stores/kasagala.png";
+import laugfsLogo from "../assets/images/stores/laugfs.png";
+import sampathLogo from "../assets/images/stores/sampath.png";
+import sparLogo from "../assets/images/stores/spar.png";
+
 /** Name, per 100 ml, per 250 ml can; `sub` rows sit indented under their parent. */
 export interface NutritionRow {
   name: string;
@@ -63,9 +70,9 @@ export const ADVISORY =
 /** The listing page's opening. */
 export const LISTING = {
   seo: {
-    title: "Our Products | Thynkers Lyquid Gotukola Drinks",
+    title: "Our Beverages | Ceylon Future Beverages",
     description:
-      "Explore Ceylon Future Beverages' collections, starting with Thynkers Lyquid: sparkling, gotu kola-infused drinks in Matcha Original, Mango & Passion and Pineapple, plus a Mixed Pack of any six cans. More coming soon. Made in Sri Lanka.",
+      "Natural drinks from Ceylon Future Beverages, starting with Thynkers Lyquid Gotukola sparkling drinks: Matcha, Mango & Passion and Pineapple. More coming soon.",
   },
   eyebrow: "Our Products",
   title: "Crafted from Ceylon’s Nature",
@@ -77,19 +84,26 @@ export const LISTING = {
   /** The heading over every collection under the hero. */
   collection: {
     title: "Our Collections",
-    /** The pills beside the heading, after "All": one per kind of drink. Each collection names its `group`. */
+    /**
+     * The pills beside the heading, after "All": one per CFB beverage line,
+     * ids from `ABOUT.brandLines.lines` (config/about.ts). A brand shows under
+     * its `family`; a line with no brand yet shows its coming-soon teaser.
+     */
     filters: [
-      { id: "sparkling", label: "Sparkling Drinks" },
-      { id: "energy", label: "Energy Drinks" },
+      { id: "botanicals", label: "CFB Botanicals" },
+      { id: "juicery", label: "CFB Juicery" },
+      { id: "functional", label: "CFB Functional" },
+      { id: "coconut", label: "CFB CocoNut" },
     ],
   },
-  /** The next collection's teaser, after Thynkers Lyquid. No name or picture until it launches. */
+  /** The teasers for the lines still to launch, one per pill. No picture until each launches. */
   comingSoon: {
-    /** Its pill. TODO: no collection is confirmed as an energy drink yet; the teaser stands in. */
-    group: "energy",
     eyebrow: "Coming Soon",
-    title: "Something new is brewing",
-    body: "A completely different drink, from the same Ceylon roots. Watch this space.",
+    lines: [
+      { group: "juicery", title: "CFB Juicery", body: "Clean-label fruit juices and blends, from the same Ceylon roots. Watch this space." },
+      { group: "functional", title: "CFB Functional", body: "Science-backed functional beverages for focus, hydration and more. Watch this space." },
+      { group: "coconut", title: "CFB CocoNut", body: "Next-generation coconut hydration, from king coconut and beyond. Watch this space." },
+    ],
   },
   /** One pill per `category` in the flavours collection, after "All". Thynkers Lyquid only. */
   filters: [
@@ -113,16 +127,16 @@ export const categoryLabel = (id: string) => LISTING.filters.find((f) => f.id ==
 /**
  * The brands on sale, each a collection on the listing with its banner over
  * its grid. Only real brands go here: the product pages find theirs by name.
- * A collection still to launch is `LISTING.comingSoon`.
+ * A line still to launch is in `LISTING.comingSoon`.
  */
 export const BRANDS = [
   {
     id: "thynkers-lyquid",
     name: "Thynkers Lyquid",
-    /** Its pill on the listing, from `LISTING.collection.filters`. */
-    group: "sparkling",
+    /** Its CFB beverage line, an id from `ABOUT.brandLines.lines` (config/about.ts). The About page groups brands by it, and it is the brand's pill on the listing. */
+    family: "botanicals",
     line: "Fuel the Thought",
-    body: "Sparkling, gotu kola–infused drinks crafted for clear thinking and mindful energy.",
+    body: "Sparkling, gotu kola infused drinks crafted for clear thinking and mindful energy.",
     badges: ["Real Gotu Kola", "No Preservatives", "No Artificial Colours"],
   },
 ] as const;
@@ -175,6 +189,8 @@ export interface Retailer {
   whereInside?: string;
   /** Imported from `assets/images/stores/` (PNG or SVG, transparent). Without one the store's initials stand in. */
   logo?: ImageMetadata;
+  /** The logo is a solid square tile (no transparent ground): in a round badge it fills the circle instead of sitting inside it. */
+  logoFill?: boolean;
   /** A supermarket's store locator, or a location's Google Maps link. */
   link?: string;
 }
@@ -186,15 +202,17 @@ export interface Retailer {
  * are hidden.
  *
  * To add one: put its logo in `src/assets/images/stores/`, import it here
- * and add an entry. TODO: the chains' names, logos (with permission), notes
- * and locator links; Hatch Works and the ECU campus once confirmed.
+ * and add an entry. The list is the company profile's "Outlets" page
+ * (docs/company-profile.md, page 22); the logos are cropped from the same
+ * page. TODO: notes and locator links.
  */
 export const RETAILERS: Retailer[] = [
-  { id: "laugfs", name: "LAUGFS Supermarket", group: "supermarket", note: "", link: "" },
-  { id: "kasagala", name: "Kasagala Supermarket", group: "supermarket", note: "", link: "" },
-  { id: "abc", name: "ABC Supermarket", group: "supermarket", note: "", link: "" },
-  { id: "hatch-works", name: "Hatch Works", group: "other", type: "Co-working space", address: "", whereInside: "", link: "" },
-  { id: "ecu-campus", name: "ECU Campus", group: "other", type: "University campus", address: "", whereInside: "", link: "" },
+  { id: "laugfs", name: "LAUGFS Supermarkets", logo: laugfsLogo, group: "supermarket", note: "", link: "" },
+  { id: "spar", name: "SPAR Supermarkets", logo: sparLogo, group: "supermarket", note: "", link: "" },
+  { id: "sampath", name: "Sampath Supermarkets", logo: sampathLogo, group: "supermarket", note: "", link: "" },
+  { id: "atukorala", name: "Atukorala Supermarket", logo: atukoralaLogo, logoFill: true, group: "supermarket", note: "", link: "" },
+  { id: "kasagala", name: "Kasagala Green Super", logo: kasagalaLogo, group: "supermarket", note: "", link: "" },
+  { id: "celeste", name: "Celeste Online", logo: celesteLogo, logoFill: true, group: "other", type: "Online store", address: "", whereInside: "", link: "" },
 ];
 
 /** The list split by group, in list order. */

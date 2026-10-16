@@ -1,4 +1,7 @@
 // @ts-check
+import { readdir, readFile, stat, unlink } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
@@ -14,6 +17,42 @@ const { SITE_URL = "https://www.ceylonfuturebeverages.com", BASE_PATH = "/" } = 
   process.cwd(),
   "",
 );
+
+/**
+ * Astro copies every imported image's full-size original into `_astro/`, even
+ * when the pages only ever use its resized WebP variants. Nothing links to
+ * those originals (some are 1–3 MB), so they only bloat the upload. After the
+ * build, delete any image in `_astro/` that no page, script, stylesheet or
+ * sitemap names.
+ *
+ * @returns {import("astro").AstroIntegration}
+ */
+function pruneUnusedImages() {
+  return {
+    name: "prune-unused-images",
+    hooks: {
+      "astro:build:done": async ({ dir, logger }) => {
+        const root = fileURLToPath(dir);
+        const files = (await readdir(root, { recursive: true })).map((f) => join(root, f));
+        let text = "";
+        for (const f of files) {
+          if (/\.(html|js|css|xml|json|webmanifest|txt)$/.test(f)) text += await readFile(f, "utf8");
+        }
+        let count = 0;
+        let bytes = 0;
+        for (const f of files) {
+          const name = f.split("/").pop() ?? "";
+          if (!f.includes("/_astro/") || !/\.(jpe?g|png|webp|avif|gif)$/i.test(name)) continue;
+          if (text.includes(name)) continue;
+          bytes += (await stat(f)).size;
+          await unlink(f);
+          count++;
+        }
+        logger.info(`removed ${count} unreferenced images (${(bytes / 1048576).toFixed(1)} MB)`);
+      },
+    },
+  };
+}
 
 export default defineConfig({
   site: SITE_URL,
@@ -38,11 +77,23 @@ export default defineConfig({
   markdown: { syntaxHighlight: false },
 
   // The form's no-script thank-you page is noindex, so it stays out of the sitemap.
-  integrations: [sitemap({ filter: (page) => !page.endsWith("/contact/thanks/") })],
+  integrations: [
+    sitemap({ filter: (page) => !page.endsWith("/contact/thanks/") }),
+    pruneUnusedImages(),
+  ],
 
   image: {
-    // AVIF first, WebP fallback — see the <Picture> calls.
     responsiveStyles: false,
+    // Same quality as sharp's defaults, smaller files: the slowest (best)
+    // WebP effort, and mozjpeg for the hero's JPEG fallbacks and the JSON-LD
+    // product images. Build time only; the pixels don't change visibly.
+    service: {
+      entrypoint: "astro/assets/services/sharp",
+      config: {
+        webp: { effort: 6 },
+        jpeg: { mozjpeg: true },
+      },
+    },
   },
 
   fonts: [
@@ -67,7 +118,9 @@ export default defineConfig({
     // that meant 400 and `font-black` on the headline renders as the
     // browser's synthetic bold — declaring its real weight would change the
     // look. Saira is variable, so it got its full axis and `font-semibold`
-    // uses the real 600 instance.
+    // uses the real 600 instance. Its file has the weight axis only: the
+    // width axis was pinned to its default (100) with fontTools' instancer,
+    // as nothing sets `font-stretch` — same glyphs, 109 kB down to 36 kB.
     {
       provider: fontProviders.local(),
       name: "Aonic",

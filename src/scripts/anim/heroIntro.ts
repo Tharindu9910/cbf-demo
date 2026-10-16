@@ -1,7 +1,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import { heroReady } from "../bridge";
+import { heroEntered, heroReady } from "../bridge";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -49,6 +49,7 @@ function play() {
       delay: 0.3,
       stagger: 1,
     })
+    .call(() => heroEntered.resolve())
     // The beat the leaf sprite's entrance used to take. The sprite is switched
     // off in the design, but its second still sits in the timing between the
     // headline and the subheading.

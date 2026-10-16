@@ -1,0 +1,55 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+import { ABOUT } from "../../config/about";
+
+/**
+ * "Leadership": the founder's story beside the board of directors, from the
+ * company profile. It follows "Our People" on the same ivory, so the two read
+ * as one block. Two columns from `lg`, stacked below. Hidden while there are
+ * no directors; the bio column drops out while it has no paragraphs.
+ */
+const { eyebrow, title, bio, directorsTitle, directors } = ABOUT.leadership;
+---
+
+{
+  directors.length > 0 && (
+    <section aria-labelledby="leadership-heading" class="bg-brand-ivory pb-20 lg:pb-28">
+      <div class="mx-auto max-w-page px-5 md:px-10">
+        <div
+          class:list={[
+            "grid gap-12 border-t border-brand-moss/30 pt-16 font-inter lg:pt-20",
+            bio.length > 0 && "lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-16",
+          ]}
+        >
+          {bio.length > 0 && (
+            <div data-reveal>
+              <SectionHeading id="leadership-heading" eyebrow={eyebrow} title={title} />
+              <div class="mt-6 max-w-[38rem] space-y-5 text-[1rem] leading-[1.5625rem] text-ink-body">
+                {bio.map((p) => <p>{p}</p>)}
+              </div>
+            </div>
+          )}
+
+          <div data-reveal>
+            {bio.length > 0 ? (
+              <h3 class="text-[0.75rem] leading-4 font-bold tracking-[0.1625rem] uppercase text-brand-fern">
+                {directorsTitle}
+              </h3>
+            ) : (
+              <SectionHeading id="leadership-heading" eyebrow={eyebrow} title={directorsTitle} />
+            )}
+            <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              {directors.map((d) => (
+                <li class="rounded-[1.25rem] bg-white/85 px-6 py-6 shadow-[0_10px_30px_-20px_rgb(30_50_20/0.35)] sm:px-7">
+                  <p class="font-display text-[1.5rem] leading-tight font-bold text-ink-heading">{d.name}</p>
+                  <p class="mt-2 text-[0.9375rem] font-semibold text-brand-fern">{d.role}</p>
+                  <p class="mt-1 text-[0.875rem] leading-[1.6] text-ink-body">{d.area}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

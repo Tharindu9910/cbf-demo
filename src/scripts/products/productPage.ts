@@ -9,7 +9,10 @@ const smooth = () =>
     ? ("auto" as const)
     : ("smooth" as const);
 
-/** Thumbnails drive the gallery's scroll-snap track, and follow it. */
+/**
+ * Thumbnails (and the phone's dots, a second set with the same indices) drive
+ * the gallery's scroll-snap track, and follow it.
+ */
 export function initGallery() {
   for (const root of document.querySelectorAll<HTMLElement>("[data-gallery]")) {
     const track = root.querySelector<HTMLElement>("[data-gallery-track]");
@@ -18,13 +21,15 @@ export function initGallery() {
     ];
     if (!track || thumbs.length === 0) continue;
 
+    const indexOf = (thumb: HTMLElement) => Number(thumb.dataset.galleryThumb);
     const mark = (index: number) =>
-      thumbs.forEach((thumb, i) =>
-        thumb.setAttribute("aria-current", String(i === index)),
+      thumbs.forEach((thumb) =>
+        thumb.setAttribute("aria-current", String(indexOf(thumb) === index)),
       );
 
-    thumbs.forEach((thumb, i) =>
+    thumbs.forEach((thumb) =>
       thumb.addEventListener("click", () => {
+        const i = indexOf(thumb);
         track.scrollTo({ left: i * track.clientWidth, behavior: smooth() });
         mark(i);
       }),
@@ -65,6 +70,8 @@ export function initPackSelect() {
   const counts = outputs.map((out) => Number(out.textContent) || 0);
   const cans = Number(builder?.dataset.cans) || 0;
   const status = builder?.querySelector<HTMLElement>("[data-mix-status]");
+  const summary = builder?.querySelector<HTMLElement>("[data-mix-summary]");
+  const details = builder?.querySelector<HTMLDetailsElement>("[data-mix-details]");
   // On a flavour page the builder waits for its radio; on the pack's own page it's always open.
   const mixOn = () => !!builder && (mixRadio ? mixRadio.checked : true);
 
@@ -82,6 +89,15 @@ export function initPackSelect() {
         total === cans
           ? `${cans} of ${cans} cans`
           : `${total} of ${cans} cans · add ${cans - total} more`;
+    if (summary)
+      summary.textContent =
+        total === cans
+          ? rows
+              .map((row, i) => [row.dataset.name, counts[i]] as const)
+              .filter(([, n]) => n > 0)
+              .map(([name, n]) => `${n} ${name}`)
+              .join(" · ")
+          : `${total} of ${cans} cans chosen`;
 
     const on = mixOn();
     if (builder) builder.hidden = !on;
@@ -135,6 +151,7 @@ export function initPackSelect() {
       link.addEventListener("click", (event) => {
         if (link.getAttribute("aria-disabled") === "true") {
           event.preventDefault();
+          if (details) details.open = true;
           status?.focus();
         }
       }),
@@ -258,4 +275,52 @@ export function initReviewRow() {
   track.addEventListener("scroll", update, { passive: true });
   addEventListener("resize", update);
   update();
+}
+
+/**
+ * The phone's bottom Order Now bar: shown once the panel's buttons have
+ * scrolled up out of view, and put away again while the closing BuyStrip is
+ * on screen, so there's only ever one way to order in sight.
+ */
+export function initStickyBuy() {
+  const bar = document.querySelector<HTMLElement>("[data-sticky-buy]");
+  const anchor = document.querySelector<HTMLElement>("[data-buy-anchor]");
+  const end = document.querySelector<HTMLElement>("[data-buy-end]");
+  if (!bar || !anchor) return;
+
+  // Start from the panel's Order Now; setOrderParam keeps the two in step.
+  const from = anchor.querySelector<HTMLAnchorElement>('a[data-inquiry="order"]');
+  const to = bar.querySelector<HTMLAnchorElement>('a[data-inquiry="order"]');
+  if (from && to) to.href = from.getAttribute("href")!;
+
+  let passed = false;
+  let atEnd = false;
+  const update = () => {
+    const show = passed && !atEnd;
+    bar.classList.toggle("translate-y-full", !show);
+    bar.toggleAttribute("inert", !show);
+    if (show) bar.removeAttribute("aria-hidden");
+    else bar.setAttribute("aria-hidden", "true");
+  };
+
+  // Each root reaches far past one edge, so its observer turns on a single
+  // line a fast fling can't jump over: the anchor leaving the top, the strip
+  // reaching the bottom (and staying "reached" below it).
+  const far = "100000px";
+  new IntersectionObserver(
+    ([entry]) => {
+      passed = !entry.isIntersecting;
+      update();
+    },
+    { rootMargin: `0px 0px ${far} 0px` },
+  ).observe(anchor);
+
+  if (end)
+    new IntersectionObserver(
+      ([entry]) => {
+        atEnd = entry.isIntersecting;
+        update();
+      },
+      { rootMargin: `${far} 0px 0px 0px` },
+    ).observe(end);
 }

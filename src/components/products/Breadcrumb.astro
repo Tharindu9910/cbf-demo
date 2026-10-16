@@ -2,17 +2,36 @@
 /**
  * Products › Brand › Product, on the detail page's ivory top. The
  * last step is the current page and isn't a link. Its JSON-LD twin is built
- * in `seo/JsonLd.astro`.
+ * in `seo/JsonLd.astro`. Phones get just a back link to the first step.
  */
 interface Props {
   items: { label: string; href?: string }[];
 }
 
 const { items } = Astro.props;
+const back = items.find((item) => item.href);
 ---
 
 <nav aria-label="Breadcrumb" class="font-inter text-[0.8125rem] leading-5">
-  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-ink-body/70">
+  {back && (
+    <a
+      href={back.href}
+      class="-my-3 inline-flex items-center gap-1.5 rounded-sm py-3 font-medium text-ink-body/80 transition-colors hover:text-brand-moss focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-moss md:hidden"
+    >
+      <svg
+        viewBox="0 0 16 16"
+        class="size-3.5"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        aria-hidden="true"
+      >
+        <path d="M10 3.5 5.5 8l4.5 4.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      {back.label}
+    </a>
+  )}
+  <ol class="hidden md:flex flex-wrap items-center gap-x-2 gap-y-1 text-ink-body/70">
     {items.map((item, i) => (
       <li class="flex items-center gap-2">
         {i > 0 && (

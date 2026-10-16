@@ -11,6 +11,7 @@ import ProductInfo from "../../components/products/ProductInfo.astro";
 import ProductReviews from "../../components/products/ProductReviews.astro";
 import ProductSpecs from "../../components/products/ProductSpecs.astro";
 import RelatedProducts from "../../components/products/RelatedProducts.astro";
+import StickyBuyBar from "../../components/products/StickyBuyBar.astro";
 import WhatsInside from "../../components/products/WhatsInside.astro";
 import { getRange, type Product } from "../../components/products/range";
 import { BRANDS } from "../../config/products";
@@ -21,7 +22,9 @@ import { url } from "../../config/url";
  *
  * All on the listing's ivory: the gallery (the can in front of its fruit)
  * beside the info panel, a soft green wash along the top so the white header
- * reads; then the label's details, what's in the box (packs only), gotu kola, reviews, FAQs, the rest of the range and the bulk bar.
+ * reads; then the label's details as folding rows, what's in the box (packs
+ * only), gotu kola and the bulk bar. Phones also get a bottom Order Now bar
+ * once the panel's buttons scroll away.
  * No 3D, so the WebGL stage is skipped.
  */
 export const getStaticPaths = (async () =>
@@ -44,7 +47,7 @@ const ogImage =
 ---
 
 <Base
-  title={`${data.name} | ${data.brand}`}
+  title={`${data.brand} ${data.name} | ${data.kind === "pack" ? "6-Can Gotukola Drink Pack" : "Gotukola Sparkling Drink"}`}
   description={data.description}
   image={ogImage}
   imageAlt={data.gallery[0].alt}
@@ -54,7 +57,7 @@ const ogImage =
 >
   <section
     aria-label={data.name}
-    class="relative isolate overflow-hidden bg-brand-ivory"
+    class="relative isolate overflow-clip bg-brand-ivory"
   >
     <div
       aria-hidden="true"
@@ -90,6 +93,7 @@ const ogImage =
   {/*<ProductFaqs />*/}
   {/*<RelatedProducts productId={id} />*/}
   <BuyStrip product={id} />
+  <StickyBuyBar product={product} />
 </Base>
 
 <script>
@@ -100,12 +104,14 @@ const ogImage =
     initQuantity,
     initReviewRow,
     initShare,
+    initStickyBuy,
   } from "../../scripts/products/productPage";
 
   initGallery();
   initPackSelect();
   initQuantity();
   initShare();
+  initStickyBuy();
   initReviewRow();
   revealOnScroll();
 </script>

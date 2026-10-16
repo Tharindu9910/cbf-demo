@@ -184,10 +184,12 @@ const legend = "float-left mb-1 w-full text-[0.75rem] leading-4 font-bold tracki
           <p class="text-[0.8125rem] leading-5 text-ink-body/75">{privacy}</p>
           <button
             type="submit"
-            class="inline-flex h-[3.25rem] shrink-0 items-center justify-center rounded-full px-8 text-[0.9375rem] font-semibold btn-glow focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss disabled:cursor-wait disabled:opacity-70"
+            class="inline-flex h-[3.25rem] shrink-0 items-center justify-center gap-2.5 rounded-full px-8 text-[0.9375rem] font-semibold btn-glow focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss disabled:cursor-wait disabled:opacity-70"
             data-submit
           >
-            {submit}
+            {/* Shown while the message sends (scripts/contact/form.ts). */}
+            <span class="size-4 animate-spin rounded-full border-2 border-current border-r-transparent" aria-hidden="true" data-submit-spinner hidden></span>
+            <span data-submit-label>{submit}</span>
           </button>
         </div>
         <p role="alert" class="text-[0.875rem] leading-5 font-semibold text-form-error sm:col-span-2" data-form-error hidden>

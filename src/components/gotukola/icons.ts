@@ -7,7 +7,3 @@ export const EVIDENCE_BADGE = {
   "not-supported": "bg-evidence-none-fill text-evidence-none",
 } as const;
 
-/** Section eyebrow and heading, as About's sections set them. */
-export const eyebrowClass = "font-poppins text-[0.75rem] leading-4 font-semibold tracking-[0.1875rem] uppercase";
-export const headingClass =
-  "mt-3 font-display text-[clamp(2rem,4.4vw,3rem)] leading-[1.08] font-bold tracking-[-0.5px] text-balance";

@@ -7,14 +7,19 @@ import { ABOUT } from "../../config/about";
 import { heading } from "../../styles/section";
 
 /**
- * "How We Work": source to delivery in four numbered steps, after the
- * mockup. Four across from `lg` with an arrow between each photo, two on
- * tablets, one on phones. Each step has its number in green beside its name,
+ * "How We Work": source to export in numbered steps, after the mockup. One
+ * column per step from `lg` (four or five) with an arrow between each photo,
+ * two on tablets, one on phones. Each step has its number in green beside its name,
  * with the line below aligned under the name. A step without a photo shows
  * its icon on deep green in the photo's place.
  */
 const { eyebrow, title, steps } = ABOUT.howWeWork;
 const titleLines = title.split(/(?<=\.)\s+/);
+// Five steps take a tighter wide-screen gutter; the arrow sits in its middle.
+// Both sets are written out in full so Tailwind generates them.
+const five = steps.length >= 5;
+const columns = five ? "lg:grid-cols-5 xl:gap-x-12" : "lg:grid-cols-4 xl:gap-x-16";
+const arrowOffset = five ? "xl:-right-6" : "xl:-right-8";
 ---
 
 <section aria-labelledby="how-heading" class="bg-brand-ivory py-20 lg:py-24">
@@ -29,7 +34,7 @@ const titleLines = title.split(/(?<=\.)\s+/);
       </h2>
     </div>
 
-    <ol class="mt-10 grid gap-x-8 gap-y-12 font-inter sm:grid-cols-2 lg:mt-12 lg:grid-cols-4 xl:gap-x-16">
+    <ol class:list={["mt-10 grid gap-x-8 gap-y-12 font-inter sm:grid-cols-2 lg:mt-12", columns]}>
       {
         steps.map((step, i) => {
           const Icon = ICONS[step.icon as IconName];
@@ -46,6 +51,7 @@ const titleLines = title.split(/(?<=\.)\s+/);
                     sizes="(min-width: 1024px) 240px, (min-width: 640px) 45vw, 100vw"
                     quality={80}
                     loading="lazy"
+                    data-skeleton
                     class="aspect-[10/7] w-full rounded-[0.875rem] object-cover shadow-[0_12px_28px_-18px_rgb(13_43_18/0.45)]"
                   />
                 ) : (
@@ -59,7 +65,7 @@ const titleLines = title.split(/(?<=\.)\s+/);
                 {!last && (
                   <ArrowRight
                     aria-hidden="true"
-                    class="absolute top-1/2 -right-4 hidden size-6 xl:-right-8 translate-x-1/2 -translate-y-1/2 text-brand-pine lg:block"
+                    class:list={["absolute top-1/2 -right-4 hidden size-6 translate-x-1/2 -translate-y-1/2 text-brand-pine lg:block", arrowOffset]}
                     stroke-width={1.75}
                   />
                 )}

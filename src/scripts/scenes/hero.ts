@@ -226,7 +226,10 @@ export async function mountHeroScene(el: HTMLElement) {
     state.rise += (target - state.rise) * (1 - Math.exp(-dt * RISE_FOLLOW));
     if (Math.abs(target - state.rise) < 1e-4) state.rise = target;
 
-    const holding = y < state.holdUntil;
+    // No top slot, no hold. Without the guard, iOS's rubber-band at the top
+    // (scrollY < 0) reads as holding and draws the group over the headline
+    // in `measureSlot`'s fallback box.
+    const holding = slotTop !== null && y < state.holdUntil;
     // First leg: drawn with the page. Second: still frame, cans move.
     view.offsetY = holding ? Math.max(0, y) : 0;
 

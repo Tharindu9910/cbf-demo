@@ -1,0 +1,87 @@
+---
+import { Image } from "astro:assets";
+
+import PillLink from "../ui/PillLink.astro";
+import type { AboutImage } from "../../config/about";
+
+/**
+ * One brand's large card on the About page: its line as an eyebrow, the name,
+ * one sentence and a link to its collection, over a full-bleed photo. `full`
+ * is the original Thynkers Lyquid card; `half` is the same card two across,
+ * for the brands after the first, so it keeps the shade under the copy at
+ * every width. Without a photo the card sits on plain leaf green.
+ */
+interface Props {
+  id: string;
+  name: string;
+  lineName: string;
+  body: string;
+  href: string;
+  cta: string;
+  image?: AboutImage;
+  size?: "full" | "half";
+}
+
+const { id, name, lineName, body, href, cta, image, size = "full" } = Astro.props;
+const full = size === "full";
+---
+
+<article
+  id={`brand-${id}`}
+  aria-labelledby={`brand-${id}-name`}
+  data-reveal
+  class="relative isolate scroll-mt-24 overflow-hidden rounded-[2rem] bg-brand-leaf font-inter"
+>
+  {
+    image && (
+      <Image
+        src={image.src}
+        alt={image.alt}
+        widths={full ? [640, 960, 1376, 1672] : [480, 720, 960]}
+        sizes={full ? "(min-width: 1200px) 1120px, 100vw" : "(min-width: 1200px) 548px, (min-width: 768px) 50vw, 100vw"}
+        quality={82}
+        loading="lazy"
+        class="absolute inset-0 -z-10 h-full w-full object-cover object-[78%_center]"
+      />
+    )
+  }
+  {/* Phones and tablets crop the photo to its subject, right behind the copy: shade under it (the bottom on phones, the left on tablets). Half cards stay narrow, so they keep the shade. */}
+  {
+    image && (
+      <div
+        aria-hidden="true"
+        class:list={[
+          "absolute inset-0 -z-10 bg-linear-to-t from-brand-leaf/90 via-brand-leaf/45 to-transparent",
+          full ? "md:bg-linear-to-r md:from-brand-leaf/85 md:via-brand-leaf/40 lg:hidden" : "",
+        ]}
+      >
+      </div>
+    )
+  }
+  <div
+    class:list={[
+      "flex max-w-md flex-col justify-end",
+      full
+        ? "min-h-[28.75rem] p-6 sm:p-8 md:min-h-[32.5rem] md:justify-center md:p-12 lg:min-h-[36.25rem] lg:p-16"
+        : "min-h-[24rem] p-6 sm:p-8 lg:min-h-[28rem] lg:p-10",
+    ]}
+  >
+    {/* On a pill of the card's green, so the line reads where the copy crosses the photo. */}
+    <p class="mb-4 w-fit rounded-full bg-brand-leaf/80 px-3 py-1.5 text-[0.6875rem] leading-4 font-bold tracking-[0.15rem] uppercase text-brand-green">
+      {lineName}
+    </p>
+    <h3
+      id={`brand-${id}-name`}
+      class:list={[
+        "font-display leading-[0.98] font-bold tracking-[-0.5px] text-white",
+        full ? "text-[clamp(2.375rem,6vw,3.75rem)]" : "text-[clamp(2rem,4vw,2.75rem)]",
+      ]}
+    >
+      {name}
+    </h3>
+    <p class:list={["mt-5 text-[1rem] leading-[1.6] text-white/85", full && "lg:text-[1.0625rem]"]}>{body}</p>
+    <PillLink href={href} arrow class="mt-8 h-[3.25rem] w-fit gap-2.5 px-8 text-[0.9375rem]">
+      {cta}
+    </PillLink>
+  </div>
+</article>

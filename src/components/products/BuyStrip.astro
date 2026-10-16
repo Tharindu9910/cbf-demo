@@ -1,13 +1,15 @@
 ---
 import Store from "@lucide/astro/icons/store";
 
+
 import PillLink from "../ui/PillLink.astro";
 import { inquiryHref } from "../../config/site";
 
 /**
  * The close of each product page: one deep-green bar for offices, cafés and
  * shops, with the bulk enquiry (more than a 6-can pack) and the way to a
- * stockist. Both links carry the product.
+ * stockist. Both links carry the product. `data-buy-end` tells the phone's sticky Order Now bar to
+ * step aside while this is on screen.
  */
 interface Props {
   product?: string;
@@ -18,6 +20,7 @@ const { product } = Astro.props;
 
 <section
   aria-labelledby="buy-heading"
+  data-buy-end
   class="bg-brand-ivory pb-20 font-inter lg:pb-24"
 >
   <div class="mx-auto max-w-page px-5 md:px-10">
@@ -43,26 +46,26 @@ const { product } = Astro.props;
         <div>
           <h2
             id="buy-heading"
-            class="font-display text-[clamp(1.375rem,2.6vw,1.75rem)] leading-[1.15] font-bold tracking-[-0.3px] text-balance"
+            class="font-display text-[clamp(1.375rem,2.6vw,1.75rem)] leading-[1.15] font-bold tracking-[-0.5px] text-balance"
           >
             Ordering for an office, caf&eacute; or shop?
           </h2>
-          <p class="mt-1.5 text-[0.875rem] leading-5 text-white/75">
+          <p class="mt-1.5 text-[0.9375rem] leading-[1.6] text-white/80">
             Get your favourite Thynkers Lyquid in bulk.
           </p>
         </div>
       </div>
-      <div class="flex flex-wrap gap-3">
+      <div class="grid gap-3 sm:flex sm:flex-wrap">
         <PillLink
           href={inquiryHref({ intent: "bulk", product })}
           arrow
-          class="h-12 gap-2 px-6 text-[0.875rem]"
+          class="h-[3.25rem] gap-2 px-8 text-[0.9375rem]"
         >
           Bulk Inquiry
         </PillLink>
         <a
           href={inquiryHref({ intent: "store", product })}
-          class="inline-flex h-12 items-center rounded-full border border-white/60 px-6 text-[0.875rem] font-semibold text-white transition-colors hover:bg-white hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
+          class="inline-flex h-[3.25rem] items-center justify-center rounded-full border border-white/60 px-8 text-[0.9375rem] font-semibold text-white transition-colors hover:bg-white hover:text-brand-leaf focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
         >
           Find a Store
         </a>

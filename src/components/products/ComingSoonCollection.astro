@@ -5,42 +5,48 @@ import leavesRight from "../../assets/images/footer/leaves-right.png";
 import { LISTING } from "../../config/products";
 
 /**
- * The next collection's teaser under Thynkers Lyquid on the Products listing:
- * a badge, a heading and one line from `LISTING.comingSoon`. No name, picture
- * or sign-up until the drink is announced.
+ * The teasers under Thynkers Lyquid on the Products listing, one per CFB line
+ * still to launch (`LISTING.comingSoon`): a badge, the line's name and one
+ * line about it. Each carries its pill's `data-group`, and they share a row,
+ * so whichever the filter leaves fills it. No picture or sign-up yet.
  */
-const { group, eyebrow, title, body } = LISTING.comingSoon;
+const { eyebrow, lines } = LISTING.comingSoon;
 ---
 
 <section
   id="coming-soon"
-  aria-labelledby="coming-soon-heading"
-  data-group={group}
-  data-reveal
-  class="mt-16 scroll-mt-8 font-inter lg:mt-24"
+  aria-label="Coming soon"
+  class="mt-16 flex scroll-mt-8 flex-col gap-5 font-inter md:flex-row lg:mt-24 lg:gap-6"
 >
-  <div class="relative isolate overflow-hidden rounded-[1.5rem] bg-brand-sage px-7 py-12 ring-1 ring-brand-leaf/6 md:px-12 md:py-16 lg:py-20">
-    <Image
-      src={leavesRight}
-      alt=""
-      widths={[320, 480, 640]}
-      sizes="(min-width: 768px) 320px, 200px"
-      loading="lazy"
-      class="pointer-events-none absolute -right-10 -bottom-12 -z-10 h-[75%] w-auto opacity-60 select-none"
-    />
-    <div class="max-w-xl">
-      <p class="inline-flex h-7 items-center rounded-full bg-white/70 px-3 text-[0.75rem] font-semibold text-brand-moss ring-1 ring-brand-leaf/8">
-        {eyebrow}
-      </p>
-      <h2
-        id="coming-soon-heading"
-        class="mt-4 font-display text-[1.625rem] leading-[1.15] font-bold tracking-[-0.2px] text-balance text-ink-heading"
-      >
-        {title}
-      </h2>
-      <p class="mt-1.5 max-w-md text-[1rem] leading-[1.5625rem] text-ink-body">
-        {body}
-      </p>
-    </div>
-  </div>
+  {lines.map(({ group, title, body }) => (
+    <article
+      data-group={group}
+      data-reveal
+      aria-labelledby={`coming-soon-${group}-heading`}
+      class="relative isolate flex-1 overflow-hidden rounded-[1.5rem] bg-brand-sage px-7 py-12 ring-1 ring-brand-leaf/6 md:px-10 md:py-14 lg:py-16"
+    >
+      <Image
+        src={leavesRight}
+        alt=""
+        widths={[320, 480, 640]}
+        sizes="(min-width: 768px) 320px, 200px"
+        loading="lazy"
+        class="pointer-events-none absolute -right-10 -bottom-12 -z-10 h-[75%] w-auto opacity-60 select-none"
+      />
+      <div class="max-w-xl">
+        <p class="inline-flex h-7 items-center rounded-full bg-white/70 px-3 text-[0.75rem] font-semibold text-brand-moss ring-1 ring-brand-leaf/8">
+          {eyebrow}
+        </p>
+        <h2
+          id={`coming-soon-${group}-heading`}
+          class="mt-4 font-display text-[1.625rem] leading-[1.15] font-bold tracking-[-0.2px] text-balance text-ink-heading"
+        >
+          {title}
+        </h2>
+        <p class="mt-1.5 max-w-md text-[1rem] leading-[1.5625rem] text-ink-body">
+          {body}
+        </p>
+      </div>
+    </article>
+  ))}
 </section>

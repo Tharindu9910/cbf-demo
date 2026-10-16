@@ -10,16 +10,17 @@
 
 import { url } from "./url";
 /**
- * The brand's social profiles, in the footer's order. TODO: paste each
- * profile's URL. Until then the footer shows the name without a link, and the
- * profile is left out of the JSON-LD `sameAs`.
+ * The brand's social profiles, in the footer's order. The company profile
+ * gives every handle as `ceylonfuturebeverages`; these are the standard URLs
+ * for it. TODO: confirm the YouTube (@handle) and LinkedIn (company page) URLs.
+ * An empty `href` shows the name without a link and drops it from `sameAs`.
  */
 export const SOCIAL_LINKS = [
-  { label: "Facebook", icon: "facebook", href: "" },
-  { label: "YouTube", icon: "youtube", href: "" },
-  { label: "Instagram", icon: "instagram", href: "" },
-  { label: "LinkedIn", icon: "linkedin", href: "" },
-  { label: "TikTok", icon: "tiktok", href: "" },
+  { label: "Facebook", icon: "facebook", href: "https://www.facebook.com/ceylonfuturebeverages" },
+  { label: "YouTube", icon: "youtube", href: "https://www.youtube.com/@ceylonfuturebeverages" },
+  { label: "Instagram", icon: "instagram", href: "https://www.instagram.com/ceylonfuturebeverages/" },
+  { label: "LinkedIn", icon: "linkedin", href: "https://www.linkedin.com/company/ceylonfuturebeverages" },
+  { label: "TikTok", icon: "tiktok", href: "https://www.tiktok.com/@ceylonfuturebeverages" },
 ] as const;
 
 export const SITE = {
@@ -30,29 +31,39 @@ export const SITE = {
   lang: "en",
   themeColor: "#0d2b12",
 
-  title: "Ceylon Future Beverages | Thynkers Lyquid Gotukola Drinks",
+  /**
+   * The company leads every default: Thynkers Lyquid is CFB's first product
+   * line, not the whole site. Claims come from `docs/company-profile.md` only.
+   */
+  title: "Ceylon Future Beverages | Natural Beverages from Sri Lanka",
   description:
-    "Thynkers Lyquid by Ceylon Future Beverages: Gotukola-based sparkling drinks for clear thinking and mindful energy. 100% natural, low sugar, made in Sri Lanka.",
+    "Ceylon Future Beverages turns Sri Lanka's botanicals into natural, functional drinks for the world. Meet Thynkers Lyquid, our Gotukola sparkling drink.",
+  /** The company in one line (company profile, About Us), for the JSON-LD. */
+  about:
+    "Ceylon Future Beverages (CFB) is an innovation-driven beverage company transforming Sri Lanka's rich natural resources into high-value products for global markets.",
 
   /** The registered company name, as the footer shows it. */
   legalName: "Ceylon Future Beverages (Pvt) Limited",
   tagline: "Nature. Reimagined.",
+  alternateName: "CFB",
+  founder: { name: "Suresh Jayarathna", jobTitle: "Founder" },
+
+  /** The Thynkers Lyquid brand, as the company profile introduces it. */
+  brandSlogan: "Fuel the Thought",
+  brandDescription:
+    "Thynkers Lyquid is a Gotukola based beverage crafted to support clear thinking and mindful energy, designed for moments that demand focus without the noise of conventional energy drinks.",
 
   /** Social profile URLs, for `sameAs`. Filled from `SOCIAL_LINKS`. */
   sameAs: SOCIAL_LINKS.map((s) => s.href as string).filter(Boolean),
 
   contact: {
     email: "info@ceylonfuturebeverages.com",
-    telephone: "+94 77 757 4953",
+    telephone: "+94 77 517 4952",
   },
 
-  /**
-   * TODO: the Alawwa street address and postal code. The street on file
-   * ("292/1, Galle Road") belonged to the old Ambalangoda address, so it is
-   * left empty rather than paired with the wrong town.
-   */
+  /** From the company profile. TODO: the postal code. */
   address: {
-    streetAddress: "",
+    streetAddress: "124/1, Galwarama",
     addressLocality: "Alawwa",
     addressRegion: "",
     postalCode: "",

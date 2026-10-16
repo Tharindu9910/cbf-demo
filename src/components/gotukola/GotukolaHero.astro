@@ -5,9 +5,10 @@ import heroPhoto from "../../assets/images/gotu-kola/gotukola-leaves-hero.jpg";
 import { GOTUKOLA } from "../../config/gotukola";
 
 /**
- * The Gotukola page's opening: a close-up of gotukola leaves, darkened for
- * the white header and the copy. Eyebrow, the page's only <h1> one sentence per
- * line, the intro, then the herb's names in four languages.
+ * The Gotukola page's opening, set like About's: a full-height close-up of
+ * gotukola leaves, darkened for the white header and the copy. Eyebrow, the
+ * page's only <h1> one sentence per line, the intro, then the herb's names in
+ * four languages.
  */
 const { eyebrow, title, intro, names } = GOTUKOLA.hero;
 const titleLines = title.split(/(?<=\.)\s+/);
@@ -15,7 +16,7 @@ const titleLines = title.split(/(?<=\.)\s+/);
 
 <section
   aria-labelledby="gotukola-hero-heading"
-  class="relative isolate flex min-h-[min(max(32.5rem,62svh),56rem)] short:min-h-svh! overflow-hidden bg-brand-leaf text-white"
+  class="relative isolate flex min-h-[min(max(37.5rem,100svh),70rem)] short:min-h-svh! overflow-hidden bg-brand-leaf text-white"
 >
   <Image
     src={heroPhoto}
@@ -30,28 +31,30 @@ const titleLines = title.split(/(?<=\.)\s+/);
   {/* Darkens the top for the header, the left for the copy and the bottom for the names. */}
   <div
     aria-hidden="true"
-    class="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgb(6_22_14/0.75)_0%,rgb(6_22_14/0.45)_50%,rgb(6_22_14/0.1)_85%),linear-gradient(to_bottom,rgb(6_22_14/0.55)_0%,rgb(6_22_14/0.05)_30%,rgb(6_22_14/0.6)_100%)]"
+    class="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgb(6_22_14/0.7)_0%,rgb(6_22_14/0.4)_45%,rgb(6_22_14/0.05)_80%),linear-gradient(to_bottom,rgb(6_22_14/0.55)_0%,rgb(6_22_14/0.05)_28%,rgb(6_22_14/0.05)_65%,rgb(6_22_14/0.6)_100%)]"
   >
   </div>
 
-  <div class="relative flex w-full flex-col justify-end px-5 pt-32 pb-12 md:px-10 md:pb-12 lg:pr-10 lg:pl-[clamp(2.5rem,11vw,12.5rem)]">
-    <p class="font-poppins text-[0.6875rem] leading-4 font-medium tracking-[0.25rem] text-brand-green uppercase md:text-[0.75rem]">
+  <div class="relative flex w-full flex-col justify-end px-5 pt-32 pb-12 md:px-10 md:pb-[max(3.5rem,9svh)] lg:pr-10 lg:pl-[clamp(2.5rem,11vw,12.5rem)]">
+    <p class="font-poppins text-[0.6875rem] leading-4 font-medium tracking-[0.25rem] text-white/90 uppercase md:text-[0.75rem]">
       {eyebrow}
     </p>
     <h1
       id="gotukola-hero-heading"
-      class="mt-4 max-w-[14ch] font-display text-[clamp(2.5rem,5vw,4.75rem)] leading-[1.02] font-bold tracking-[-0.5px] drop-shadow-[0_2px_24px_rgb(0_0_0/0.3)]"
+      class="mt-4 max-w-[14ch] font-display text-[clamp(2.75rem,5.6vw,6rem)] leading-[1.02] font-bold tracking-[-0.5px] drop-shadow-[0_2px_24px_rgb(0_0_0/0.3)]"
     >
       {titleLines.map((line) => <span class="block">{line}</span>)}
     </h1>
-    <p class="mt-5 max-w-[34em] font-poppins text-[0.9375rem] leading-[1.6] text-white/90 md:text-[clamp(1rem,1.2vw,1.1875rem)]">
+    <p
+      class="mt-5 max-w-[34em] font-poppins text-[0.9375rem] leading-[1.55] font-medium text-white/95 drop-shadow-[0_1px_10px_rgb(0_0_0/0.3)] md:text-[clamp(1rem,1.3vw,1.25rem)]"
+    >
       {intro}
     </p>
-    <dl class="mt-8 grid max-w-[57.5rem] grid-cols-2 gap-x-6 gap-y-5 border-t border-white/20 pt-6 font-poppins md:grid-cols-4">
+    <dl class="mt-8 lg:mt-10 grid max-w-[57.5rem] grid-cols-2 gap-x-6 gap-y-5 border-t border-white/20 pt-6 font-poppins md:grid-cols-4">
       {
         names.map(({ lang, name }) => (
           <div class="flex flex-col">
-            <dt class="text-[0.625rem] leading-4 font-medium tracking-[0.1562rem] text-white/60 uppercase">{lang}</dt>
+            <dt class="text-[0.625rem] leading-4 font-medium tracking-[0.1562rem] text-white/70 uppercase">{lang}</dt>
             <dd class:list={["mt-1 text-[0.9375rem] leading-snug font-medium md:text-[1rem]", lang === "Botanical" && "italic"]}>
               {name}
             </dd>

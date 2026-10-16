@@ -1,5 +1,4 @@
 ---
-import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import Clock from "@lucide/astro/icons/clock";
 import Mail from "@lucide/astro/icons/mail";
 import MapPin from "@lucide/astro/icons/map-pin";
@@ -13,19 +12,11 @@ import { FULL_ADDRESS, SITE } from "../../config/site";
  * Beside the form: address, phone, WhatsApp, email and hours, each row only
  * when its value is set. Address, phone and email are `SITE`'s, the same as
  * the footer and the JSON-LD.
- *
- * The map is a link to Google Maps rather than an embedded one: the page's
- * CSP (`default-src 'self'`) blocks third-party iframes, and a link costs no
- * cookies or megabyte of map script. It appears once the street address is
- * known, as a town alone would pin the wrong place.
  */
 const { title, hours, whatsapp } = CONTACT.details;
 const { email, telephone } = SITE.contact;
 
 const digits = (n: string) => n.replace(/[^\d+]/g, "");
-const mapHref = SITE.address.streetAddress
-  ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${SITE.legalName}, ${FULL_ADDRESS}`)}`
-  : "";
 
 const rows = [
   { icon: MapPin, label: "Address", value: FULL_ADDRESS, href: "" },
@@ -43,14 +34,15 @@ const link =
   <h2 id="details-heading" class="font-display text-[clamp(1.75rem,4vw,2.125rem)] leading-[1.1] font-bold text-ink-heading">{title}</h2>
   <p class="mt-2 text-[1rem] leading-[1.6] text-ink-body">{SITE.legalName}</p>
 
-  <dl class="mt-8 grid gap-6">
+  {/* One <dl> per row: the icon can't sit inside a list's <div> group. */}
+  <div class="mt-8 grid gap-6">
     {
       rows.map(({ icon: Icon, label, value, href }) => (
         <div class="flex gap-4">
           <span class="grid size-11 shrink-0 place-items-center rounded-full bg-white text-brand-moss ring-1 ring-brand-leaf/8">
             <Icon class="size-5" stroke-width={1.8} aria-hidden="true" />
           </span>
-          <div class="min-w-0 pt-0.5">
+          <dl class="min-w-0 pt-0.5">
             <dt class="text-[0.75rem] leading-4 font-bold tracking-[2px] text-brand-fern uppercase">{label}</dt>
             <dd class="mt-1 text-[1rem] leading-6 text-ink-heading">
               {href ? (
@@ -61,30 +53,9 @@ const link =
                 value
               )}
             </dd>
-          </div>
+          </dl>
         </div>
       ))
     }
-  </dl>
-
-  {
-    mapHref && (
-      <a
-        href={mapHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="group relative mt-10 flex aspect-[16/10] w-full items-center md:max-lg:mx-auto md:max-lg:max-w-md justify-center overflow-hidden rounded-[1.5rem] bg-brand-cream bg-[radial-gradient(rgb(13_43_18/0.14)_1px,transparent_1px)] bg-size-[18px_18px] ring-1 ring-brand-leaf/8 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-moss"
-      >
-        <span class="flex flex-col items-center gap-3 text-center">
-          <span class="grid size-14 place-items-center rounded-full bg-brand-moss text-white shadow-pill transition-transform group-hover:-translate-y-1 motion-reduce:transition-none">
-            <MapPin class="size-7" stroke-width={1.8} aria-hidden="true" />
-          </span>
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[0.875rem] font-semibold text-brand-leaf shadow-[0_6px_16px_-8px_rgb(13_43_18/0.4)]">
-            Open in Google Maps
-            <ArrowUpRight class="size-4" stroke-width={2} aria-hidden="true" />
-          </span>
-        </span>
-      </a>
-    )
-  }
+  </div>
 </aside>

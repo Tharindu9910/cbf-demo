@@ -158,13 +158,28 @@ const {
 
     <Footer />
 
+    <script>
+      // The loading sheen on late photos (`[data-skeleton]`).
+      import { skeletonImages } from "../scripts/anim/imageLoading";
+
+      skeletonImages();
+    </script>
+
     {stage && <script>
+      import { heroEntered } from "../scripts/bridge";
+
       // three.js and the scenes stay out of the critical path: one chunk,
       // never blocking first paint. Desktop fetches it at once — the hero
       // copy waits on its cans. Touch screens show the cans as a photo
       // first (the hero copy doesn't wait), so the chunk comes once the
       // page has loaded and the main thread is idle, leaving the LCP photo
       // and the hero's entrance uncontested. A scroll starts it sooner.
+      //
+      // Portrait screens with the hero hold it further, until the headline
+      // (the page's LCP) has landed: their cans start below the frame and
+      // only rise in on scroll, so there is nothing to show before then, and
+      // three's ~1s of start-up on a phone CPU would otherwise land in the
+      // middle of the entrance.
       let started = false;
       const load = () => {
         if (started) return;
@@ -183,8 +198,19 @@ const {
           "requestIdleCallback" in window
             ? requestIdleCallback(load, { timeout: 1500 })
             : setTimeout(load, 300);
-        if (document.readyState === "complete") idle();
-        else addEventListener("load", idle, { once: true });
+        const loaded = new Promise((r) =>
+          document.readyState === "complete"
+            ? r(undefined)
+            : addEventListener("load", r, { once: true }),
+        );
+        const holdForHeadline =
+          matchMedia("(orientation: portrait)").matches && document.querySelector(".hero");
+        Promise.all([
+          loaded,
+          holdForHeadline
+            ? Promise.race([heroEntered.promise, new Promise((r) => setTimeout(r, 4000))])
+            : null,
+        ]).then(idle);
         addEventListener("scroll", load, { once: true, passive: true });
       }
     </script>}

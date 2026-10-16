@@ -56,11 +56,12 @@ const followIcon = `${icon} w-[1.43em] max-xl:text-[15px]`;
   aria-labelledby="footer-heading"
 >
   {/* The leaf bunches, cut out of the mockup's backdrop, in the bottom corners. On phones small and dimmed, so they frame the copy instead of sitting under it. */}
-  <Image src={leavesLeft} alt="" loading="lazy" class="pointer-events-none absolute bottom-0 left-0 h-auto select-none max-md:w-[120px] max-md:opacity-55 md:max-xl:w-[170px] xl:w-[calc(190*var(--u))]" />
-  <Image src={leavesRight} alt="" loading="lazy" class="pointer-events-none absolute right-0 bottom-0 h-auto select-none max-md:w-[160px] max-md:opacity-55 md:max-xl:w-[180px] xl:w-[calc(290*var(--u))]" />
+  {/* `sizes` mirrors the classes: 120/170px, then 190 and 290 frame px (of 1919) as vw. */}
+  <Image src={leavesLeft} alt="" widths={[150, 220, leavesLeft.width]} sizes="(min-width: 1280px) 10vw, (min-width: 768px) 110px, 64px" loading="lazy" class="pointer-events-none absolute bottom-0 left-0 h-auto select-none max-md:w-[64px] max-md:opacity-40 md:max-xl:w-[110px] md:max-xl:opacity-70 xl:w-[calc(190*var(--u))]" />
+  <Image src={leavesRight} alt="" widths={[180, 300, leavesRight.width]} sizes="(min-width: 1280px) 15.2vw, (min-width: 768px) 140px, 88px" loading="lazy" class="pointer-events-none absolute right-0 bottom-0 h-auto select-none max-md:w-[88px] max-md:opacity-40 md:max-xl:w-[140px] md:max-xl:opacity-70 xl:w-[calc(290*var(--u))]" />
 
   <div
-    class="relative mx-auto max-md:px-6 max-md:pt-12 max-md:pb-8 md:max-xl:px-12 md:max-xl:pt-14 md:max-xl:pb-9 max-xl:max-w-[1100px] xl:max-w-[calc(1919*var(--u))] xl:pt-[calc(110*var(--u))] xl:pb-[calc(96*var(--u))] [&_:is(p,li,a,span)]:text-shadow-footer"
+    class="relative mx-auto max-md:px-6 max-md:pt-12 max-md:pb-10 md:max-xl:px-12 md:max-xl:pt-14 md:max-xl:pb-12 max-xl:max-w-[1100px] xl:max-w-[calc(1919*var(--u))] xl:pt-[calc(110*var(--u))] xl:pb-[calc(96*var(--u))] [&_:is(p,li,a,span)]:text-shadow-footer"
   >
     <h2 id="footer-heading" class="sr-only">{SITE.name}: contact and links</h2>
 
@@ -190,26 +191,12 @@ const followIcon = `${icon} w-[1.43em] max-xl:text-[15px]`;
     </div>
 
     <div
-      class="flex font-sans text-sm max-md:flex-col max-xl:gap-[18px] max-xl:pt-6 md:items-center md:justify-between xl:pt-[calc(37*var(--u))] xl:pr-[calc(202*var(--u))] xl:pl-[calc(198*var(--u))]"
+      class="flex font-sans text-sm max-md:flex-col max-md:items-center max-md:text-center max-xl:gap-[18px] max-xl:pt-6 md:items-center md:justify-between xl:pt-[calc(37*var(--u))] xl:pr-[calc(202*var(--u))] xl:pl-[calc(198*var(--u))]"
     >
       <p>&copy; {year} {SITE.name}. All rights reserved.</p>
 
       <div class="flex items-center max-xl:gap-[18px] max-sm:gap-3 xl:gap-[calc(24*var(--u))]">
-        <svg class:list={[icon, "max-xl:text-[13px]"]} width="2.26em" height="2.21em" viewBox="0 0 43 42" aria-hidden="true">
-          <defs>
-            <linearGradient id="footer-leaf-grad" x1="0" y1="1" x2="1" y2="0">
-              <stop offset="0" stop-color="#6aab32" />
-              <stop offset="1" stop-color="#9ccf52" />
-            </linearGradient>
-          </defs>
-          <path fill="url(#footer-leaf-grad)" d="M41.5 1.2C28 1.8 10 8.5 6.2 24.5 4.8 30.5 8.2 35.3 13.5 35 30 34 40.2 17 41.5 1.2z" />
-          <path d="M3 40 36 5" fill="none" stroke="#1d4a15" stroke-width="1.8" stroke-linecap="round" />
-          <path d="M2.2 40.8 9 33.5" fill="none" stroke="#7ab83c" stroke-width="2.6" stroke-linecap="round" />
-        </svg>
-        <span
-          class="flex-none bg-footer-values-rule max-xl:h-[26px] max-xl:w-px xl:mr-[calc(9*var(--u))] xl:h-[calc(35*var(--u))] xl:w-[max(1px,calc(1.5*var(--u)))]"
-          aria-hidden="true"
-        ></span>
+        
         <ul class="flex items-center whitespace-nowrap text-footer-values max-xl:tracking-[0.4px] xl:tracking-normal">
           {
             /* `{value}` hugs its tags: whitespace would open a gap after each dot. */

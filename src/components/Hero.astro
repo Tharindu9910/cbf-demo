@@ -24,10 +24,15 @@ import { url } from "../config/url";
  */
 const HERO_BACKGROUNDS = [heroBg1, heroBg2, heroBg4, heroBg5, heroBg6, heroBg8];
 
-/** Responsive widths up to, and always including, the photo's own width. */
+/**
+ * Responsive widths up to the photo's own width, topped out at 3840. The
+ * steps above 1920 matter: without them a retina laptop, which wants ~3300px
+ * for these cropped full-bleed slides, jumped straight to a 5–6k original.
+ */
+const MAX_WIDTH = 3840;
 const widthsFor = (width: number) => [
-  ...[640, 960, 1280, 1672, 1920].filter((w) => w < width),
-  width,
+  ...[640, 960, 1280, 1672, 1920, 2560, 3200].filter((w) => w < width),
+  Math.min(width, MAX_WIDTH),
 ];
 
 const HERO_FEATURES = [
@@ -57,7 +62,10 @@ const HERO_FEATURES = [
     {/*
       The slides stack; the GSAP loop cross-fades between them. Only the first
       is high priority — it's the LCP image. No `scale-*` classes: GSAP owns the
-      transform on these.
+      transform on these. The rest start `hidden`: they sit in the viewport, so
+      `loading="lazy"` alone would still fetch them all at once, against the
+      first paint. The slideshow shows them once the page has loaded, long
+      before the first hand-over (and never, for reduced motion or no script).
     */}
     {
       HERO_BACKGROUNDS.map((src, i) => (
@@ -70,7 +78,7 @@ const HERO_FEATURES = [
           quality={78}
           loading={i === 0 ? "eager" : "lazy"}
           fetchpriority={i === 0 ? "high" : "auto"}
-          class="hero-bg-slide absolute inset-0 h-full w-full object-cover"
+          class:list={["hero-bg-slide absolute inset-0 h-full w-full object-cover", i > 0 && "hidden"]}
         />
       ))
     }

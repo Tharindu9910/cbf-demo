@@ -7,7 +7,7 @@
  *   1. @theme      — fonts, colours, shadows, easings, animations (the tokens)
  *   2. variants    — `noscript:`
  *   3. utilities   — `frame-*` (the design-frame unit), `scrollbar-none`,
- *                    `animate-scroll-drift`
+ *                    `animate-scroll-drift`, `skeleton`
  *   4. base        — the few element defaults Tailwind v4 dropped
  *
  * A new colour or face goes in @theme with a comment saying where it is used,
@@ -149,6 +149,10 @@
 
   /* Contact form */
   --color-form-error: #a3261f; /* invalid field border, send-failure message */
+
+  /* A photo's placeholder while it loads (`skeleton`): a faint leaf tint, and the sheen that sweeps it. */
+  --color-skeleton: rgb(13 43 18 / 0.07);
+  --color-skeleton-sheen: rgb(255 255 255 / 0.5);
 
   /* The WebGL loader (drei's colours). */
   --color-loader-ground: #171717;
@@ -316,6 +320,38 @@
   }
   to {
     transform: scale(1.08) translateY(4%);
+  }
+}
+
+/*
+ * A photo's placeholder while it loads: a faint tint with a slow sheen
+ * sweeping across it. Only `scripts/anim/imageLoading.ts` adds it, and takes
+ * it off once the photo is in. It sets the background image alone, so a
+ * frame's own background colour stays underneath. The sheen holds still for
+ * reduced motion.
+ */
+@utility skeleton {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-skeleton) 40%,
+    var(--color-skeleton-sheen) 50%,
+    var(--color-skeleton) 60%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sheen 1.6s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* With the gradient twice the box's width, 150% → -50% carries the sheen from just off the left edge to just off the right. */
+@keyframes skeleton-sheen {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
   }
 }
 
