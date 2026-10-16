@@ -182,10 +182,8 @@ const pill =
 </Base>
 
 <script>
-  import { revealOnScroll } from "../../scripts/anim/aboutReveal";
   import { initFilter } from "../../scripts/products/filter";
 
-  revealOnScroll();
   const collections = document.querySelector<HTMLElement>("[data-collections]");
   if (collections) initFilter(collections, "group");
 </script>
