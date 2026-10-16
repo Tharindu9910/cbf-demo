@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import ArrowDown from "@lucide/astro/icons/arrow-down";
 
+import BlurPlaceholder from "../ui/BlurPlaceholder.astro";
 import leavesLeft from "../../assets/images/footer/leaves-left.png";
 import leavesRight from "../../assets/images/footer/leaves-right.png";
 import { ABOUT } from "../../config/about";
@@ -23,6 +24,8 @@ const titleLines = title.split(/(?<=\.)\s+/);
 >
   {
     image ? (
+      <>
+      <BlurPlaceholder src={image.src} class="absolute inset-0 -z-20 h-full w-full object-cover" />
       <Image
         src={image.src}
         alt={image.alt}
@@ -33,6 +36,7 @@ const titleLines = title.split(/(?<=\.)\s+/);
         fetchpriority="high"
         class="absolute inset-0 -z-20 h-full w-full object-cover"
       />
+      </>
     ) : (
       <>
         <div

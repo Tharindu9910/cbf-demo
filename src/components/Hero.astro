@@ -1,7 +1,8 @@
 ---
-import { Image, Picture } from "astro:assets";
+import { Image } from "astro:assets";
 
 import BrandIntro from "./BrandIntro.astro";
+import BlurPlaceholder from "./ui/BlurPlaceholder.astro";
 import ArrowDownIcon from "./icons/ArrowDownIcon.astro";
 import ArrowRightIcon from "./icons/ArrowRightIcon.astro";
 import LeafIcon from "./icons/LeafIcon.astro";
@@ -67,12 +68,13 @@ const HERO_FEATURES = [
       first paint. The slideshow shows them once the page has loaded, long
       before the first hand-over (and never, for reduced motion or no script).
     */}
+    <BlurPlaceholder src={HERO_BACKGROUNDS[0]} class="absolute inset-0 h-full w-full object-cover" />
     {
       HERO_BACKGROUNDS.map((src, i) => (
-        <Picture
+        <Image
           src={src}
           alt=""
-          formats={["webp"]}
+          format="webp"
           widths={widthsFor(src.width)}
           sizes="100vw"
           quality={78}

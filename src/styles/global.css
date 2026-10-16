@@ -345,6 +345,31 @@
   }
 }
 
+/*
+ * Images arrive whole. While script runs, every <img> stays transparent until
+ * `scripts/anim/imageLoading.ts` has seen it load and decode, then fades it
+ * in: no blank box snapping to a photo, no photo painting in strips.
+ * Unlayered, so it outranks an `opacity-*` utility until the image is in (an
+ * inline opacity, GSAP's on the hero slides, still wins; the slideshow
+ * handles those). Blur-up placeholders paint at once. If the script never
+ * gets to run, the failsafe shows everything after 8s.
+ */
+@media (scripting: enabled) {
+  img:not([data-loaded], [data-placeholder]) {
+    opacity: 0;
+  }
+
+  :root:not([data-images]) img:not([data-loaded], [data-placeholder]) {
+    animation: image-failsafe 0s 8s forwards;
+  }
+}
+
+@keyframes image-failsafe {
+  to {
+    opacity: 1;
+  }
+}
+
 /* With the gradient twice the box's width, 150% → -50% carries the sheen from just off the left edge to just off the right. */
 @keyframes skeleton-sheen {
   from {

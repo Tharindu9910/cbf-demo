@@ -1,5 +1,7 @@
 import { gsap } from "gsap";
 
+import { whenReady } from "./imageLoading";
+
 /** Seconds a slide holds before it starts handing over. */
 const SLIDE_HOLD = 5;
 /** Seconds the hand-over itself takes. */
@@ -28,11 +30,22 @@ export function runHeroSlideshow() {
   const slides = gsap.utils.toArray<HTMLElement>(".hero-bg-slide");
   if (slides.length < 2) return;
 
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   gsap.set(slides, { opacity: 0, xPercent: 0, scale: SLIDE_SCALE, zIndex: 0 });
-  gsap.set(slides[0], { opacity: 1 });
+
+  // Each slide is "ready" once loaded and decoded. The first fades in over its
+  // blurred placeholder (Hero.astro) then, instead of painting in strips.
+  const ready = new Set<HTMLElement>();
+  slides.forEach((slide, i) =>
+    whenReady(slide as HTMLImageElement).then(() => {
+      ready.add(slide);
+      slide.dataset.loaded = "";
+      if (i === 0) gsap.to(slide, { opacity: 1, duration: still ? 0 : 0.8, ease: "power2.out" });
+    }),
+  );
 
   // A still frame for readers who ask for less motion.
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (still) return;
 
   // The later slides start `hidden` so they don't download against the first
   // paint (see Hero.astro). Show them, and so start their lazy loads, halfway
@@ -51,6 +64,21 @@ export function runHeroSlideshow() {
     const next = slides[(i + 1) % slides.length];
     const start = i * step;
     const handover = start + SLIDE_HOLD;
+
+    // Never hand over to a slide that is still downloading: a second before
+    // the cross-fade, if the next one isn't ready, ease the whole loop (the
+    // slow push-in included) to a stop, and ease it back once it is.
+    tl.call(
+      () => {
+        if (ready.has(next)) return;
+        gsap.to(tl, { timeScale: 0, duration: 0.6, ease: "power2.out", overwrite: true });
+        void whenReady(next as HTMLImageElement).then(() =>
+          gsap.to(tl, { timeScale: 1, duration: 0.6, ease: "power2.in", overwrite: true }),
+        );
+      },
+      undefined,
+      handover - 1,
+    );
 
     // The push-in. `fromTo` so each cycle starts from a known scale, and
     // `immediateRender: false` so building the timeline doesn't blank the

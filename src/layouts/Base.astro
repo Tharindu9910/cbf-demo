@@ -159,12 +159,12 @@ const {
     <Footer />
 
     <script>
-      // The loading sheen on late photos (`[data-skeleton]`), and the scroll
+      // How images arrive (fade in once decoded, over a sheen or blur), and the scroll
       // reveals (`[data-reveal]`), on every page.
-      import { skeletonImages } from "../scripts/anim/imageLoading";
+      import { smoothImages } from "../scripts/anim/imageLoading";
       import { revealOnScroll } from "../scripts/anim/reveal";
 
-      skeletonImages();
+      smoothImages();
       void revealOnScroll();
     </script>
 

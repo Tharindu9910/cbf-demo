@@ -73,7 +73,7 @@ const range = (await getCollection("flavours")).sort((a, b) => a.data.order - b.
 
 /** One product, keyed to its page. Placeholder reviews never appear here. */
 async function productNode({ id, data }: CollectionEntry<"flavours">) {
-  const lead = await getImage({ src: data.gallery[0].src, width: 1200, format: "jpg" });
+  const lead = await getImage({ src: data.gallery[0].src, width: 1200, format: "webp" });
   return {
     "@type": "Product",
     "@id": abs(`/products/${id}/#product`),

@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 
+import BlurPlaceholder from "../ui/BlurPlaceholder.astro";
 import { CONTACT } from "../../config/contact";
 
 /**
@@ -15,6 +16,7 @@ const { eyebrow, title, intro, image } = CONTACT.hero;
   aria-labelledby="contact-hero-heading"
   class="relative isolate flex min-h-[min(max(37.5rem,100svh),70rem)] short:min-h-svh! overflow-hidden bg-brand-leaf text-white"
 >
+  <BlurPlaceholder src={image.src} class="absolute inset-0 -z-20 h-full w-full object-cover" />
   <Image
     src={image.src}
     alt={image.alt}

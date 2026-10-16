@@ -84,14 +84,14 @@ export default defineConfig({
 
   image: {
     responsiveStyles: false,
-    // Same quality as sharp's defaults, smaller files: the slowest (best)
-    // WebP effort, and mozjpeg for the hero's JPEG fallbacks and the JSON-LD
-    // product images. Build time only; the pixels don't change visibly.
+    // Every image the pages use is built as WebP. The masters in src/assets
+    // stay JPG/PNG on purpose: sharp shrinks a WebP source through a faster,
+    // lossier path, so WebP masters build measurably softer. Same quality as
+    // sharp's default, smaller files: its slowest, best effort.
     service: {
       entrypoint: "astro/assets/services/sharp",
       config: {
         webp: { effort: 6 },
-        jpeg: { mozjpeg: true },
       },
     },
   },

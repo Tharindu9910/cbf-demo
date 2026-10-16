@@ -48,6 +48,19 @@ export function runCarousel() {
     gsap.set(right[i], { xPercent: OFFSCREEN, opacity: 1 });
   });
 
+  // Parked off-screen, the other flavours' art never comes near the viewport,
+  // so lazy loading would only fetch it once a change slides it in: the
+  // pieces would arrive empty. Fetch it all as the section comes into view.
+  const art = section.querySelectorAll<HTMLImageElement>(".flavor-piece img");
+  new IntersectionObserver(
+    (entries, io) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      art.forEach((img) => (img.loading = "eager"));
+    },
+    { rootMargin: "50% 0px" },
+  ).observe(section);
+
   const show = (index: number) => {
     current = index;
     const flavour = flavours[index];

@@ -1,44 +1,54 @@
 /**
- * A loading state for photos that arrive late. The element marked
- * `[data-skeleton]` shows the `skeleton` sheen (global.css) until its photo
- * has loaded and decoded:
+ * How images arrive, on every page. Until an image has loaded and decoded it
+ * stays transparent (the `img:not([data-loaded])` rule in global.css, in
+ * place before first paint), then it fades in to its own opacity. So nothing
+ * snaps from blank to photo, and a large photo never paints in strips.
  *
- *   - on a frame around the photo, the photo then fades in over the sheen;
- *   - on the `<img>` itself (a photo that is its own rounded frame), the sheen
- *     is the image's background and the photo simply covers it, since fading
- *     the image would fade its background with it.
+ * Underneath, while it loads, there is one of:
+ *   - a frame marked `[data-skeleton]`: it shows the `skeleton` sheen until
+ *     the photo is in;
+ *   - a `BlurPlaceholder` (the page heroes): a blurred copy, inlined in the
+ *     HTML, that the sharp photo fades in over;
+ *   - otherwise the section's own ground (cut-outs, logos, inline photos).
  *
- * Only lazy images still loading when this runs are touched, so the eager
- * (above-the-fold, LCP) and cached ones paint as they always did, and without
- * script nothing changes. Mark opaque photos only: a cut-out would show the
- * sheen through its transparent parts.
+ * The hero slides are the slideshow's (`heroSlideshow.ts`), which waits for
+ * each one the same way. Reduced motion skips the fade, not the wait.
  */
 const FADE: KeyframeAnimationOptions = {
-  duration: 450,
+  duration: 500,
   easing: "cubic-bezier(0.22, 1, 0.36, 1)",
 };
 
-export function skeletonImages() {
+export function smoothImages() {
+  // The script is here: global.css's no-script failsafe stands down.
+  document.documentElement.dataset.images = "";
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  for (const frame of document.querySelectorAll<HTMLElement>("[data-skeleton]")) {
-    const img = frame instanceof HTMLImageElement ? frame : frame.querySelector("img");
-    if (!img || img.loading !== "lazy" || img.complete) continue;
+  const show = (img: HTMLImageElement, frame: HTMLElement | null) => {
+    if ("loaded" in img.dataset) return;
+    img.dataset.loaded = "";
+    if (still) return frame?.classList.remove("skeleton");
+    // Fade to the opacity its classes give it (the footer's 55% leaves).
+    const to = getComputedStyle(img).opacity;
+    img
+      .animate({ opacity: ["0", to] }, FADE)
+      .finished.finally(() => frame?.classList.remove("skeleton"));
+  };
 
-    const fades = img !== frame && !still;
-    frame.classList.add("skeleton");
-    // Held back until decoded, so a big photo never paints in strips.
-    if (fades) img.style.opacity = "0";
-
-    const reveal = () => {
-      img.style.opacity = "";
-      if (!fades) return frame.classList.remove("skeleton");
-      img
-        .animate([{ opacity: 0 }, { opacity: 1 }], FADE)
-        .finished.finally(() => frame.classList.remove("skeleton"));
-    };
-
-    img.addEventListener("load", () => void img.decode().catch(() => {}).then(reveal), { once: true });
-    img.addEventListener("error", reveal, { once: true });
+  for (const img of document.images) {
+    if (img.matches("[data-placeholder], .hero-bg-slide")) continue;
+    const frame = img.closest<HTMLElement>("[data-skeleton]");
+    if (!img.complete) frame?.classList.add("skeleton");
+    void whenReady(img).then(() => show(img, frame));
   }
+}
+
+/** Resolves once an image is loaded and decoded, or has failed: ready to paint whole. */
+export function whenReady(img: HTMLImageElement): Promise<void> {
+  const decode = () => img.decode().catch(() => {});
+  if (img.complete) return decode();
+  return new Promise((resolve) => {
+    img.addEventListener("load", () => void decode().then(resolve), { once: true });
+    img.addEventListener("error", () => resolve(), { once: true });
+  });
 }
