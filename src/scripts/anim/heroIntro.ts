@@ -2,6 +2,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { heroEntered, heroReady } from "../bridge";
+import { setHeroSlideshowPaused } from "./heroSlideshow";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,7 +75,20 @@ function play() {
     .to({}, { duration: 1.5 }, 0)
     .to(".hero-scroll-cue", { opacity: 0, duration: 0.4 }, 0)
     // Photo dissolves to reveal the runway's cream ground underneath.
-    .to(".hero-bg", { opacity: 0, duration: 1 }, 1);
+    // `autoAlpha`, so once it's gone it is `visibility: hidden` and the browser
+    // stops compositing the full-screen layer under the 3D; the slideshow
+    // holds while it can't be seen.
+    .to(
+      ".hero-bg",
+      {
+        autoAlpha: 0,
+        duration: 1,
+        onUpdate() {
+          setHeroSlideshowPaused(this.progress() === 1);
+        },
+      },
+      1,
+    );
 
   // The runway copy arrives on its own trigger rather than on the scrubbed
   // timeline: it should read at its own pace once the section is in view.

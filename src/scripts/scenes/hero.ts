@@ -15,7 +15,8 @@ import { createContactShadow, type ContactShadow } from "../three/contactShadow"
 import { applyEnvironment } from "../three/environment";
 import { createFloatingCan, type FloatingCan } from "../three/floatingCan";
 import { addCanLights } from "../three/lights";
-import { addView, onViewResize } from "../three/stage";
+import { labelTextures } from "../three/sodaCan";
+import { addView, onViewResize, warmUp } from "../three/stage";
 import { heroReady } from "../bridge";
 import { url } from "../../config/url";
 
@@ -86,6 +87,10 @@ export async function mountHeroScene(el: HTMLElement) {
   // Back-left, front-centre, back-right — the order the cluster is in.
   for (const { key } of CLUSTER) group.add(wrappers[key]);
   addCanLights(scene);
+
+  // Compiled and uploaded before the view goes live, so the first frame (and
+  // the entrance that starts with it) doesn't stall.
+  await warmUp(scene, await labelTextures());
 
   // The scroll timeline (landscape), rebuilt by `build` below. The shadows
   // read its progress every frame.

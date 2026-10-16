@@ -211,6 +211,12 @@ export function loadCanModel() {
       ...Object.values(flavorTextures).map((url) => textureLoader.loadAsync(url)),
     ]);
 
+    // Decode the labels now, off the main thread. Otherwise the browser
+    // decodes each 2K WebP synchronously inside the GPU upload, on a frame.
+    await Promise.all(
+      textures.map((t) => (t.image as HTMLImageElement).decode?.().catch(() => {})),
+    );
+
     const can = gltf.scene;
     const nodes: Record<string, Mesh> = {};
     can.traverse((child) => {
@@ -239,6 +245,16 @@ export function loadCanModel() {
     };
   })();
   return model;
+}
+
+/**
+ * Every label texture, set up as the label material reads it, for
+ * `warmUp` to upload ahead of time: the carousel swaps between all of them,
+ * and an upload left to the swap stalls the spin.
+ */
+export async function labelTextures() {
+  const { labels } = await loadCanModel();
+  return Object.values(labels).map((map) => labelMaterialFor(map).map!);
 }
 
 export type SodaCan = Group & { setFlavor(flavor: Flavor): void };

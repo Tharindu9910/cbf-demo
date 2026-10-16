@@ -22,6 +22,19 @@ const SLIDE_SHIFT = 6;
  */
 const SLIDE_ZOOM = 1.24;
 
+let loop: gsap.core.Timeline | null = null;
+
+/**
+ * Hold the loop while the photo layer is faded out. It is a fixed, full-screen
+ * stack of scaled images: left running under the runway and the rest of the
+ * page, it is re-composited every frame behind the 3D for nothing, and on a
+ * phone that is enough to drop frames. `heroIntro.ts` calls this as the scroll
+ * fades the layer out and back in.
+ */
+export function setHeroSlideshowPaused(paused: boolean) {
+  loop?.paused(paused);
+}
+
 /**
  * The hero's background slideshow. Independent of the entrance choreography,
  * so the cadence never jumps when that replays or the breakpoint flips.
@@ -55,7 +68,7 @@ export function runHeroSlideshow() {
     (SLIDE_HOLD / 2) * 1000,
   );
 
-  const tl = gsap.timeline({ repeat: -1 });
+  const tl = (loop = gsap.timeline({ repeat: -1 }));
   const step = SLIDE_HOLD + SLIDE_FADE;
 
   // Every slide gets an identical step at an absolute position, so the gaps

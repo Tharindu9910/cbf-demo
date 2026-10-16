@@ -3,8 +3,8 @@ import { Box3, Group, Scene, Vector3 } from "three";
 import { applyEnvironment } from "../three/environment";
 import { createFloatingCan } from "../three/floatingCan";
 import { addCanLights } from "../three/lights";
-import { addView } from "../three/stage";
-import type { Flavor } from "../three/sodaCan";
+import { addView, warmUp } from "../three/stage";
+import { labelTextures, type Flavor } from "../three/sodaCan";
 import { url } from "../../config/url";
 
 /**
@@ -35,6 +35,9 @@ export async function mountCarouselScene(el: HTMLElement, flavor: Flavor) {
   scene.add(center);
 
   addCanLights(scene);
+
+  // See the hero: compile and upload ahead of the first frame.
+  await warmUp(scene, await labelTextures());
 
   const view = addView(el, scene);
   view.update = floating.update;

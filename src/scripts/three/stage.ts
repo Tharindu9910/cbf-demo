@@ -5,6 +5,7 @@ import {
   SRGBColorSpace,
   Timer,
   WebGLRenderer,
+  type Texture,
 } from "three";
 
 /**
@@ -43,6 +44,7 @@ export type View = {
 };
 
 let renderer: WebGLRenderer | null = null;
+let host: HTMLElement | null = null;
 const views: View[] = [];
 const timer = new Timer();
 let running = false;
@@ -54,6 +56,15 @@ let size = { width: 0, height: 0 };
  * soften and the rims step.
  */
 export const COARSE_POINTER = matchMedia("(pointer: coarse)").matches;
+
+/**
+ * The highest DPR the canvas may use: 2 on touch screens, 1.5 elsewhere (see
+ * `createStage`). `adapt` lowers it a step at a time on a device that can't
+ * hold the frame rate, down to `MIN_DPR`; it never climbs back within a page.
+ */
+let dprCap = COARSE_POINTER ? 2 : 1.5;
+const MIN_DPR = 1;
+const DPR_STEP = 0.25;
 
 /** Views whose box is on (or about to come on) screen; the loop runs only while one is. */
 const visible = new Set<Element>();
@@ -75,8 +86,9 @@ const visibility = new IntersectionObserver(
 /** Listeners for viewport-size changes on any view, keyed by view. */
 const resizeListeners = new Map<View, Set<() => void>>();
 
-export function createStage(host: HTMLElement) {
+export function createStage(el: HTMLElement) {
   if (renderer) return renderer;
+  host = el;
 
   renderer = new WebGLRenderer({
     // MSAA everywhere: phone GPUs are tile-based and resolve it on-chip, so
@@ -88,7 +100,7 @@ export function createStage(host: HTMLElement) {
   // R3F's `dpr={[1, 1.5]}`; 2 on touch screens, whose 2-3x displays show
   // anything less as blur. Not 3: only the scissored views are drawn, but a
   // 3x whole-screen buffer is still more memory than iOS likes to give.
-  const maxDpr = COARSE_POINTER ? 2 : 1.5;
+  // (`dprCap`, lowered by `adapt` on a phone that can't keep up.)
   renderer.outputColorSpace = SRGBColorSpace;
   // R3F defaults to ACES Filmic, which desaturates as it rolls off and left the
   // printed labels looking washed out. Khronos PBR Neutral holds the colour.
@@ -115,17 +127,8 @@ export function createStage(host: HTMLElement) {
     start();
   });
 
-  const measure = () => {
-    size = { width: host.clientWidth, height: host.clientHeight };
-    // The canvas covers the whole window, so on a large monitor even 1.5x is
-    // a huge buffer (5760x3240 on 4K). Hold it to about a 4K screen's worth
-    // of pixels; laptops and phones are far under that and keep their DPR.
-    const budget = Math.sqrt(MAX_BUFFER_PIXELS / Math.max(1, size.width * size.height));
-    renderer!.setPixelRatio(Math.max(1, Math.min(window.devicePixelRatio, maxDpr, budget)));
-    renderer!.setSize(size.width, size.height, false);
-  };
   measure();
-  new ResizeObserver(measure).observe(host);
+  new ResizeObserver(measure).observe(el);
 
   timer.connect(document);
   document.addEventListener("visibilitychange", () => {
@@ -136,9 +139,35 @@ export function createStage(host: HTMLElement) {
   return renderer;
 }
 
+function measure() {
+  if (!renderer || !host) return;
+  size = { width: host.clientWidth, height: host.clientHeight };
+  // The canvas covers the whole window, so on a large monitor even 1.5x is
+  // a huge buffer (5760x3240 on 4K). Hold it to about a 4K screen's worth
+  // of pixels; laptops and phones are far under that and keep their DPR.
+  const budget = Math.sqrt(MAX_BUFFER_PIXELS / Math.max(1, size.width * size.height));
+  renderer.setPixelRatio(Math.max(1, Math.min(window.devicePixelRatio, dprCap, budget)));
+  renderer.setSize(size.width, size.height, false);
+}
+
 export function getRenderer() {
   if (!renderer) throw new Error("createStage() must run first");
   return renderer;
+}
+
+/**
+ * Compile a scene's shaders, build its environment's PMREM and upload its
+ * textures before it goes on screen. Left to the first frame, all of that
+ * lands in one frame: on a phone a stall of a few hundred milliseconds, which
+ * swallows the start of the hero's entrance. `compileAsync` lets the driver
+ * compile in the background where it can (KHR_parallel_shader_compile).
+ */
+export async function warmUp(scene: Scene, textures: Iterable<Texture> = []) {
+  const r = getRenderer();
+  for (const texture of textures) r.initTexture(texture);
+  const camera = new PerspectiveCamera(FOV, 1, 0.1, 1000);
+  camera.position.set(0, 0, CAMERA_Z);
+  await r.compileAsync(scene, camera);
 }
 
 /**
@@ -182,6 +211,9 @@ function measureView(view: View) {
 function start() {
   if (running || document.hidden || contextLost || !renderer || !visible.size) return;
   running = true;
+  // A restarted loop's first frames carry the gap and any catch-up work.
+  lastFrame = 0;
+  settleUntil = performance.now() + SETTLE_MS;
   renderer.setAnimationLoop(frame);
 }
 
@@ -196,12 +228,57 @@ function stop() {
   }
 }
 
+// ---- Adaptive resolution ----
+//
+// Fill rate is what a phone runs out of here: a full-window canvas at 2x with
+// MSAA, and clear-coated cans covering much of a portrait screen. When the
+// frames come in well behind the display's rate for a second at a time, drop
+// the DPR a step. Each step costs one buffer reallocation (a single hitch), so
+// it only ever steps down.
+
+/** Frames per verdict. */
+const SAMPLE_FRAMES = 60;
+/** Ignore frame times for this long after the loop starts or the DPR changes. */
+const SETTLE_MS = 1500;
+/** Average frame time, against the target interval, that counts as struggling. */
+const SLOW = 1.3;
+
+let lastFrame = 0;
+let settleUntil = 0;
+let shortest = Infinity;
+let sampleSum = 0;
+let sampleCount = 0;
+
+function adapt(time: number) {
+  const delta = time - lastFrame;
+  lastFrame = time;
+  // Gaps (a parked loop, a backgrounded tab) and the settling window say
+  // nothing about how fast the GPU draws.
+  if (delta <= 0 || delta > 100 || time < settleUntil || dprCap <= MIN_DPR) return;
+
+  shortest = Math.min(shortest, delta);
+  sampleSum += delta;
+  if (++sampleCount < SAMPLE_FRAMES) return;
+
+  const average = sampleSum / sampleCount;
+  sampleSum = sampleCount = 0;
+  // The display's interval, but never asking more than 60fps: a 120Hz phone
+  // holding 60 is fine and keeps its resolution.
+  const target = Math.max(shortest, 1000 / 60);
+  if (average < target * SLOW) return;
+
+  dprCap = Math.max(MIN_DPR, dprCap - DPR_STEP);
+  settleUntil = time + SETTLE_MS;
+  measure();
+}
+
 /**
  * One frame: clear once, then draw each on-screen view into its own rectangle
  * — drei's `View` render path, with the canvas at the top-left of the window.
  */
 function frame(time: number) {
   if (!renderer) return;
+  adapt(time);
   timer.update(time);
   const elapsed = timer.getElapsed();
 
